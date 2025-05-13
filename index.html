@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MINIUK: FOODPEDIA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .food-container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            padding: 40px;
+            transition: all 0.3s ease;
+        }
+
+        .food-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .food-header h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .food-header p {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #95a5a6;
+            font-size: 18px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px 20px 15px 50px;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background-color: #f8f9fa;
+        }
+
+        .input-group input:focus {
+            border-color: #3498db;
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            outline: none;
+        }
+
+        .search-button {
+            width: 100%;
+            padding: 15px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .search-button:hover {
+            background-color: #27ae60;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+        }
+
+        .search-button:active {
+            transform: translateY(0);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 30px 0;
+            color: #7f8c8d;
+        }
+
+        .loading i {
+            animation: spin 1s linear infinite;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .food-result {
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            display: none;
+            border: 1px solid #ecf0f1;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .food-result h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .food-result p {
+            margin-bottom: 12px;
+            color: #34495e;
+            line-height: 1.6;
+        }
+
+        .food-result strong {
+            color: #2c3e50;
+        }
+
+        .food-result ul {
+            margin-bottom: 15px;
+            padding-left: 25px;
+        }
+
+        .food-result li {
+            margin-bottom: 8px;
+            color: #34495e;
+        }
+
+        .fun-fact {
+            font-style: italic;
+            color: #e74c3c;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #fff5f5;
+            border-left: 4px solid #e74c3c;
+            border-radius: 4px;
+        }
+
+        .fun-fact strong {
+            color: #e74c3c;
+        }
+
+        @media (max-width: 480px) {
+            .food-container {
+                padding: 25px;
+                border-radius: 10px;
+            }
+            
+            .food-header h1 {
+                font-size: 24px;
+            }
+            
+            .input-group input {
+                padding: 12px 15px 12px 45px;
+            }
+            
+            .search-button {
+                padding: 12px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="food-container">
+        <div class="food-header">
+            <h1>Foodpedia</h1>
+            <p>Descubra tudo sobre qualquer comida!</p>
+        </div>
+        
+        <form id="food-form">
+            <div class="input-group">
+                <i class="fas fa-search"></i>
+                <input type="text" id="food-input" placeholder="Digite o nome de uma comida (ex: pizza, sushi)" required>
+            </div>
+            
+            <button type="submit" class="search-button">
+                <i class="fas fa-utensils"></i> Pesquisar
+            </button>
+        </form>
+        
+        <div class="loading" id="loading">
+            <i class="fas fa-spinner"></i>
+            <p>Buscando informações...</p>
+        </div>
+        
+        <div id="food-result" class="food-result">
+            <h2 id="food-name"></h2>
+            <p><strong>Origem:</strong> <span id="food-origin"></span></p>
+            <p><strong>Ingredientes principais:</strong></p>
+            <ul id="food-ingredients"></ul>
+            <p><strong>Preparo:</strong> <span id="food-preparation"></span></p>
+            <p class="fun-fact"><strong>Curiosidade:</strong> <span id="food-funfact"></span></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('food-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const foodInput = document.getElementById('food-input');
+            const foodResult = document.getElementById('food-result');
+            const loading = document.getElementById('loading');
+            
+            foodResult.style.display = 'none';
+            loading.style.display = 'block';
+            foodInput.disabled = true;
+            
+            try {
+                const response = await fetch('/ask_food', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        message: foodInput.value 
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Erro desconhecido');
+                }
+
+                const data = await response.json();
+                
+                // Preenche os dados
+                document.getElementById('food-name').textContent = data.name;
+                document.getElementById('food-origin').textContent = data.origin;
+                
+                const ingredientsList = document.getElementById('food-ingredients');
+                ingredientsList.innerHTML = '';
+                data.ingredients.forEach(ingredient => {
+                    const li = document.createElement('li');
+                    li.textContent = ingredient;
+                    ingredientsList.appendChild(li);
+                });
+                
+                document.getElementById('food-preparation').textContent = data.preparation;
+                document.getElementById('food-funfact').textContent = data.fun_fact;
+                
+                loading.style.display = 'none';
+                foodResult.style.display = 'block';
+                
+            } catch (error) {
+                console.error('Erro:', error);
+                loading.style.display = 'none';
+                alert(`Erro: ${error.message}\nVerifique o console para detalhes.`);
+            } finally {
+                foodInput.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
