@@ -84,6 +84,7 @@ O objetivo do Foodpedia é fornecer uma plataforma simples e organizada para usu
 ## 👩‍💻 Autor
 
 Desenvolvido por **[Letícia Miniuk Rosa Pereira](https://github.com/ltcmnk), [Rayssa Gaievicz Grafetti](https://github.com/T-800-888) e Victor Willian Rodrigues Bittencourt**
+
 ---
 
 ## 📜 Licença
