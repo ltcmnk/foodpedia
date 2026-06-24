@@ -1,0 +1,317 @@
+[
+  {
+    "spread_index": 6,
+    "name": "Feijoada Brasileira",
+    "subtitle": "O abraço da cozinha nacional",
+    "category": "Culinária Brasileira",
+    "illustration_key": "herbs",
+    "page_left": "6",
+    "page_right": "7",
+    "prep_time": "3 horas",
+    "servings": "8 pessoas",
+    "difficulty": "Médio",
+    "story": "A feijoada chegou ao Brasil com os portugueses, mas foi nas senzalas que ganhou alma. Hoje é patrimônio afetivo de todo o país, servida às sextas e sábados com a gravidade de um ritual.",
+    "annotation": "servir com\nfarofa torrada\ne laranja fatiada!",
+    "ingredients": [
+      "500g de feijão preto",
+      "300g de carne-seca dessalgada",
+      "200g de linguiça defumada",
+      "150g de paio fatiado",
+      "2 folhas de louro",
+      "1 cebola grande",
+      "4 dentes de alho",
+      "Sal e pimenta-do-reino"
+    ],
+    "steps": [
+      "Deixe o feijão de molho por 12 horas. Dessalgue as carnes por 24 horas trocando a água.",
+      "Refogue o alho e a cebola até dourar. Adicione as carnes e doure por 10 minutos.",
+      "Junte o feijão escorrido, cubra com água e cozinhe por 2h na pressão.",
+      "Ajuste o sal, adicione o louro e deixe apurar por mais 30 minutos sem tampa.",
+      "Sirva com arroz branco, farofa, couve refogada e laranja fatiada."
+    ],
+    "tip": "um cálice de cachaça na feijoada enquanto cozinha. na sua e na dela."
+  },
+  {
+    "spread_index": 7,
+    "name": "Risotto ai Funghi",
+    "subtitle": "O ritual lento do norte italiano",
+    "category": "Culinária Italiana",
+    "illustration_key": "grain",
+    "page_left": "8",
+    "page_right": "9",
+    "prep_time": "35 minutos",
+    "servings": "4 pessoas",
+    "difficulty": "Médio",
+    "story": "O risotto nasceu no Vêneto no século XVI quando o açafrão vazou acidentalmente sobre o arroz de um discípulo de mestre vidreiro. A versão com funghi é seu herdeiro mais nobre.",
+    "annotation": "o segredo está\nno brodo quente\ncolher por colher",
+    "ingredients": [
+      "320g de arroz Arborio ou Carnaroli",
+      "30g de funghi secchi reidratados",
+      "1L de caldo de legumes quente",
+      "1 cebola pequena picada",
+      "120ml de vinho branco seco",
+      "60g de parmesão ralado",
+      "40g de manteiga gelada",
+      "Azeite, sal e pimenta"
+    ],
+    "steps": [
+      "Reidrate os funghi em água morna por 20 min. Reserve a água coada e pique os funghi.",
+      "Refogue a cebola no azeite até transparente. Adicione o arroz e toste por 2 min.",
+      "Deglaze com o vinho branco. Quando evaporar, adicione a água dos funghi.",
+      "Adicione o caldo quente concha por concha, mexendo sempre, por 18 minutos.",
+      "Desligue o fogo. Adicione manteiga e parmesão. Tampe e aguarde 2 min antes de servir."
+    ],
+    "tip": "manteiga gelada no final. nunca mole. esse é o segredo da mantecatura."
+  },
+  {
+    "spread_index": 8,
+    "name": "Ramen Tonkotsu",
+    "subtitle": "Dezoito horas numa tigela",
+    "category": "Culinária Japonesa",
+    "illustration_key": "bowl",
+    "page_left": "10",
+    "page_right": "11",
+    "prep_time": "18 horas",
+    "servings": "4 pessoas",
+    "difficulty": "Difícil",
+    "story": "O tonkotsu nasceu em Kurume, Fukuoka, em 1947. Um cozinheiro esqueceu os ossos de porco no fogo alto por horas e descobriu o caldo mais branco e cremoso da história culinária japonesa.",
+    "annotation": "o ovo deve ficar\nàs 6h30 de cozimento\npara a gema cremosa",
+    "ingredients": [
+      "1kg de ossos de porco (joelho)",
+      "200g de barriga de porco chashu",
+      "4 ovos cozidos marinados (ajitsuke tamago)",
+      "4 porções de macarrão fresco ramen",
+      "4 folhas de nori",
+      "Cebolinha e gergelim para servir",
+      "Tare: shoyu, mirin, sake",
+      "Azeite de gergelim"
+    ],
+    "steps": [
+      "Branqueie os ossos em água fervente por 10 min. Descarte a água e lave os ossos.",
+      "Cozinhe os ossos em fogo alto com água fervente por 4h, repondo a água.",
+      "Reduza para fogo médio e cozinhe por mais 12h até o caldo ficar branco e cremoso.",
+      "Prepare o chashu: enrole a barriga, amarre e braise por 2h em shoyu, sake e mirin.",
+      "Monte: caldo quente + tare + macarrão + chashu + ovo + nori + cebolinha."
+    ],
+    "tip": "não cubra a panela durante o cozimento. a evaporação é o que emulsiona o colágeno."
+  },
+  {
+    "spread_index": 9,
+    "name": "Crème Brûlée",
+    "subtitle": "A chama que revela o caramelo",
+    "category": "Confeitaria Francesa",
+    "illustration_key": "vanilla",
+    "page_left": "12",
+    "page_right": "13",
+    "prep_time": "1h + 4h geladeira",
+    "servings": "6 ramekins",
+    "difficulty": "Médio",
+    "story": "Há disputa centenária entre França, Inglaterra e Espanha pela paternidade deste creme. O que é certo: a chama do maçarico sobre o açúcar é um dos espetáculos mais satisfatórios da gastronomia ocidental.",
+    "annotation": "a fava de baunilha\nfaz toda a diferença.\nsem substituto.",
+    "ingredients": [
+      "500ml de creme de leite fresco (35%)",
+      "6 gemas",
+      "100g de açúcar refinado",
+      "1 fava de baunilha",
+      "Açúcar demerara para caramelizar"
+    ],
+    "steps": [
+      "Abra a fava de baunilha e raspe as sementes. Aqueça o creme com a fava até quase ferver.",
+      "Bata as gemas com o açúcar até esbranquiçar. Adicione o creme quente aos poucos, mexendo sempre.",
+      "Coe e distribua nos ramekins. Asse em banho-maria a 150°C por 45 min.",
+      "Deixe esfriar e leve à geladeira por no mínimo 4 horas.",
+      "Antes de servir, polvilhe açúcar demerara e caramelize com maçarico até formar a casquinha."
+    ],
+    "tip": "o creme está no ponto quando a borda firmou mas o centro ainda treme como gelatina."
+  },
+  {
+    "spread_index": 10,
+    "name": "Paella Valenciana",
+    "subtitle": "A panela que alimentou campos",
+    "category": "Culinária Espanhola",
+    "illustration_key": "grain",
+    "page_left": "14",
+    "page_right": "15",
+    "prep_time": "1h 20min",
+    "servings": "6 pessoas",
+    "difficulty": "Médio",
+    "story": "A paella original de Valencia não tem frutos do mar. Nasceu nos campos valencianos com o que os trabalhadores rurais encontravam: frango, coelho, feijão verde, tomate e o arroz que cultivavam.",
+    "annotation": "o socarrat é sagrado.\nnunca mexa o arroz\napós adicionar o caldo.",
+    "ingredients": [
+      "400g de arroz bomba valenciano",
+      "300g de frango em pedaços",
+      "200g de coelho em pedaços",
+      "150g de feijão verde (bajoca)",
+      "2 tomates maduros ralados",
+      "1 colher de páprica defumada",
+      "Açafrão em pistilos",
+      "Azeite e sal"
+    ],
+    "steps": [
+      "Aqueça azeite na paellera. Doure o frango e o coelho em fogo médio-alto por 12 min.",
+      "Adicione o feijão verde e o tomate. Refogue por 8 min até caramelizar.",
+      "Junte a páprica (30 seg) e adicione água quente (dobro do volume do arroz).",
+      "Dissolva o açafrão em um pouco de caldo quente e adicione à paella.",
+      "Distribua o arroz uniformemente. Cozinhe sem mexer em fogo médio por 18-20 min."
+    ],
+    "tip": "nos últimos 2 minutos, aumente o fogo para criar o socarrat: a crosta caramelizada no fundo."
+  },
+  {
+    "spread_index": 11,
+    "name": "Tacos de Carnitas",
+    "subtitle": "Gordura e tempo, nada mais",
+    "category": "Culinária Mexicana",
+    "illustration_key": "herbs",
+    "page_left": "16",
+    "page_right": "17",
+    "prep_time": "2h 30min",
+    "servings": "8 tacos",
+    "difficulty": "Fácil",
+    "story": "Carnitas significa literalmente 'carninhas'. O segredo é confitar o porco na própria gordura até que a carne desfia sozinha e a pele carameliza. É a técnica do confit francês chegada ao México pelo caminho errado, e ficou melhor.",
+    "annotation": "tortilla de milho\naquecida na chama\ndo fogão. sempre.",
+    "ingredients": [
+      "1kg de paleta de porco com osso",
+      "Banha de porco ou óleo para cobrir",
+      "1 laranja (suco e casca)",
+      "4 dentes de alho",
+      "1 colher de cominho",
+      "Sal e pimenta",
+      "Tortillas de milho para servir",
+      "Coentro, cebola e limão para acompanhar"
+    ],
+    "steps": [
+      "Tempere o porco com sal, pimenta e cominho. Deixe marinar por 1h.",
+      "Em panela pesada, cubra a carne com banha/óleo. Adicione alho, laranja e cozinhe em fogo baixo por 2h.",
+      "Retire a carne. Aumente o fogo e frite por 10 min até dourar e crocante.",
+      "Desfie grosseiramente com dois garfos.",
+      "Sirva nas tortillas aquecidas com coentro, cebola branca, limão e salsa verde."
+    ],
+    "tip": "a gordura do cozimento é ouro. guarde para fritar ovos ou batatas nos próximos dias."
+  },
+  {
+    "spread_index": 12,
+    "name": "Spaghetti alla Carbonara",
+    "subtitle": "O ovo que nunca scrambleia",
+    "category": "Culinária Italiana",
+    "illustration_key": "grain",
+    "page_left": "18",
+    "page_right": "19",
+    "prep_time": "20 minutos",
+    "servings": "4 pessoas",
+    "difficulty": "Médio",
+    "story": "A carbonara não leva creme de leite. Nunca levou. Nasceu no Lácio com ingredientes de guerra — ovos, queijo curado, guanciale e pimenta-do-reino. A emulsão entre ovo, queijo e amido da massa é a única cremosidade aceitável.",
+    "annotation": "fogo desligado\nantes dos ovos.\nsempre.",
+    "ingredients": [
+      "400g de spaghetti ou rigatoni",
+      "150g de guanciale (ou pancetta) em cubos",
+      "4 gemas + 1 ovo inteiro",
+      "80g de Pecorino Romano ralado",
+      "40g de Parmigiano Reggiano ralado",
+      "Pimenta-do-reino em abundância",
+      "Sal (apenas para a água do macarrão)"
+    ],
+    "steps": [
+      "Cozinhe o guanciale em frigideira fria, em fogo médio-baixo, até a gordura derreter e dourar levemente.",
+      "Bata as gemas com o ovo inteiro, os queijos e pimenta generosa. Reserve.",
+      "Cozinhe o macarrão al dente. Reserve uma xícara da água de cozimento.",
+      "Fora do fogo, misture o macarrão à frigideira do guanciale. Adicione o ovo e queijo.",
+      "Incorpore água do macarrão aos poucos, mexendo rápido até a mistura ficar cremosa. Sirva imediatamente."
+    ],
+    "tip": "a temperatura é tudo. calor demais faz omelete. frio demais não emulsiona. o ponto certo é a temperatura da frigideira desligada."
+  },
+  {
+    "spread_index": 13,
+    "name": "Pad Thai",
+    "subtitle": "O wok que unificou uma nação",
+    "category": "Culinária Tailandesa",
+    "illustration_key": "citrus",
+    "page_left": "20",
+    "page_right": "21",
+    "prep_time": "25 minutos",
+    "servings": "2 pessoas",
+    "difficulty": "Médio",
+    "story": "O Pad Thai foi criado como prato nacional nos anos 1930 pelo governo tailandês, que precisava de um símbolo culinário unificador. Hoje é o prato mais reconhecido da Tailândia no mundo — e continua sendo extraordinário.",
+    "annotation": "o wok precisa\nestar fumegante.\nnão improvise.",
+    "ingredients": [
+      "200g de macarrão de arroz (sen lek)",
+      "200g de camarão ou tofu firme",
+      "2 ovos",
+      "3 colheres de molho de tamarindo",
+      "2 colheres de fish sauce (nam pla)",
+      "1 colher de açúcar de palma",
+      "2 dentes de alho + 2 shallots",
+      "Amendoim triturado, broto de feijão, cebolinha e limão"
+    ],
+    "steps": [
+      "Deixe o macarrão de molho em água morna por 20 min. Escorra.",
+      "Misture molho de tamarindo, fish sauce e açúcar. Reserve.",
+      "Em wok muito quente com óleo, refogue alho e shallots por 30 seg. Adicione o camarão.",
+      "Abra espaço, quebre os ovos e mexa rapidamente até cozer pela metade. Incorpore ao camarão.",
+      "Adicione o macarrão, o molho e o broto de feijão. Refogue em fogo alto por 2 min. Sirva com amendoim e limão."
+    ],
+    "tip": "se seu wok fizer fumaça, está perfeito. esse efeito se chama wok hei — a alma do fogo."
+  },
+  {
+    "spread_index": 14,
+    "name": "Croissant",
+    "subtitle": "Duzentas e quarenta e seis camadas",
+    "category": "Confeitaria Francesa",
+    "illustration_key": "grain",
+    "page_left": "22",
+    "page_right": "23",
+    "prep_time": "3 dias",
+    "servings": "12 croissants",
+    "difficulty": "Difícil",
+    "story": "O croissant não é francês de origem — veio da Áustria como o kipferl vienense, trazido ao Paris do século XIX. Os franceses o transformaram com a técnica do feuilletage, laminando manteiga em camadas. Cada mordida é uma equação de física.",
+    "annotation": "manteiga seca\ne fria. jamais\namolecida.",
+    "ingredients": [
+      "500g de farinha de trigo (tipo 00)",
+      "280ml de leite integral",
+      "10g de fermento seco",
+      "10g de sal",
+      "50g de açúcar",
+      "280g de manteiga seca (tourage) gelada",
+      "1 ovo para pincelar"
+    ],
+    "steps": [
+      "Amasse todos os ingredientes exceto a manteiga tourage. Refrigere a massa por 1 hora.",
+      "Abra a massa em retângulo. Coloque a manteiga no centro e feche como envelope.",
+      "Faça 3 dobras simples (tour), refrigerando 30 min entre cada dobra. Total: 3 dobras.",
+      "Abra a massa a 3mm de espessura. Corte triângulos e enrole do lado largo ao vértice.",
+      "Deixe crescer por 2h em temperatura ambiente. Pincele com ovo e asse a 200°C por 18 min."
+    ],
+    "tip": "a manteiga e a massa devem ter a mesma consistência ao laminar. se a manteiga quebrar, a massa esfriou demais."
+  },
+  {
+    "spread_index": 15,
+    "name": "Moussaka",
+    "subtitle": "As camadas que alimentam o Mediterrâneo",
+    "category": "Culinária Grega",
+    "illustration_key": "spice",
+    "page_left": "24",
+    "page_right": "25",
+    "prep_time": "1h 45min",
+    "servings": "6 pessoas",
+    "difficulty": "Médio",
+    "story": "A moussaka percorreu o Mediterrâneo antes de se tornar grega. Tem parentes no Egito, na Turquia, nos Bálcãs. A versão grega com béchamel foi codificada no século XX pelo chef Nikolaos Tselementes, que estudou na França e trouxe a molho branco para o prato.",
+    "annotation": "a berinjela\nquer sal e\npeso por 30min.",
+    "ingredients": [
+      "1kg de berinjela fatiada",
+      "600g de carne moída de cordeiro (ou boi)",
+      "2 tomates maduros picados",
+      "1 cebola + 4 dentes de alho",
+      "Canela, allspice, noz-moscada",
+      "500ml de leite integral",
+      "40g de manteiga + 40g de farinha (béchamel)",
+      "100g de queijo kefalotyri (ou parmesão)"
+    ],
+    "steps": [
+      "Sale as fatias de berinjela, deixe descansar 30 min com peso. Enxágue e seque bem.",
+      "Frite ou asse as berinjelas até dourar. Reserve em papel absorvente.",
+      "Refogue cebola e alho. Adicione a carne, tomate, canela e allspice. Cozinhe até secar.",
+      "Prepare um béchamel espesso. Adicione 2 gemas e metade do queijo.",
+      "Monte em assadeira: berinjela, carne, berinjela, béchamel, queijo. Asse a 180°C por 45 min."
+    ],
+    "tip": "deixe a moussaka descansar 20 minutos antes de cortar. ela precisa firmar para não desmontar no prato."
+  }
+]

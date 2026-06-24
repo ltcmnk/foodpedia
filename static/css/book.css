@@ -1,0 +1,1082 @@
+@import url('https://fonts.googleapis.com/css2?family=Indie+Flower&family=La+Belle+Aurore&family=Cedarville+Cursive&family=Grape+Nuts&family=Homemade+Apple&display=swap');
+
+:root {
+  --c-cover-red:    #C8102E;
+  --c-cover-white:  #FAF7F0;
+  --c-spine:        #8B1A1A;
+  --c-ribbon:       #990c23;
+  --c-page:         #F7F2E3;
+  --c-page-alt:     #F0EAD6;
+  --c-page-shadow:  #E8DECA;
+  --c-ink:          #1E0F08;
+  --c-ink-faded:    #6B4C3B;
+  --c-rule:         rgba(180,155,110,0.35);
+  --c-border:       rgba(140,105,65,0.4);
+  --c-gold:         #B07D2A;
+  --c-red-accent:   #8B1A1A;
+  --c-annotation:   #4A6741;
+  --c-backcover:    #F0EAD6;
+  --c-wood:         #2C1810;
+  --ease-book-open: cubic-bezier(0.23,1,0.32,1);
+  --ease-page-turn: cubic-bezier(0.77,0,0.175,1);
+  --ease-content:   cubic-bezier(0.16,1,0.3,1);
+  --t-display:      clamp(52px,7vw,80px);
+  --t-h1:           clamp(24px,3.5vw,42px);
+  --t-h2:           20px;
+  --t-h3:           13px;
+  --t-body:         16px;
+  --t-body-sm:      14px;
+  --t-caption:      11px;
+  --t-page-num:     13px;
+  --t-handwriting:  clamp(22px,3vw,30px);
+  --t-annotation:   13px;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: var(--c-wood);
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Indie Flower', cursive;
+}
+
+/* ── PAPER GRAIN FILTER ── */
+.grain-filter { position:fixed; inset:0; pointer-events:none; z-index:1000; opacity:0.04; }
+
+/* ── BOOK CONTAINER ── */
+.book-scene {
+  position: relative;
+  width: 100dvw;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 2000px;
+}
+
+.book-wrapper {
+  position: relative;
+  width: min(95vw, 1200px);
+  height: min(90vh, 800px);
+  transform-style: preserve-3d;
+}
+
+/* ── BOOK COVER (metade direita = livro fechado) ── */
+#book-cover {
+  position: absolute;
+  top: 0; bottom: 0; right: 0;
+  width: 50%;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  cursor: pointer;
+  z-index: 10;
+  border-radius: 0 4px 4px 0;
+  box-shadow:
+    6px 0 24px rgba(0,0,0,0.5),
+    0 32px 100px rgba(0,0,0,0.65),
+    0 8px 24px rgba(0,0,0,0.4),
+    inset -4px 0 12px rgba(0,0,0,0.3);
+  overflow: hidden;
+  background: var(--c-cover-red);
+}
+
+.cover-checkerboard {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(8,1fr);
+  grid-template-rows: repeat(6,1fr);
+}
+.cover-cell {
+  width: 100%;
+  height: 100%;
+}
+.cover-cell.red   { background: var(--c-cover-red); }
+.cover-cell.white { background: var(--c-cover-white); }
+
+.cover-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+/* ── STAMP / TAG / ADESIVO ── */
+.cover-badge {
+  background: var(--c-cover-white);
+  text-align: center;
+  position: relative;
+  transform: rotate(-1.5deg);
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.55),
+    0 2px 10px rgba(0,0,0,0.35),
+    inset 0 0 0 1.5px rgba(30,15,8,0.1);
+  min-width: 320px;
+  overflow: hidden;  /* nada escapa da etiqueta */
+}
+
+/* Faixa vermelha no topo — dentro do badge, contida pelo overflow:hidden */
+.cover-badge-stripe {
+  background: var(--c-cover-red);
+  height: 9px;
+  width: 100%;
+}
+
+/* Linha dourada fina separando stripe do corpo */
+.cover-badge-stripe::after {
+  content: '';
+  display: block;
+  height: 1.5px;
+  background: rgba(176,125,42,0.45);
+}
+
+.cover-badge-body {
+  padding: 18px 48px 28px;
+}
+
+.cover-eyebrow {
+  font-family: 'Indie Flower', cursive;
+  font-size: 9px;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  color: var(--c-red-accent);
+  display: block;
+  margin-bottom: 10px;
+}
+
+.cover-title {
+  font-family: 'Homemade Apple', cursive;
+  font-size: var(--t-display);
+  font-weight: 700;
+  font-style: italic;
+  color: var(--c-ink);
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+.cover-subtitle {
+  font-family: 'Indie Flower', cursive;
+  font-size: 12px;
+  color: var(--c-ink-faded);
+  margin-top: 8px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* Ribbon bookmark — decorativo na capa */
+.ribbon {
+  position: absolute;
+  top: 0;
+  right: 48px;
+  width: 18px;
+  background: var(--c-ribbon);
+  z-index: 5;
+  height: 72px;
+  clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+}
+
+/* Ribbon visível no livro aberto — animado quando receita fica pronta */
+#ribbon-pages {
+  position: absolute;
+  top: 0;
+  right: 48px;
+  width: 18px;
+  background: var(--c-ribbon);
+  z-index: 25;
+  height: 72px;
+  clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+  cursor: pointer;
+  transition: filter 0.2s ease;
+}
+#ribbon-pages:hover { filter: brightness(1.15); }
+
+/* Opening shadow between cover and pages */
+.opening-shadow {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(0,0,0,0.35) 0%, transparent 30%);
+  pointer-events: none;
+  z-index: 3;
+  transform-origin: right center;
+}
+
+/* ── CAPA TRASEIRA ── */
+#book-backcover {
+  display: none; /* revelada somente ao final da leitura */
+  position: absolute;
+  top: 0; bottom: 0; left: 0;
+  width: 50%;
+  background: var(--c-cover-red);
+  border-radius: 4px 0 0 4px;
+  overflow: hidden;
+  cursor: pointer;
+  z-index: 8;
+  box-shadow:
+    -6px 0 24px rgba(0,0,0,0.4),
+    0 32px 100px rgba(0,0,0,0.65),
+    0 8px 24px rgba(0,0,0,0.4);
+}
+
+.backcover-ext-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  padding: 52px 44px;
+  text-align: center;
+  gap: 20px;
+}
+
+.backcover-ext-ornament {
+  opacity: 0.4;
+  width: 44px;
+}
+.backcover-ext-ornament svg {
+  width: 100%;
+  height: auto;
+  stroke: var(--c-cover-white) !important;
+}
+
+.backcover-ext-quote {
+  font-family: 'La Belle Aurore', cursive;
+  font-size: 15px;
+  color: var(--c-cover-white);
+  line-height: 2;
+  text-shadow: 0 1px 10px rgba(0,0,0,0.3);
+}
+
+.backcover-ext-rule {
+  width: 52px;
+  height: 1px;
+  background: rgba(250,247,240,0.3);
+}
+
+.backcover-ext-footer {
+  font-family: 'Cedarville Cursive', cursive;
+  font-size: 10px;
+  color: rgba(250,247,240,0.48);
+  letter-spacing: 3px;
+}
+
+.backcover-ext-spine {
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: 22px;
+  background: linear-gradient(to right, transparent, rgba(0,0,0,0.28));
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* ── BOOK PAGES CONTAINER ── */
+#book-pages {
+  position: absolute;
+  inset: 0;
+  display: none;
+  border-radius: 2px 4px 4px 2px;
+  box-shadow: 0 32px 100px rgba(0,0,0,0.65), 0 8px 24px rgba(0,0,0,0.4);
+  overflow: hidden;
+  background: var(--c-page);
+}
+
+/* ── SPREADS ── */
+.book-spread {
+  display: none;
+  position: absolute;
+  inset: 0;
+  grid-template-columns: 1fr 1fr;
+}
+.book-spread.active {
+  display: grid;
+}
+
+/* ── PAGES ── */
+.page {
+  position: relative;
+  background: var(--c-page);
+  overflow: hidden;
+  /* ruled lines */
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 27px,
+    var(--c-rule) 27px,
+    var(--c-rule) 28px
+  );
+  background-position: 0 36px;
+}
+
+.page-left {
+  border-right: 1px solid var(--c-border);
+  /* spine shadow from inside */
+  box-shadow: inset -12px 0 20px rgba(0,0,0,0.06);
+}
+.page-left::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 20px;
+  background: linear-gradient(to right, rgba(0,0,0,0.04), transparent);
+  pointer-events: none;
+}
+
+.page-right {
+  background: var(--c-page-alt);
+  box-shadow: inset 12px 0 20px rgba(0,0,0,0.06);
+  transform-origin: left center;
+  transform-style: preserve-3d;
+}
+.page-right::after {
+  content: '';
+  position: absolute;
+  right: 0; top: 0; bottom: 0;
+  width: 20px;
+  background: linear-gradient(to left, rgba(0,0,0,0.04), transparent);
+  pointer-events: none;
+}
+
+/* Page curl bottom-right */
+.page-right::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(225deg, var(--c-page-shadow) 45%, transparent 46%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Page footer */
+.page-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0; right: 0;
+  padding: 10px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 0.75px solid var(--c-rule);
+  background: inherit;
+  z-index: 1;
+}
+.footer-brand {
+  font-family: 'Indie Flower', cursive;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--c-ink-faded);
+  opacity: 0.7;
+}
+.page-number {
+  font-family: 'Indie Flower', cursive;
+  font-size: var(--t-page-num);
+  color: var(--c-ink-faded);
+  font-style: italic;
+}
+
+/* ── RECIPE CARD BORDER ── */
+.recipe-card-border {
+  border: 1.5px solid var(--c-border);
+  margin: 28px 28px 48px 28px;
+  padding: 24px 28px;
+  position: relative;
+  height: calc(100% - 76px);
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.recipe-card-border::-webkit-scrollbar { display:none; }
+.recipe-card-border::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 0.75px solid var(--c-border);
+  opacity: 0.5;
+  pointer-events: none;
+}
+.recipe-card-border::after {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border: 0.5px solid var(--c-border);
+  opacity: 0.28;
+  pointer-events: none;
+}
+
+/* ── RECIPE HEADER ── */
+.recipe-eyebrow {
+  font-family: 'Indie Flower', cursive;
+  font-size: 10px;
+  font-style: italic;
+  color: var(--c-red-accent);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+.recipe-header-rule {
+  width: 40px;
+  height: 1px;
+  background: var(--c-border);
+  margin: 8px 0 12px;
+}
+.recipe-title {
+  font-family: 'Homemade Apple', cursive;
+  font-size: var(--t-h1);
+  color: var(--c-ink);
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+.recipe-subtitle-italic {
+  font-family: 'Indie Flower', cursive;
+  font-size: 13px;
+  font-style: italic;
+  color: var(--c-ink-faded);
+  margin-bottom: 4px;
+}
+
+/* ── META GRID ── */
+.recipe-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  border: 1px solid var(--c-rule);
+  margin: 16px 0;
+}
+.meta-cell {
+  padding: 8px 10px;
+  border-right: 1px solid var(--c-rule);
+  text-align: center;
+}
+.meta-cell:last-child { border-right: none; }
+.meta-label {
+  display: block;
+  font-family: 'Indie Flower', cursive;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--c-ink-faded);
+  margin-bottom: 3px;
+}
+.meta-value {
+  font-family: 'Indie Flower', cursive;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--c-ink);
+}
+
+/* ── SECTION LABEL ── */
+.section-label {
+  font-family: 'Indie Flower', cursive;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--c-ink);
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border-bottom: 0.75px solid var(--c-rule);
+}
+
+/* ── INGREDIENTS ── */
+.ingredients-list {
+  list-style: none;
+  margin-bottom: 14px;
+}
+.ingredients-list li {
+  font-family: 'Indie Flower', cursive;
+  font-size: 13px;
+  color: var(--c-ink);
+  line-height: 1.55;
+  padding: 2px 0 2px 18px;
+  position: relative;
+}
+.ingredients-list li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--c-gold);
+  font-family: 'Indie Flower', cursive;
+}
+
+/* ── STEPS ── */
+.steps-list {
+  list-style: none;
+}
+.steps-list li {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 0.75px dashed var(--c-rule);
+}
+.steps-list li:last-child { border-bottom: none; }
+.step-number {
+  font-family: 'Indie Flower', cursive;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--c-red-accent);
+  line-height: 1;
+  flex-shrink: 0;
+  min-width: 18px;
+}
+.step-text {
+  font-family: 'Indie Flower', cursive;
+  font-size: 13px;
+  color: var(--c-ink);
+  line-height: 1.6;
+}
+
+/* ── CHEF TIP ── */
+.chef-tip {
+  margin-top: 14px;
+  padding: 10px 12px;
+  background: rgba(176,125,42,0.06);
+  border-left: 2.5px solid var(--c-gold);
+}
+.tip-label {
+  font-family: 'Indie Flower', cursive;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--c-gold);
+  display: block;
+  margin-bottom: 5px;
+}
+.tip-text {
+  font-family: 'Grape Nuts', cursive;
+  font-size: 13px;
+  color: var(--c-ink);
+  line-height: 1.6;
+}
+
+/* ── HANDWRITTEN ANNOTATIONS ── */
+.handwritten-annotation {
+  font-family: 'Grape Nuts', cursive;
+  font-size: var(--t-annotation);
+  color: var(--c-annotation);
+  position: absolute;
+  line-height: 1.5;
+  max-width: 150px;
+  pointer-events: none;
+  white-space: pre-line;
+  z-index: 5;
+  background: rgba(247, 242, 227, 0.78);
+  padding: 2px 5px;
+}
+.annotation-0 { bottom: 52px; right: 16px; transform: rotate(-3deg); }
+.annotation-1 { bottom: 56px; left: 14px;  transform: rotate(2.5deg); }
+.annotation-2 { bottom: 48px; right: 22px; transform: rotate(-1.5deg); }
+
+/* ── BOTANICAL ILLUSTRATION ── */
+.botanical-illustration {
+  float: right;
+  margin: 0 0 14px 16px;
+  width: clamp(60px, 16%, 100px);
+  opacity: 0.72;
+}
+
+/* ── RECIPE STORY ── */
+.recipe-story { margin-bottom: 16px; }
+.story-text {
+  font-family: 'Indie Flower', cursive;
+  font-size: 13px;
+  font-style: italic;
+  line-height: 1.8;
+  color: var(--c-ink);
+}
+
+.divider-ornament {
+  margin: 10px 0;
+  opacity: 0.7;
+}
+
+/* ── SECTION CONTAINER ── */
+.recipe-section { margin-bottom: 14px; }
+
+/* ══════════════════════════════════════
+   BACK COVER [spread 1]
+══════════════════════════════════════ */
+.backcover-page {
+  background: var(--c-backcover);
+  background-image: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 96px;
+  position: relative;
+  text-align: center;
+}
+.backcover-spine-edge {
+  position: absolute;
+  right: 0; top: 0; bottom: 0;
+  width: 24px;
+  background: linear-gradient(to left, rgba(0,0,0,0.25), transparent);
+  pointer-events: none;
+}
+.backcover-ornament-top,
+.backcover-ornament-bottom {
+  width: 80px;
+  opacity: 0.65;
+}
+.backcover-ornament-bottom { transform: scaleY(-1); }
+.backcover-spacer { flex: 1; }
+.backcover-text {
+  font-family: 'Indie Flower', cursive;
+  font-size: 16px;
+  font-style: italic;
+  color: var(--c-ink-faded);
+  max-width: 480px;
+  line-height: 1.9;
+  margin: 32px 0;
+}
+.backcover-rule {
+  width: 120px;
+  height: 1px;
+  background: var(--c-border);
+  margin: 16px auto;
+}
+.backcover-footer {
+  font-family: 'Indie Flower', cursive;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: var(--c-ink-faded);
+  opacity: 0.7;
+}
+
+/* ══════════════════════════════════════
+   TITLE PAGE [spread 2]
+══════════════════════════════════════ */
+.titlepage-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  text-align: center;
+}
+.titlepage-main {
+  font-family: 'Homemade Apple', cursive;
+  font-size: 52px;
+  color: var(--c-ink);
+  line-height: 1;
+  margin-bottom: 16px;
+}
+.titlepage-sub {
+  font-family: 'Indie Flower', cursive;
+  font-size: 18px;
+  font-style: italic;
+  color: var(--c-ink-faded);
+  margin-bottom: 10px;
+}
+.titlepage-year {
+  font-family: 'Indie Flower', cursive;
+  font-size: 14px;
+  color: var(--c-ink-faded);
+  opacity: 0.6;
+}
+.titlepage-divider { margin: 20px auto; width: 100%; max-width: 240px; }
+.empty-page { display: flex; align-items: flex-end; }
+
+/* ══════════════════════════════════════
+   TABLE OF CONTENTS [spread 3]
+══════════════════════════════════════ */
+.toc-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+.toc-botanical {
+  width: 55%;
+  max-width: 200px;
+  opacity: 0.65;
+}
+.toc-label-bottom {
+  font-family: 'Indie Flower', cursive;
+  font-size: 12px;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: var(--c-ink-faded);
+  margin-top: auto;
+  padding-bottom: 20px;
+}
+
+.toc-right {
+  padding: 48px 56px 48px 40px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.toc-right::-webkit-scrollbar { display:none; }
+
+.toc-heading {
+  font-family: 'Homemade Apple', cursive;
+  font-size: 36px;
+  color: var(--c-ink);
+  margin-bottom: 36px;
+}
+
+.toc-entries { list-style: none; }
+.toc-entry {
+  display: flex;
+  align-items: baseline;
+  font-family: 'Indie Flower', cursive;
+  font-size: 14px;
+  line-height: 2.2;
+  cursor: pointer;
+  transition: color 120ms;
+  text-decoration: none;
+  color: var(--c-ink);
+}
+.toc-entry:hover { color: var(--c-red-accent); }
+.toc-entry.toc-sub {
+  padding-left: 20px;
+  font-size: 13px;
+}
+.toc-entry-title { flex-shrink: 0; }
+.toc-dots {
+  flex: 1;
+  border-bottom: 1px dotted var(--c-rule);
+  margin: 0 8px 4px 8px;
+}
+.toc-page {
+  flex-shrink: 0;
+  font-family: 'Indie Flower', cursive;
+  font-size: 14px;
+  color: var(--c-ink-faded);
+}
+.toc-rule {
+  border: none;
+  border-top: 0.75px solid var(--c-rule);
+  margin: 6px 0 10px;
+}
+.toc-entry.toc-capa {
+  font-style: italic;
+  color: var(--c-ink-faded);
+  opacity: 0.7;
+}
+.toc-entry.toc-capa:hover {
+  color: var(--c-red-accent);
+  opacity: 1;
+}
+
+/* ══════════════════════════════════════
+   ABOUT [spread 4]
+══════════════════════════════════════ */
+.about-page {
+  padding: 48px 44px 48px;
+  display: flex;
+  flex-direction: column;
+}
+.about-page .recipe-card-border {
+  margin: 0 0 32px 0;
+  height: auto;
+  flex: 1;
+}
+.about-heading {
+  font-family: 'Homemade Apple', cursive;
+  font-size: 32px;
+  color: var(--c-ink);
+  line-height: 1.1;
+  margin-bottom: 20px;
+}
+.about-body {
+  font-family: 'Indie Flower', cursive;
+  font-size: 14px;
+  line-height: 1.9;
+  color: var(--c-ink);
+}
+.about-body p { margin-bottom: 14px; }
+.about-eyebrow {
+  font-family: 'Indie Flower', cursive;
+  font-size: 10px;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--c-red-accent);
+  margin-bottom: 12px;
+  display: block;
+}
+
+/* ══════════════════════════════════════
+   SEARCH [spread 11]
+══════════════════════════════════════ */
+.search-left {
+  padding: 48px 32px 48px 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+.search-intro-label {
+  font-family: 'Indie Flower', cursive;
+  font-size: 10px;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--c-red-accent);
+  margin-bottom: 20px;
+  display: block;
+}
+.search-intro-heading {
+  font-family: 'Homemade Apple', cursive;
+  font-size: 26px;
+  color: var(--c-ink);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+.search-intro-body {
+  font-family: 'Indie Flower', cursive;
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--c-ink-faded);
+  max-width: 340px;
+}
+.search-annotation {
+  font-family: 'Grape Nuts', cursive;
+  font-size: 14px;
+  color: var(--c-annotation);
+  margin-top: 32px;
+  transform: rotate(-2deg);
+  display: inline-block;
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+/* ── MODEL SELECTOR ── */
+.model-selector {
+  margin-top: 28px;
+  border-top: 0.75px solid var(--c-rule);
+  padding-top: 14px;
+}
+.model-selector-label {
+  font-family: 'Indie Flower', cursive;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--c-ink-faded);
+  display: block;
+  margin-bottom: 8px;
+}
+.model-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.model-option {
+  font-family: 'Indie Flower', cursive;
+  font-size: 13px;
+  color: var(--c-ink-faded);
+  cursor: pointer;
+  padding: 3px 0 3px 14px;
+  position: relative;
+  transition: color 120ms;
+  line-height: 1.5;
+  border-radius: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.model-option::before {
+  content: '○';
+  position: absolute;
+  left: 0;
+  font-size: 9px;
+  color: var(--c-border);
+  top: 4px;
+  transition: color 120ms;
+}
+.model-option:hover { color: var(--c-ink); }
+.model-option.selected {
+  color: var(--c-ink);
+  font-style: italic;
+}
+.model-option.selected::before {
+  content: '●';
+  color: var(--c-gold);
+}
+.model-option.loading-models {
+  color: var(--c-ink-faded);
+  opacity: 0.5;
+  cursor: default;
+  font-style: italic;
+  font-size: 12px;
+}
+
+.search-right {
+  padding: 48px 56px 48px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.search-question {
+  font-family: 'Homemade Apple', cursive;
+  font-size: 20px;
+  color: var(--c-ink);
+  margin-bottom: 12px;
+}
+.search-ruled-line {
+  width: 100%;
+  height: 1px;
+  background: var(--c-border);
+  margin-bottom: 8px;
+}
+#recipe-search {
+  font-family: 'Homemade Apple', cursive;
+  font-size: clamp(20px, 2.5vw, 28px);
+  color: var(--c-ink);
+  background: transparent;
+  border: none;
+  outline: none;
+  width: 100%;
+  padding: 12px 0;
+  line-height: 1.4;
+  caret-color: var(--c-cover-red);
+  border-bottom: 1px solid var(--c-rule);
+}
+#recipe-search::placeholder {
+  font-family: 'Homemade Apple', cursive;
+  color: rgba(176,125,42,0.38);
+}
+.search-hint {
+  font-family: 'Indie Flower', cursive;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--c-ink-faded);
+  margin-top: 12px;
+  opacity: 0.7;
+}
+
+/* ══════════════════════════════════════
+   PAGE TURN CURTAIN
+══════════════════════════════════════ */
+#page-curtain {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    var(--c-page-shadow) 0%,
+    var(--c-page-alt) 8%,
+    var(--c-page) 100%
+  );
+  z-index: 20;
+  pointer-events: none;
+  transform: scaleX(0);
+  transform-origin: right center;
+  will-change: transform;
+}
+/* Leading-edge shadow (simula espessura do papel) */
+#page-curtain::before {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 18px;
+  background: linear-gradient(to right, rgba(0,0,0,0.18), transparent);
+}
+#page-curtain.forward::before { left: 0; }
+#page-curtain.backward::before { right: 0; left: auto;
+  background: linear-gradient(to left, rgba(0,0,0,0.18), transparent);
+}
+
+/* ══════════════════════════════════════
+   PAGE ARROWS (navegação permanente)
+══════════════════════════════════════ */
+.page-corner {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 220ms ease, background 150ms;
+  z-index: 15;
+  pointer-events: none;
+  border-radius: 2px;
+}
+.corner-prev { left: 0; }
+.corner-next { right: 0; }
+.page-corner.active {
+  opacity: 0.38;
+  pointer-events: auto;
+}
+.page-corner.active:hover {
+  opacity: 1;
+  background: rgba(30,15,8,0.05);
+}
+
+@keyframes corner-pulse {
+  0%, 100% { opacity: 0.9; }
+  50%       { opacity: 0.3; }
+}
+.page-corner.ready { animation: corner-pulse 1.4s ease-in-out infinite; }
+
+/* ══════════════════════════════════════
+   STAGGER ITEMS
+══════════════════════════════════════ */
+[data-stagger] { opacity: 0; }
+
+/* ══════════════════════════════════════
+   TIPOGRAFIA — SISTEMA DE GERAÇÕES
+   Cinco mãos, uma enciclopédia
+══════════════════════════════════════ */
+
+/* La Belle Aurore — a geração literária e romântica */
+.recipe-subtitle-italic,
+.story-text,
+.backcover-text {
+  font-family: 'La Belle Aurore', cursive;
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+/* Cedarville Cursive — o catalogador meticuloso */
+.cover-eyebrow, .cover-subtitle,
+.footer-brand, .page-number,
+.recipe-eyebrow,
+.meta-label, .meta-value,
+.section-label, .step-number, .tip-label,
+.backcover-footer,
+.titlepage-sub, .titlepage-year,
+.toc-label-bottom, .toc-entry, .toc-page,
+.about-eyebrow, .search-intro-label,
+.model-selector-label { font-family: 'Cedarville Cursive', cursive; }
+
+/* Grape Nuts — quem rabiscou enquanto cozinhava */
+.tip-text,
+.handwritten-annotation,
+.search-annotation {
+  font-family: 'Grape Nuts', cursive;
+  font-size: 14px;
+}
+
+/* ══════════════════════════════════════
+   REDUCED MOTION
+══════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
