@@ -1,6 +1,6 @@
 [
   {
-    "spread_index": 6,
+    "spread_index": 3,
     "name": "Feijoada Brasileira",
     "subtitle": "O abraço da cozinha nacional",
     "category": "Culinária Brasileira",
@@ -32,7 +32,7 @@
     "tip": "um cálice de cachaça na feijoada enquanto cozinha. na sua e na dela."
   },
   {
-    "spread_index": 7,
+    "spread_index": 4,
     "name": "Risotto ai Funghi",
     "subtitle": "O ritual lento do norte italiano",
     "category": "Culinária Italiana",
@@ -64,7 +64,7 @@
     "tip": "manteiga gelada no final. nunca mole. esse é o segredo da mantecatura."
   },
   {
-    "spread_index": 8,
+    "spread_index": 5,
     "name": "Ramen Tonkotsu",
     "subtitle": "Dezoito horas numa tigela",
     "category": "Culinária Japonesa",
@@ -96,7 +96,7 @@
     "tip": "não cubra a panela durante o cozimento. a evaporação é o que emulsiona o colágeno."
   },
   {
-    "spread_index": 9,
+    "spread_index": 6,
     "name": "Crème Brûlée",
     "subtitle": "A chama que revela o caramelo",
     "category": "Confeitaria Francesa",
@@ -125,7 +125,7 @@
     "tip": "o creme está no ponto quando a borda firmou mas o centro ainda treme como gelatina."
   },
   {
-    "spread_index": 10,
+    "spread_index": 7,
     "name": "Paella Valenciana",
     "subtitle": "A panela que alimentou campos",
     "category": "Culinária Espanhola",
@@ -157,7 +157,7 @@
     "tip": "nos últimos 2 minutos, aumente o fogo para criar o socarrat: a crosta caramelizada no fundo."
   },
   {
-    "spread_index": 11,
+    "spread_index": 8,
     "name": "Tacos de Carnitas",
     "subtitle": "Gordura e tempo, nada mais",
     "category": "Culinária Mexicana",
@@ -189,7 +189,7 @@
     "tip": "a gordura do cozimento é ouro. guarde para fritar ovos ou batatas nos próximos dias."
   },
   {
-    "spread_index": 12,
+    "spread_index": 9,
     "name": "Spaghetti alla Carbonara",
     "subtitle": "O ovo que nunca scrambleia",
     "category": "Culinária Italiana",
@@ -220,7 +220,7 @@
     "tip": "a temperatura é tudo. calor demais faz omelete. frio demais não emulsiona. o ponto certo é a temperatura da frigideira desligada."
   },
   {
-    "spread_index": 13,
+    "spread_index": 10,
     "name": "Pad Thai",
     "subtitle": "O wok que unificou uma nação",
     "category": "Culinária Tailandesa",
@@ -252,7 +252,7 @@
     "tip": "se seu wok fizer fumaça, está perfeito. esse efeito se chama wok hei — a alma do fogo."
   },
   {
-    "spread_index": 14,
+    "spread_index": 11,
     "name": "Croissant",
     "subtitle": "Duzentas e quarenta e seis camadas",
     "category": "Confeitaria Francesa",
@@ -262,7 +262,7 @@
     "prep_time": "3 dias",
     "servings": "12 croissants",
     "difficulty": "Difícil",
-    "story": "O croissant não é francês de origem — veio da Áustria como o kipferl vienense, trazido ao Paris do século XIX. Os franceses o transformaram com a técnica do feuilletage, laminando manteiga em camadas. Cada mordida é uma equação de física.",
+    "story": "Não é francês de origem — veio da Áustria como o kipferl vienense. Os franceses o refinaram com o feuilletage, laminando manteiga em camadas finas. Cada mordida é física aplicada.",
     "annotation": "manteiga seca\ne fria. jamais\namolecida.",
     "ingredients": [
       "500g de farinha de trigo (tipo 00)",
@@ -274,16 +274,16 @@
       "1 ovo para pincelar"
     ],
     "steps": [
-      "Amasse todos os ingredientes exceto a manteiga tourage. Refrigere a massa por 1 hora.",
-      "Abra a massa em retângulo. Coloque a manteiga no centro e feche como envelope.",
-      "Faça 3 dobras simples (tour), refrigerando 30 min entre cada dobra. Total: 3 dobras.",
-      "Abra a massa a 3mm de espessura. Corte triângulos e enrole do lado largo ao vértice.",
-      "Deixe crescer por 2h em temperatura ambiente. Pincele com ovo e asse a 200°C por 18 min."
+      "Amasse farinha, leite, fermento, sal e açúcar. Refrigere por 1 hora.",
+      "Abra em retângulo, posicione a manteiga no centro e feche como envelope.",
+      "Faça 3 dobras simples, refrigerando 30 min entre cada uma.",
+      "Abra a 3mm, corte triângulos e enrole do vértice à base.",
+      "Cresça 2h à temperatura ambiente. Pincele com ovo e asse a 200°C por 18 min."
     ],
     "tip": "a manteiga e a massa devem ter a mesma consistência ao laminar. se a manteiga quebrar, a massa esfriou demais."
   },
   {
-    "spread_index": 15,
+    "spread_index": 12,
     "name": "Moussaka",
     "subtitle": "As camadas que alimentam o Mediterrâneo",
     "category": "Culinária Grega",
@@ -293,7 +293,7 @@
     "prep_time": "1h 45min",
     "servings": "6 pessoas",
     "difficulty": "Médio",
-    "story": "A moussaka percorreu o Mediterrâneo antes de se tornar grega. Tem parentes no Egito, na Turquia, nos Bálcãs. A versão grega com béchamel foi codificada no século XX pelo chef Nikolaos Tselementes, que estudou na França e trouxe a molho branco para o prato.",
+    "story": "A moussaka atravessou o Mediterrâneo antes de se tornar um clássico grego. A versão com béchamel foi consolidada no século XX pelo chef Nikolaos Tselementes, após seus estudos na França.",
     "annotation": "a berinjela\nquer sal e\npeso por 30min.",
     "ingredients": [
       "1kg de berinjela fatiada",
@@ -313,5 +313,190 @@
       "Monte em assadeira: berinjela, carne, berinjela, béchamel, queijo. Asse a 180°C por 45 min."
     ],
     "tip": "deixe a moussaka descansar 20 minutos antes de cortar. ela precisa firmar para não desmontar no prato."
+  },
+  {
+    "spread_index": 13,
+    "name": "Dal Makhani",
+    "subtitle": "A noite inteira no fogo baixo",
+    "category": "Culinária Indiana",
+    "illustration_key": "spice",
+    "page_left": "26",
+    "page_right": "27",
+    "prep_time": "14 horas",
+    "servings": "6 pessoas",
+    "difficulty": "Médio",
+    "story": "O dal makhani foi criado em 1947 no Moti Mahal de Delhi. Cozinhar os feijões a noite inteira no tandoor e finalizar com creme e manteiga foi o acidente que virou clássico.",
+    "annotation": "quanto mais tempo\ncozinha em fogo baixo,\nmelhor fica.",
+    "ingredients": [
+      "250g de feijão preto (urad dal)",
+      "50g de feijão vermelho",
+      "3 tomates maduros",
+      "Cebola, gengibre, alho",
+      "Cominho, cardamomo, canela, cravo",
+      "200ml de creme de leite",
+      "100g de manteiga",
+      "Sal e coentro"
+    ],
+    "steps": [
+      "Molhe os feijões 12h. Cozinhe na pressão 30 min.",
+      "Faça o masala: frite cebola, gengibre, alho e especiarias.",
+      "Misture ao feijão. Cozinhe em fogo baixo 1h.",
+      "Adicione metade da manteiga e do creme. Mais 30 min.",
+      "Finalize com o restante. Sirva com naan."
+    ],
+    "tip": "o segredo é o tempo. restaurantes indianos cozinham por 24 horas."
+  },
+  {
+    "spread_index": 14,
+    "name": "Ceviche Peruano",
+    "subtitle": "O ácido que cozinha sem fogo",
+    "category": "Culinária Peruana",
+    "illustration_key": "citrus",
+    "page_left": "28",
+    "page_right": "29",
+    "prep_time": "20 minutos",
+    "servings": "4 pessoas",
+    "difficulty": "Fácil",
+    "story": "O ceviche é patrimônio cultural do Peru. O limão desnatura as proteínas do peixe em minutos. A leche de tigre que sobra é bebida como shot de boas-vindas.",
+    "annotation": "peixe muito fresco.\nesta receita não\nperdoa o contrário.",
+    "ingredients": [
+      "500g de filé de robalo fresco",
+      "Suco de 12 limões tahiti",
+      "1 ají amarillo picado",
+      "½ cebola roxa fatiada",
+      "Coentro fresco",
+      "Sal, pimenta, alho",
+      "Cancha e camote cozido"
+    ],
+    "steps": [
+      "Corte o peixe em cubos de 2cm. Sal e alho leve.",
+      "Cubra com suco de limão. Misture bem.",
+      "Adicione ají e cebola. Aguarde 3-5 min apenas.",
+      "Finalize com coentro. Centro deve estar translúcido.",
+      "Sirva imediatamente com cancha e camote."
+    ],
+    "tip": "o ceviche não espera. monte na hora de servir, nunca antes."
+  },
+  {
+    "spread_index": 15,
+    "name": "Shakshuka",
+    "subtitle": "Ovos no inferno que reconforta",
+    "category": "Culinária do Oriente Médio",
+    "illustration_key": "herbs",
+    "page_left": "30",
+    "page_right": "31",
+    "prep_time": "30 minutos",
+    "servings": "4 pessoas",
+    "difficulty": "Fácil",
+    "story": "A shakshuka viajou da Tunísia para Israel e conquistou o mundo. Sem carne, sem forno, pronto em meia hora — para qualquer refeição.",
+    "annotation": "pão pita fresco\né obrigatório\npara o molho.",
+    "ingredients": [
+      "6 ovos",
+      "400g de tomates pelados",
+      "1 pimentão vermelho",
+      "1 cebola",
+      "3 dentes de alho",
+      "Cominho, páprica defumada",
+      "Pimenta caiena, sal, azeite, coentro"
+    ],
+    "steps": [
+      "Refogue cebola e pimentão no azeite 8 min. Adicione alho e especiarias.",
+      "Adicione tomates esmagados. Cozinhe 10 min até engrossar.",
+      "Abra cavidades no molho. Quebre um ovo em cada.",
+      "Tampe e cozinhe 6-8 min (gema mole).",
+      "Finalize com coentro. Sirva na frigideira."
+    ],
+    "tip": "não mexa os ovos após colocá-los. paciência é a única técnica."
+  },
+  {
+    "spread_index": 16,
+    "name": "Boeuf Bourguignon",
+    "subtitle": "O campônes que estudou na França",
+    "category": "Culinária Francesa",
+    "illustration_key": "mortar",
+    "page_left": "32",
+    "page_right": "33",
+    "prep_time": "3 horas",
+    "servings": "6 pessoas",
+    "difficulty": "Médio",
+    "story": "Julia Child apresentou este prato à América em 1961. Era culinária camponesa da Borgonha transformada em arte por alguém que amava genuinamente comer.",
+    "annotation": "vinho bom no prato.\nvinho bom no copo.\nnão economize.",
+    "ingredients": [
+      "1.5kg de acém em cubos",
+      "750ml de vinho tinto Borgonha",
+      "200g de bacon defumado",
+      "300g de cogumelos paris",
+      "20 cebolinhas pérola",
+      "Cenoura, alho, bouquet garni",
+      "Farinha, manteiga, azeite"
+    ],
+    "steps": [
+      "Marine a carne no vinho com legumes 12h. Seque e doure em lotes.",
+      "Frite o bacon. Refogue os vegetais. Adicione a farinha.",
+      "Junte tudo com o vinho e bouquet garni. Asse 160°C por 2h30.",
+      "Frite cogumelos e cebolinhas em manteiga separadamente.",
+      "Remova a carne, reduza o molho, reintegre tudo."
+    ],
+    "tip": "fica ainda melhor no dia seguinte. julia child fazia assim."
+  },
+  {
+    "spread_index": 17,
+    "name": "Kimchi Jjigae",
+    "subtitle": "O ensopado que honra o tempo",
+    "category": "Culinária Coreana",
+    "illustration_key": "bowl",
+    "page_left": "34",
+    "page_right": "35",
+    "prep_time": "35 minutos",
+    "servings": "4 pessoas",
+    "difficulty": "Fácil",
+    "story": "Usa o kimchi mais velho e azedo que sobra na geladeira. Quanto mais fermentado, melhor o ensopado. Culinária de aproveitamento que virou símbolo nacional.",
+    "annotation": "kimchi bem azedo\n(3+ semanas\nfermentado) é o segredo.",
+    "ingredients": [
+      "300g de kimchi muito fermentado",
+      "200g de barriga de porco",
+      "300g de tofu firme",
+      "500ml de caldo de anchova",
+      "2 col. de gochugaru",
+      "1 col. de doenjang",
+      "Gergelim e cebolinha"
+    ],
+    "steps": [
+      "Frite a barriga com o kimchi 5 min em fogo alto.",
+      "Adicione o caldo e a pasta de soja. Ferva.",
+      "Adicione gochugaru e tofu. Reduza o fogo.",
+      "Cozinhe 20 min até o caldo ficar vermelho e denso.",
+      "Finalize com gergelim e cebolinha. Sirva com arroz."
+    ],
+    "tip": "nunca tampe. a evaporação concentra o sabor do kimchi."
+  },
+  {
+    "spread_index": 18,
+    "name": "Brigadeiro",
+    "subtitle": "O doce que parou o Brasil",
+    "category": "Confeitaria Brasileira",
+    "illustration_key": "vanilla",
+    "page_left": "36",
+    "page_right": "37",
+    "prep_time": "25 minutos",
+    "servings": "30 unidades",
+    "difficulty": "Fácil",
+    "story": "Criado nos anos 1940 em apoio à campanha presidencial do Brigadeiro Eduardo Gomes, o doce foi vendido em festinhas e virou símbolo do Brasil. Hoje aparece em aniversários, festas juninas e na nostalgia de todo brasileiro.",
+    "annotation": "a manteiga\nnão pode ser\nmargarina. jamais.",
+    "ingredients": [
+      "1 lata de leite condensado (395g)",
+      "1 colher de sopa de manteiga sem sal",
+      "3 colheres de sopa de chocolate em pó 50% cacau",
+      "Chocolate granulado para enrolar",
+      "Forminhas de papel"
+    ],
+    "steps": [
+      "Misture o leite condensado, a manteiga e o chocolate em pó numa panela de fundo grosso.",
+      "Cozinhe em fogo médio-baixo mexendo sem parar com espátula.",
+      "Quando desgrudar do fundo e você ver o fundo da panela por 3 segundos, está no ponto.",
+      "Despeje em prato untado com manteiga. Deixe esfriar completamente.",
+      "Unte as mãos com manteiga. Enrole bolinhas e passe no granulado. Coloque nas forminhas."
+    ],
+    "tip": "o ponto correto é firme fora da geladeira. se amolece na temperatura ambiente, cozinhe mais 2 minutos."
   }
 ]

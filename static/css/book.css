@@ -1,4 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Indie+Flower&family=La+Belle+Aurore&family=Cedarville+Cursive&family=Grape+Nuts&family=Homemade+Apple&display=swap');
+/* book.css — Foodpedia v5 */
+
+/* ── FONTS ── */
+/* All 7 fonts loaded via <link> in HTML head. Print fonts (Kalam, EB Garamond) included. */
 
 :root {
   --c-cover-red:    #C8102E;
@@ -16,1067 +19,1659 @@
   --c-red-accent:   #8B1A1A;
   --c-annotation:   #4A6741;
   --c-backcover:    #F0EAD6;
-  --c-wood:         #2C1810;
-  --ease-book-open: cubic-bezier(0.23,1,0.32,1);
-  --ease-page-turn: cubic-bezier(0.77,0,0.175,1);
-  --ease-content:   cubic-bezier(0.16,1,0.3,1);
-  --t-display:      clamp(52px,7vw,80px);
-  --t-h1:           clamp(24px,3.5vw,42px);
-  --t-h2:           20px;
-  --t-h3:           13px;
-  --t-body:         16px;
-  --t-body-sm:      14px;
-  --t-caption:      11px;
-  --t-page-num:     13px;
-  --t-handwriting:  clamp(22px,3vw,30px);
-  --t-annotation:   13px;
+  --c-wood:         #57291c;
+  --tab-w: 34px; --tab-h: 62px; --tab-gap: 3px;
+  --t-display:   clamp(52px,7vw,80px);
+  --t-h1:        clamp(24px,3.5vw,42px);
+  --t-body:      16px;
+  --t-body-sm:   14px;
+  --t-caption:   11px;
+  --t-page-num:  13px;
+  --t-annotation:13px;
 }
 
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
 html, body {
-  width: 100%;
-  height: 100%;
-  min-height: 100dvh;
-  overflow: hidden;
-  background: var(--c-wood);
+  width:100%; height:100%;
+  min-height:100dvh;
+  overflow:hidden;
+  background-color:var(--c-wood);
+  background-image:url('/static/img/textures/wood-table.jpg');
+  background-size:cover;
+  background-position:center;
+}
+/* Darken the wood texture — reduce grain visibility and deepen base */
+html::before {
+  content:'';
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(ellipse 100% 100% at 50% 50%, rgba(0,0,0,0.38) 0%, rgba(0,0,0,0.58) 100%),
+    linear-gradient(175deg, rgba(8,2,0,0.6) 0%, rgba(0,0,0,0.4) 100%);
 }
 
 body {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Indie Flower', cursive;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:'Indie Flower',cursive;
 }
 
-/* ── PAPER GRAIN FILTER ── */
+/* ── PAPER GRAIN ── */
 .grain-filter { position:fixed; inset:0; pointer-events:none; z-index:1000; opacity:0.04; }
 
-/* ── BOOK CONTAINER ── */
+/* ── BOOK SCENE ── */
 .book-scene {
-  position: relative;
-  width: 100dvw;
-  height: 100dvh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  perspective: 2000px;
+  position:relative; z-index:1;
+  width:100dvw; height:100dvh;
+  display:flex; align-items:center; justify-content:center;
+  perspective:2000px;
 }
 
 .book-wrapper {
-  position: relative;
-  width: min(95vw, 1200px);
-  height: min(90vh, 800px);
-  transform-style: preserve-3d;
+  position:relative;
+  width:min(95vw,1200px);
+  height:min(90vh,800px);
 }
 
-/* ── BOOK COVER (metade direita = livro fechado) ── */
-#book-cover {
-  position: absolute;
-  top: 0; bottom: 0; right: 0;
-  width: 50%;
-  transform-origin: left center;
-  transform-style: preserve-3d;
-  cursor: pointer;
-  z-index: 10;
-  border-radius: 0 4px 4px 0;
+/* ── COVER WRAPPER (3D flip container) ── */
+#cover-wrapper {
+  position:absolute;
+  top:0; bottom:0; right:0;
+  width:50%;
+  transform-origin:left center;
+  transform-style:preserve-3d; -webkit-transform-style:preserve-3d;
+  cursor:pointer;
+  z-index:10;
+}
+
+#cover-front {
+  position:absolute; inset:0;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  border-radius:0 4px 4px 0;
   box-shadow:
-    6px 0 24px rgba(0,0,0,0.5),
-    0 32px 100px rgba(0,0,0,0.65),
-    0 8px 24px rgba(0,0,0,0.4),
-    inset -4px 0 12px rgba(0,0,0,0.3);
-  overflow: hidden;
-  background: var(--c-cover-red);
+    6px 0 24px rgba(0,0,0,.5),
+    0 32px 100px rgba(0,0,0,.65),
+    0 8px 24px rgba(0,0,0,.4),
+    inset -4px 0 12px rgba(0,0,0,.3);
+  overflow:hidden;
+  background:var(--c-cover-red);
 }
 
+#cover-back {
+  position:absolute; inset:0;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  transform:rotateY(180deg);
+  background:var(--c-page-alt);
+  border-radius:4px 0 0 4px;
+}
+
+.cover-back-quote {
+  font-family:'La Belle Aurore',cursive;
+  font-size:16px; color:var(--c-ink-faded);
+  max-width:360px; line-height:1.9;
+}
+.cover-back-rule {
+  width:40px; height:1px;
+  background:rgba(140,105,65,.4);
+  margin:24px auto;
+}
+.cover-back-footer {
+  font-family:'Cedarville Cursive',cursive;
+  font-size:12px; text-transform:capitalize;
+  letter-spacing:2px; color:var(--c-ink-faded);
+}
+.cover-back-spine {
+  position:absolute; top:0; right:0; bottom:0;
+  width:24px;
+  background:linear-gradient(to left,rgba(0,0,0,.22),transparent);
+  pointer-events:none;
+}
+
+/* ── CHECKERBOARD ── */
 .cover-checkerboard {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  grid-template-columns: repeat(8,1fr);
-  grid-template-rows: repeat(6,1fr);
+  position:absolute; inset:0;
+  display:grid;
 }
-.cover-cell {
-  width: 100%;
-  height: 100%;
-}
-.cover-cell.red   { background: var(--c-cover-red); }
-.cover-cell.white { background: var(--c-cover-white); }
+.cover-cell { width:100%; height:100%; }
+.cover-cell.red   { background:var(--c-cover-red); }
+.cover-cell.white { background:var(--c-cover-white); }
 
+/* ── COVER CONTENT ── */
 .cover-content {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
+  position:absolute; inset:0;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  z-index:2;
 }
 
-/* ── STAMP / TAG / ADESIVO ── */
 .cover-badge {
-  background: var(--c-cover-white);
-  text-align: center;
-  position: relative;
-  transform: rotate(-1.5deg);
-  box-shadow:
-    0 8px 32px rgba(0,0,0,0.55),
-    0 2px 10px rgba(0,0,0,0.35),
-    inset 0 0 0 1.5px rgba(30,15,8,0.1);
-  min-width: 320px;
-  overflow: hidden;  /* nada escapa da etiqueta */
+  background:var(--c-cover-white);
+  text-align:center;
+  position:relative;
+  transform:rotate(-1.5deg);
+  box-shadow:0 8px 32px rgba(0,0,0,.55),0 2px 10px rgba(0,0,0,.35),inset 0 0 0 1.5px rgba(30,15,8,.1);
+  min-width:320px;
+  overflow:hidden;
 }
-
-/* Faixa vermelha no topo — dentro do badge, contida pelo overflow:hidden */
 .cover-badge-stripe {
-  background: var(--c-cover-red);
-  height: 9px;
-  width: 100%;
+  background:var(--c-cover-red);
+  height:9px; width:100%;
 }
-
-/* Linha dourada fina separando stripe do corpo */
 .cover-badge-stripe::after {
-  content: '';
-  display: block;
-  height: 1.5px;
-  background: rgba(176,125,42,0.45);
+  content:''; display:block; height:1.5px;
+  background:rgba(176,125,42,.45);
 }
-
-.cover-badge-body {
-  padding: 18px 48px 28px;
-}
+.cover-badge-body { padding:12px 48px 30px; }
 
 .cover-eyebrow {
-  font-family: 'Indie Flower', cursive;
-  font-size: 9px;
-  font-style: italic;
-  text-transform: uppercase;
-  letter-spacing: 5px;
-  color: var(--c-red-accent);
-  display: block;
-  margin-bottom: 10px;
+  font-family:'Cedarville Cursive',cursive;
+  font-size:9px;
+  text-transform:capitalize;
+  letter-spacing:2.5px;
+  color:var(--c-red-accent);
+  display:block; margin-bottom:22px;
 }
-
 .cover-title {
-  font-family: 'Homemade Apple', cursive;
-  font-size: var(--t-display);
-  font-weight: 700;
-  font-style: italic;
-  color: var(--c-ink);
-  line-height: 1;
-  letter-spacing: -1px;
+  font-family:'Homemade Apple',cursive;
+  font-size:var(--t-display);
+  color:var(--c-ink); line-height:1;
 }
 
-.cover-subtitle {
-  font-family: 'Indie Flower', cursive;
-  font-size: 12px;
-  color: var(--c-ink-faded);
-  margin-top: 8px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-
-/* Ribbon bookmark — decorativo na capa */
-.ribbon {
-  position: absolute;
-  top: 0;
-  right: 48px;
-  width: 18px;
-  background: var(--c-ribbon);
-  z-index: 5;
-  height: 72px;
-  clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.35);
-}
-
-/* Ribbon visível no livro aberto — animado quando receita fica pronta */
+/* Ribbon — open book */
 #ribbon-pages {
-  position: absolute;
-  top: 0;
-  right: 48px;
-  width: 18px;
-  background: var(--c-ribbon);
-  z-index: 25;
-  height: 72px;
-  clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.35);
-  cursor: pointer;
-  transition: filter 0.2s ease;
+  position:absolute; top:0; right:48px;
+  width:18px; background:var(--c-ribbon);
+  z-index:25; height:72px;
+  clip-path:polygon(0 0,100% 0,100% 85%,50% 100%,0 85%);
+  box-shadow:0 4px 12px rgba(0,0,0,.35);
+  cursor:pointer; transition:filter .2s ease;
+  opacity:0;
+  border:0; padding:0; appearance:none;
 }
-#ribbon-pages:hover { filter: brightness(1.15); }
+#ribbon-pages:hover { filter:brightness(1.15); }
+#ribbon-pages.is-favorite {
+  filter:saturate(1.16) brightness(1.03);
+  box-shadow:0 7px 14px rgba(0,0,0,.42);
+}
+#ribbon-pages:focus-visible {
+  outline:2px solid var(--c-cover-white);
+  outline-offset:3px;
+}
 
-/* Opening shadow between cover and pages */
+/* Opening shadow */
 .opening-shadow {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to right, rgba(0,0,0,0.35) 0%, transparent 30%);
-  pointer-events: none;
-  z-index: 3;
-  transform-origin: right center;
+  position:absolute; inset:0;
+  background:linear-gradient(to right,rgba(0,0,0,.35) 0%,transparent 30%);
+  pointer-events:none; z-index:3;
+  transform-origin:right center;
 }
 
-/* ── CAPA TRASEIRA ── */
+/* ── BACK COVER (exterior) ── */
 #book-backcover {
-  display: none; /* revelada somente ao final da leitura */
-  position: absolute;
-  top: 0; bottom: 0; left: 0;
-  width: 50%;
-  background: var(--c-cover-red);
-  border-radius: 4px 0 0 4px;
-  overflow: hidden;
-  cursor: pointer;
-  z-index: 8;
+  display:none;
+  position:absolute; top:0; bottom:0; left:0; width:50%;
+  background:var(--c-cover-red);
+  border-radius:4px 0 0 4px;
+  overflow:hidden; cursor:pointer; z-index:8;
+  transform-style:preserve-3d;
   box-shadow:
-    -6px 0 24px rgba(0,0,0,0.4),
-    0 32px 100px rgba(0,0,0,0.65),
-    0 8px 24px rgba(0,0,0,0.4);
+    -14px 0 38px rgba(0,0,0,.58),
+    0 36px 110px rgba(0,0,0,.72),
+    inset 10px 0 24px rgba(30,15,8,.28),
+    inset -7px 0 18px rgba(30,15,8,.42);
 }
 
 .backcover-ext-content {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
-  padding: 52px 44px;
-  text-align: center;
-  gap: 20px;
+  position:absolute; inset:0;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  z-index:2; padding:52px 44px; text-align:center; gap:20px;
 }
-
-.backcover-ext-ornament {
-  opacity: 0.4;
-  width: 44px;
+.backcover-ext-content::before {
+  content:'';
+  position:absolute; inset:13% 12%; z-index:-1;
+  background:rgba(68,20,20,.72);
+  border:1px solid rgba(247,242,227,.28);
+  box-shadow:0 15px 36px rgba(30,15,8,.28),inset 0 0 26px rgba(30,15,8,.18);
+  transform:rotate(-.45deg);
 }
-.backcover-ext-ornament svg {
-  width: 100%;
-  height: auto;
-  stroke: var(--c-cover-white) !important;
+.backcover-badge {
+  width:min(86%,320px);
+  background:var(--c-cover-white);
+  color:var(--c-ink);
+  box-shadow:0 9px 28px rgba(30,15,8,.48),inset 0 0 0 1px rgba(30,15,8,.12);
+  transform:rotate(.7deg);
 }
-
+.backcover-badge-stripe {
+  height:8px;
+  background:var(--c-cover-red);
+  border-bottom:1px solid rgba(176,125,42,.5);
+}
+.backcover-badge-body { padding:12px 24px 16px; }
+.backcover-badge-eyebrow {
+  display:block;
+  margin-bottom:5px;
+  font:10px/1.3 'Cedarville Cursive',cursive;
+  color:var(--c-red-accent);
+  letter-spacing:1.4px;
+}
+.backcover-badge-title {
+  display:block;
+  font:30px/1.2 'Homemade Apple',cursive;
+  font-weight:400;
+}
+.backcover-ext-ornament { opacity:.82; width:44px; }
+.backcover-ext-ornament svg { width:100%; height:auto; stroke:var(--c-cover-white)!important; }
 .backcover-ext-quote {
-  font-family: 'La Belle Aurore', cursive;
-  font-size: 15px;
-  color: var(--c-cover-white);
-  line-height: 2;
-  text-shadow: 0 1px 10px rgba(0,0,0,0.3);
+  font-family:'La Belle Aurore',cursive;
+  font-size:16px; color:var(--c-cover-white); line-height:1.85;
+  max-width:320px; text-shadow:0 2px 5px rgba(30,15,8,.72);
 }
-
-.backcover-ext-rule {
-  width: 52px;
-  height: 1px;
-  background: rgba(250,247,240,0.3);
-}
-
+.backcover-ext-rule { width:52px; height:1px; background:rgba(250,247,240,.3); }
 .backcover-ext-footer {
-  font-family: 'Cedarville Cursive', cursive;
-  font-size: 10px;
-  color: rgba(250,247,240,0.48);
-  letter-spacing: 3px;
+  font-family:'Cedarville Cursive',cursive;
+  font-size:10px; color:rgba(250,247,240,.76);
+  text-transform:capitalize; letter-spacing:2px;
 }
-
+.backcover-return-hint {
+  font:11px/1.3 'Cedarville Cursive',cursive;
+  color:rgba(250,247,240,.72);
+  letter-spacing:.4px;
+}
+#book-backcover:focus-visible {
+  outline:3px solid var(--c-cover-white);
+  outline-offset:5px;
+}
 .backcover-ext-spine {
-  position: absolute;
-  top: 0; right: 0; bottom: 0;
-  width: 22px;
-  background: linear-gradient(to right, transparent, rgba(0,0,0,0.28));
-  pointer-events: none;
-  z-index: 3;
+  position:absolute; top:0; right:0; bottom:0; width:22px;
+  background:linear-gradient(to right,transparent,rgba(0,0,0,.28));
+  pointer-events:none; z-index:3;
 }
 
-/* ── BOOK PAGES CONTAINER ── */
-#book-pages {
-  position: absolute;
-  inset: 0;
-  display: none;
-  border-radius: 2px 4px 4px 2px;
-  box-shadow: 0 32px 100px rgba(0,0,0,0.65), 0 8px 24px rgba(0,0,0,0.4);
-  overflow: hidden;
-  background: var(--c-page);
+/* ── PAGE REVEAL (left page shown during cover-open) ── */
+/* Full-width cream spread that appears instantly on cover click */
+#page-reveal {
+  position:absolute; inset:0;
+  background:var(--c-page-alt);
+  border-radius:4px;
+  display:none;
+  box-shadow:0 32px 100px rgba(0,0,0,.65),0 8px 24px rgba(0,0,0,.4);
+}
+/* Left page — same styling as original #cover-back */
+.page-reveal-left {
+  position:absolute; top:0; bottom:0; left:0; width:50%;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:80px 64px;
+  text-align:center;
+  border-radius:4px 0 0 4px;
+  box-shadow:
+    -10px 0 34px rgba(30,15,8,.34),
+    0 30px 85px rgba(30,15,8,.46),
+    inset 10px 0 24px rgba(30,15,8,.12),
+    inset -3px 0 8px rgba(30,15,8,.2);
+}
+.page-reveal-gutter {
+  position:absolute; top:0; right:0; bottom:0;
+  width:24px;
+  background:linear-gradient(to left,rgba(0,0,0,.22),transparent);
+  pointer-events:none;
+}
+
+/* ── BOOK SPREADS CONTAINER ── */
+#book-spreads {
+  position:absolute; inset:0;
+  border-radius:2px 4px 4px 2px;
+  box-shadow:0 32px 100px rgba(0,0,0,.65),0 8px 24px rgba(0,0,0,.4);
+  overflow:hidden;
+  background:var(--c-page);
 }
 
 /* ── SPREADS ── */
 .book-spread {
-  display: none;
-  position: absolute;
-  inset: 0;
-  grid-template-columns: 1fr 1fr;
+  display:none;
+  position:absolute; inset:0;
+  grid-template-columns:1fr 1fr;
 }
-.book-spread.active {
-  display: grid;
-}
+.book-spread.active { display:grid; }
 
 /* ── PAGES ── */
 .page {
-  position: relative;
-  background: var(--c-page);
-  overflow: hidden;
-  /* ruled lines */
-  background-image: repeating-linear-gradient(
-    transparent,
-    transparent 27px,
-    var(--c-rule) 27px,
-    var(--c-rule) 28px
-  );
-  background-position: 0 36px;
+  position:relative;
+  background:var(--c-page);
+  overflow:hidden;
+  background-image:repeating-linear-gradient(transparent,transparent 27px,var(--c-rule) 27px,var(--c-rule) 28px);
+  background-position:0 36px;
 }
-
 .page-left {
-  border-right: 1px solid var(--c-border);
-  /* spine shadow from inside */
-  box-shadow: inset -12px 0 20px rgba(0,0,0,0.06);
+  border-right:1px solid var(--c-border);
+  box-shadow:inset -12px 0 20px rgba(0,0,0,.06);
 }
 .page-left::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 20px;
-  background: linear-gradient(to right, rgba(0,0,0,0.04), transparent);
-  pointer-events: none;
+  content:''; position:absolute; left:0; top:0; bottom:0; width:20px;
+  background:linear-gradient(to right,rgba(0,0,0,.04),transparent);
+  pointer-events:none;
 }
-
 .page-right {
-  background: var(--c-page-alt);
-  box-shadow: inset 12px 0 20px rgba(0,0,0,0.06);
-  transform-origin: left center;
-  transform-style: preserve-3d;
+  background:var(--c-page-alt);
+  box-shadow:inset 12px 0 20px rgba(0,0,0,.06);
+  transform-origin:left center;
+  transform-style:preserve-3d;
 }
 .page-right::after {
-  content: '';
-  position: absolute;
-  right: 0; top: 0; bottom: 0;
-  width: 20px;
-  background: linear-gradient(to left, rgba(0,0,0,0.04), transparent);
-  pointer-events: none;
+  content:''; position:absolute; right:0; top:0; bottom:0; width:20px;
+  background:linear-gradient(to left,rgba(0,0,0,.04),transparent);
+  pointer-events:none;
 }
-
-/* Page curl bottom-right */
 .page-right::before {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(225deg, var(--c-page-shadow) 45%, transparent 46%);
-  pointer-events: none;
-  z-index: 2;
+  content:''; position:absolute; bottom:0; right:0; width:40px; height:40px;
+  background:linear-gradient(225deg,var(--c-page-shadow) 45%,transparent 46%);
+  pointer-events:none; z-index:2;
 }
 
-/* Page footer */
+/* ── PAGE FOOTER ── */
 .page-footer {
-  position: absolute;
-  bottom: 0;
-  left: 0; right: 0;
-  padding: 10px 32px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-top: 0.75px solid var(--c-rule);
-  background: inherit;
-  z-index: 1;
+  position:absolute; bottom:0; left:0; right:0;
+  padding:10px 32px;
+  display:flex; justify-content:space-between; align-items:center;
+  border-top:0.75px solid var(--c-rule);
+  background:inherit; z-index:1;
 }
 .footer-brand {
-  font-family: 'Indie Flower', cursive;
-  font-size: 9px;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  color: var(--c-ink-faded);
-  opacity: 0.7;
+  font-family:'Cedarville Cursive',cursive;
+  font-size:9px; text-transform:capitalize;
+  letter-spacing:2px; color:var(--c-ink-faded); opacity:.7;
 }
 .page-number {
-  font-family: 'Indie Flower', cursive;
-  font-size: var(--t-page-num);
-  color: var(--c-ink-faded);
-  font-style: italic;
+  font-family:'Homemade Apple',cursive;
+  font-size:11px; color:var(--c-ink-faded);
 }
 
 /* ── RECIPE CARD BORDER ── */
 .recipe-card-border {
-  border: 1.5px solid var(--c-border);
-  margin: 28px 28px 48px 28px;
-  padding: 24px 28px;
-  position: relative;
-  height: calc(100% - 76px);
-  overflow-y: auto;
-  scrollbar-width: none;
+  border:1.5px solid var(--c-border);
+  margin:28px 28px 48px 28px;
+  padding:24px 28px;
+  position:relative;
+  height:calc(100% - 76px);
+  overflow-y:auto; scrollbar-width:none;
 }
 .recipe-card-border::-webkit-scrollbar { display:none; }
 .recipe-card-border::before {
-  content: '';
-  position: absolute;
-  inset: 4px;
-  border: 0.75px solid var(--c-border);
-  opacity: 0.5;
-  pointer-events: none;
+  content:''; position:absolute; inset:4px;
+  border:0.75px solid var(--c-border); opacity:.5; pointer-events:none;
 }
 .recipe-card-border::after {
-  content: '';
-  position: absolute;
-  inset: 7px;
-  border: 0.5px solid var(--c-border);
-  opacity: 0.28;
-  pointer-events: none;
+  content:''; position:absolute; inset:7px;
+  border:0.5px solid var(--c-border); opacity:.28; pointer-events:none;
 }
 
-/* ── RECIPE HEADER ── */
+/* ── RECIPE TYPOGRAPHY ── */
 .recipe-eyebrow {
-  font-family: 'Indie Flower', cursive;
-  font-size: 10px;
-  font-style: italic;
-  color: var(--c-red-accent);
-  text-transform: uppercase;
-  letter-spacing: 3px;
+  font-family:'Cedarville Cursive',cursive;
+  font-size:10px; text-transform:capitalize;
+  letter-spacing:2px; color:var(--c-red-accent);
 }
-.recipe-header-rule {
-  width: 40px;
-  height: 1px;
-  background: var(--c-border);
-  margin: 8px 0 12px;
-}
+.recipe-header-rule { width:40px; height:1px; background:var(--c-border); margin:8px 0 12px; }
 .recipe-title {
-  font-family: 'Homemade Apple', cursive;
-  font-size: var(--t-h1);
-  color: var(--c-ink);
-  line-height: 1.1;
-  margin-bottom: 6px;
+  font-family:'Homemade Apple',cursive;
+  font-size:var(--t-h1); color:var(--c-ink); line-height:1.1; margin-bottom:6px;
 }
 .recipe-subtitle-italic {
-  font-family: 'Indie Flower', cursive;
-  font-size: 13px;
-  font-style: italic;
-  color: var(--c-ink-faded);
-  margin-bottom: 4px;
+  font-family:'La Belle Aurore',cursive;
+  font-size:15px; line-height:1.9; color:var(--c-ink-faded); margin-bottom:4px;
 }
 
 /* ── META GRID ── */
 .recipe-meta-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  border: 1px solid var(--c-rule);
-  margin: 16px 0;
+  display:grid; grid-template-columns:1fr 1fr 1fr;
+  border:1px solid var(--c-rule); margin:16px 0;
 }
-.meta-cell {
-  padding: 8px 10px;
-  border-right: 1px solid var(--c-rule);
-  text-align: center;
-}
-.meta-cell:last-child { border-right: none; }
+.meta-cell { padding:8px 10px; border-right:1px solid var(--c-rule); text-align:center; }
+.meta-cell:last-child { border-right:none; }
 .meta-label {
-  display: block;
-  font-family: 'Indie Flower', cursive;
-  font-size: 9px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: var(--c-ink-faded);
-  margin-bottom: 3px;
+  display:block;
+  font-family:'Cedarville Cursive',cursive;
+  font-size:9px; text-transform:capitalize;
+  letter-spacing:1px; color:var(--c-ink-faded); margin-bottom:3px;
 }
 .meta-value {
-  font-family: 'Indie Flower', cursive;
-  font-weight: 600;
-  font-size: 15px;
-  color: var(--c-ink);
+  font-family:'Cedarville Cursive',cursive;
+  font-size:13px; color:var(--c-ink);
 }
 
 /* ── SECTION LABEL ── */
 .section-label {
-  font-family: 'Indie Flower', cursive;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  color: var(--c-ink);
-  margin-bottom: 10px;
-  padding-bottom: 5px;
-  border-bottom: 0.75px solid var(--c-rule);
+  font-family:'Cedarville Cursive',cursive;
+  font-size:11px; text-transform:capitalize;
+  letter-spacing:1.5px; color:var(--c-ink);
+  margin-bottom:10px; padding-bottom:5px;
+  border-bottom:0.75px solid var(--c-rule);
+  display:block;
 }
 
 /* ── INGREDIENTS ── */
-.ingredients-list {
-  list-style: none;
-  margin-bottom: 14px;
-}
+.ingredients-list { list-style:none; margin-bottom:14px; }
 .ingredients-list li {
-  font-family: 'Indie Flower', cursive;
-  font-size: 13px;
-  color: var(--c-ink);
-  line-height: 1.55;
-  padding: 2px 0 2px 18px;
-  position: relative;
+  font-family:'Indie Flower',cursive;
+  font-size:13px; color:var(--c-ink); line-height:1.55;
+  padding:2px 0 2px 18px; position:relative;
 }
 .ingredients-list li::before {
-  content: '—';
-  position: absolute;
-  left: 0;
-  color: var(--c-gold);
-  font-family: 'Indie Flower', cursive;
+  content:'—'; position:absolute; left:0;
+  color:var(--c-gold); font-family:'Indie Flower',cursive;
 }
 
 /* ── STEPS ── */
-.steps-list {
-  list-style: none;
-}
+.steps-list { list-style:none; }
 .steps-list li {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 10px;
-  padding-bottom: 10px;
-  border-bottom: 0.75px dashed var(--c-rule);
+  display:flex; gap:12px;
+  margin-bottom:10px; padding-bottom:10px;
+  border-bottom:0.75px dashed var(--c-rule);
 }
-.steps-list li:last-child { border-bottom: none; }
+.steps-list li:last-child { border-bottom:none; }
 .step-number {
-  font-family: 'Indie Flower', cursive;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--c-red-accent);
-  line-height: 1;
-  flex-shrink: 0;
-  min-width: 18px;
+  font-family:'Cedarville Cursive',cursive;
+  font-size:16px; color:var(--c-red-accent);
+  line-height:1; flex-shrink:0; min-width:18px;
 }
 .step-text {
-  font-family: 'Indie Flower', cursive;
-  font-size: 13px;
-  color: var(--c-ink);
-  line-height: 1.6;
+  font-family:'Indie Flower',cursive;
+  font-size:13px; color:var(--c-ink); line-height:1.6;
 }
 
 /* ── CHEF TIP ── */
 .chef-tip {
-  margin-top: 14px;
-  padding: 10px 12px;
-  background: rgba(176,125,42,0.06);
-  border-left: 2.5px solid var(--c-gold);
+  margin-top:14px; padding:10px 12px;
+  background:rgba(176,125,42,.06);
+  border-left:2.5px solid var(--c-gold);
 }
 .tip-label {
-  font-family: 'Indie Flower', cursive;
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  color: var(--c-gold);
-  display: block;
-  margin-bottom: 5px;
+  font-family:'Cedarville Cursive',cursive;
+  font-size:10px; text-transform:capitalize;
+  letter-spacing:1.5px; color:var(--c-gold);
+  display:block; margin-bottom:5px;
 }
 .tip-text {
-  font-family: 'Grape Nuts', cursive;
-  font-size: 13px;
-  color: var(--c-ink);
-  line-height: 1.6;
+  font-family:'Grape Nuts',cursive;
+  font-size:13px; color:var(--c-ink); line-height:1.6;
 }
 
 /* ── HANDWRITTEN ANNOTATIONS ── */
 .handwritten-annotation {
-  font-family: 'Grape Nuts', cursive;
-  font-size: var(--t-annotation);
-  color: var(--c-annotation);
-  position: absolute;
-  line-height: 1.5;
-  max-width: 150px;
-  pointer-events: none;
-  white-space: pre-line;
-  z-index: 5;
-  background: rgba(247, 242, 227, 0.78);
-  padding: 2px 5px;
+  font-family:'Grape Nuts',cursive;
+  font-size:var(--t-annotation);
+  color:var(--c-annotation);
+  position:absolute; line-height:1.5;
+  max-width:170px;
+  pointer-events:auto;
+  white-space:pre-line; z-index:5;
+  padding:2px 5px;
+  cursor:grab;
+  user-select:none;
+  touch-action:none;
+  text-shadow:0 1px rgba(247,242,227,.72);
+  transition:color 150ms ease-out,filter 150ms ease-out;
 }
-.annotation-0 { bottom: 52px; right: 16px; transform: rotate(-3deg); }
-.annotation-1 { bottom: 56px; left: 14px;  transform: rotate(2.5deg); }
-.annotation-2 { bottom: 48px; right: 22px; transform: rotate(-1.5deg); }
+.handwritten-annotation:hover { color:rgba(74,103,65,.84); }
+.handwritten-annotation:focus-visible {
+  outline:1px dashed rgba(74,103,65,.7);
+  outline-offset:4px;
+}
+.handwritten-annotation.is-dragging {
+  cursor:grabbing;
+  filter:drop-shadow(0 3px 3px rgba(30,15,8,.18));
+  z-index:40;
+}
+.annotation-0 { top:12%; right:16px; transform:rotate(-3deg); }
+.annotation-1 { top:43%; left:12px; transform:rotate(2.5deg); }
+.annotation-2 { bottom:13%; right:20px; transform:rotate(-1.5deg); }
+
+/* User-created annotations (double-click to add) */
+.user-annotation {
+  background:rgba(247,242,227,.76);
+  border:1px solid rgba(140,105,65,.28);
+  border-radius:1px;
+  min-width:52px; min-height:20px;
+  padding:4px 8px;
+  outline:none;
+  cursor:grab;
+  user-select:text;
+}
+.user-annotation:focus {
+  background:rgba(247,242,227,.96);
+  border-color:rgba(140,105,65,.55);
+  box-shadow:0 2px 8px rgba(30,15,8,.1);
+  cursor:text;
+}
+.user-annotation:empty::before {
+  content:'nota...';
+  color:rgba(107,76,59,.36);
+  font-style:italic;
+  pointer-events:none;
+}
+.annotation-delete-btn {
+  position:absolute; top:-9px; right:-9px;
+  width:19px; height:19px;
+  border-radius:50%;
+  background:var(--c-cover-red);
+  color:#FAF7F0; border:0;
+  font-family:'Indie Flower',cursive;
+  font-size:13px; line-height:1;
+  cursor:pointer; z-index:50;
+  display:none; align-items:center; justify-content:center;
+  box-shadow:0 2px 5px rgba(30,15,8,.3);
+  padding:0;
+}
+.user-annotation:hover .annotation-delete-btn,
+.user-annotation:focus-within .annotation-delete-btn { display:flex; }
 
 /* ── BOTANICAL ILLUSTRATION ── */
 .botanical-illustration {
-  float: right;
-  margin: 0 0 14px 16px;
-  width: clamp(60px, 16%, 100px);
-  opacity: 0.72;
+  float:right; margin:0 0 14px 16px;
+  width:clamp(60px,16%,100px); opacity:.72;
 }
 
-/* ── RECIPE STORY ── */
-.recipe-story { margin-bottom: 16px; }
+/* ── STORY / DIVIDER ── */
+.recipe-story { margin-bottom:16px; }
 .story-text {
-  font-family: 'Indie Flower', cursive;
-  font-size: 13px;
-  font-style: italic;
-  line-height: 1.8;
-  color: var(--c-ink);
+  font-family:'La Belle Aurore',cursive;
+  font-size:15px; line-height:1.9;
+  color:var(--c-ink);
+}
+.divider-ornament { margin:10px 0; opacity:.7; }
+.recipe-section { margin-bottom:14px; }
+
+/* Moussaka has dense instructions; keep the whole right page editorial, never scrollable. */
+[data-recipe-name="Moussaka"] .page-right .story-text {
+  font-size:14px;
+  line-height:1.58;
+}
+[data-recipe-name="Moussaka"] .page-right .recipe-story { margin-bottom:8px; }
+[data-recipe-name="Moussaka"] .page-right .divider-ornament { margin:4px 0; }
+[data-recipe-name="Moussaka"] .page-right .recipe-section { margin-bottom:7px; }
+[data-recipe-name="Moussaka"] .page-right .steps-list li {
+  gap:9px;
+  margin-bottom:5px;
+  padding-bottom:5px;
+}
+[data-recipe-name="Moussaka"] .page-right .step-text { line-height:1.42; }
+[data-recipe-name="Moussaka"] .page-right .chef-tip {
+  margin-top:7px;
+  padding:7px 10px;
 }
 
-.divider-ornament {
-  margin: 10px 0;
-  opacity: 0.7;
-}
-
-/* ── SECTION CONTAINER ── */
-.recipe-section { margin-bottom: 14px; }
-
-/* ══════════════════════════════════════
-   BACK COVER [spread 1]
-══════════════════════════════════════ */
-.backcover-page {
-  background: var(--c-backcover);
-  background-image: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 80px 96px;
-  position: relative;
-  text-align: center;
-}
-.backcover-spine-edge {
-  position: absolute;
-  right: 0; top: 0; bottom: 0;
-  width: 24px;
-  background: linear-gradient(to left, rgba(0,0,0,0.25), transparent);
-  pointer-events: none;
-}
-.backcover-ornament-top,
-.backcover-ornament-bottom {
-  width: 80px;
-  opacity: 0.65;
-}
-.backcover-ornament-bottom { transform: scaleY(-1); }
-.backcover-spacer { flex: 1; }
-.backcover-text {
-  font-family: 'Indie Flower', cursive;
-  font-size: 16px;
-  font-style: italic;
-  color: var(--c-ink-faded);
-  max-width: 480px;
-  line-height: 1.9;
-  margin: 32px 0;
-}
-.backcover-rule {
-  width: 120px;
-  height: 1px;
-  background: var(--c-border);
-  margin: 16px auto;
-}
-.backcover-footer {
-  font-family: 'Indie Flower', cursive;
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 4px;
-  color: var(--c-ink-faded);
-  opacity: 0.7;
-}
-
-/* ══════════════════════════════════════
-   TITLE PAGE [spread 2]
-══════════════════════════════════════ */
-.titlepage-right {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 48px;
-  text-align: center;
-}
-.titlepage-main {
-  font-family: 'Homemade Apple', cursive;
-  font-size: 52px;
-  color: var(--c-ink);
-  line-height: 1;
-  margin-bottom: 16px;
-}
-.titlepage-sub {
-  font-family: 'Indie Flower', cursive;
-  font-size: 18px;
-  font-style: italic;
-  color: var(--c-ink-faded);
-  margin-bottom: 10px;
-}
-.titlepage-year {
-  font-family: 'Indie Flower', cursive;
-  font-size: 14px;
-  color: var(--c-ink-faded);
-  opacity: 0.6;
-}
-.titlepage-divider { margin: 20px auto; width: 100%; max-width: 240px; }
-.empty-page { display: flex; align-items: flex-end; }
-
-/* ══════════════════════════════════════
-   TABLE OF CONTENTS [spread 3]
-══════════════════════════════════════ */
+/* ──────────────────────────
+   TABLE OF CONTENTS
+─────────────────────────── */
 .toc-left {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center; padding:40px;
 }
-.toc-botanical {
-  width: 55%;
-  max-width: 200px;
-  opacity: 0.65;
-}
+.toc-botanical { width:55%; max-width:200px; opacity:.65; }
 .toc-label-bottom {
-  font-family: 'Indie Flower', cursive;
-  font-size: 12px;
-  font-style: italic;
-  text-transform: uppercase;
-  letter-spacing: 4px;
-  color: var(--c-ink-faded);
-  margin-top: auto;
-  padding-bottom: 20px;
+  font-family:'Cedarville Cursive',cursive;
+  font-size:12px; text-transform:capitalize;
+  letter-spacing:2px; color:var(--c-ink-faded);
+  margin-top:auto; padding-bottom:20px;
 }
-
 .toc-right {
-  padding: 48px 56px 48px 40px;
-  overflow-y: auto;
-  scrollbar-width: none;
+  padding:48px 56px 48px 40px;
 }
-.toc-right::-webkit-scrollbar { display:none; }
-
+.toc-sheet {
+  padding:42px 48px 48px;
+  display:flex;
+  flex-direction:column;
+}
 .toc-heading {
-  font-family: 'Homemade Apple', cursive;
-  font-size: 36px;
-  color: var(--c-ink);
-  margin-bottom: 36px;
+  font-family:'Homemade Apple',cursive;
+  font-size:34px; color:var(--c-ink); margin-bottom:20px;
 }
-
-.toc-entries { list-style: none; }
+.toc-continuation {
+  font-family:'Cedarville Cursive',cursive;
+  font-size:12px;
+  color:var(--c-ink-faded);
+  margin:2px 0 18px;
+}
+.toc-entries { list-style:none; }
 .toc-entry {
-  display: flex;
-  align-items: baseline;
-  font-family: 'Indie Flower', cursive;
-  font-size: 14px;
-  line-height: 2.2;
-  cursor: pointer;
-  transition: color 120ms;
-  text-decoration: none;
-  color: var(--c-ink);
+  display:flex; align-items:baseline;
+  font-family:'Indie Flower',cursive;
+  font-size:14px; line-height:1.75;
+  cursor:pointer; text-decoration:none; color:var(--c-ink);
+  transition:color 120ms;
 }
-.toc-entry:hover { color: var(--c-red-accent); }
-.toc-entry.toc-sub {
-  padding-left: 20px;
-  font-size: 13px;
+.toc-entry:hover { color:var(--c-red-accent); }
+.toc-sub { padding-left:16px; font-size:13px; color:var(--c-ink-faded); }
+.toc-sub:hover { color:var(--c-red-accent); }
+.toc-entry-title { flex-shrink:0; }
+.toc-favorite-mark {
+  width:11px;
+  flex:0 0 11px;
+  color:var(--c-ribbon);
+  font-family:serif;
+  font-size:8px;
+  line-height:1;
+  opacity:0;
+  transform:rotate(45deg);
 }
-.toc-entry-title { flex-shrink: 0; }
-.toc-dots {
-  flex: 1;
-  border-bottom: 1px dotted var(--c-rule);
-  margin: 0 8px 4px 8px;
+.toc-entry.is-favorite .toc-favorite-mark { opacity:1; }
+.toc-entry.is-favorite .toc-entry-title {
+  color:var(--c-red-accent);
 }
+.toc-dots { flex:1; border-bottom:1px dotted var(--c-rule); margin:0 6px 4px 6px; }
 .toc-page {
-  flex-shrink: 0;
-  font-family: 'Indie Flower', cursive;
-  font-size: 14px;
-  color: var(--c-ink-faded);
+  flex-shrink:0;
+  font-family:'Homemade Apple',cursive;
+  font-size:11px; color:var(--c-ink-faded);
 }
-.toc-rule {
-  border: none;
-  border-top: 0.75px solid var(--c-rule);
-  margin: 6px 0 10px;
+.toc-rule { border:none; border-top:0.75px solid var(--c-rule); margin:6px 0 8px; }
+.toc-eyebrow {
+  font-family:'Cedarville Cursive',cursive;
+  font-size:9.5px; color:var(--c-ink-faded);
+  text-transform:capitalize; letter-spacing:1.5px;
+  display:block; margin-bottom:6px;
 }
-.toc-entry.toc-capa {
-  font-style: italic;
-  color: var(--c-ink-faded);
-  opacity: 0.7;
+.toc-section-row { margin-top:2px; }
+.toc-section {
+  color:var(--c-red-accent);
+  cursor:default;
+  font-family:'Cedarville Cursive',cursive;
+  font-size:12px;
 }
-.toc-entry.toc-capa:hover {
-  color: var(--c-red-accent);
-  opacity: 1;
+.toc-filter-row { margin:3px 0 5px; }
+.toc-filter-label {
+  display:block;
+  font-family:'Cedarville Cursive',cursive;
+  font-size:10px;
+  color:var(--c-ink-faded);
+  margin-bottom:2px;
+}
+#saved-search-input {
+  width:100%;
+  border:0;
+  border-bottom:1px solid var(--c-rule);
+  background:transparent;
+  color:var(--c-ink);
+  font-family:'Grape Nuts',cursive;
+  font-size:14px;
+  padding:3px 0;
+  outline:none;
+}
+#saved-search-input:focus-visible { border-bottom-color:var(--c-cover-red); }
+
+.toc-heirloom {
+  position:relative;
+  overflow:hidden;
+  background-image:none;
+}
+.heirloom-botanical {
+  position:absolute;
+  width:38%;
+  right:12%;
+  bottom:9%;
+  fill:none;
+  stroke:rgba(74,103,65,.25);
+  stroke-width:1;
+  stroke-linecap:round;
+}
+.heirloom-ring {
+  position:absolute;
+  width:112px;
+  height:112px;
+  border:9px double rgba(107,76,59,.045);
+  border-radius:50%;
+  left:13%;
+  top:16%;
+  transform:rotate(-11deg);
+}
+.heirloom-ring-small {
+  width:58px;
+  height:58px;
+  left:auto;
+  right:17%;
+  top:auto;
+  bottom:13%;
+  border-width:6px;
+  opacity:.8;
+}
+.heirloom-note {
+  position:absolute;
+  font-family:'Grape Nuts',cursive;
+  color:rgba(74,103,65,.52);
+  line-height:1.35;
+  cursor:grab;
+  pointer-events:auto;
+  touch-action:none;
+  user-select:none;
+}
+.heirloom-note.is-dragging { cursor:grabbing; z-index:40; }
+.note-a { left:15%; top:21%; font-size:16px; transform:rotate(-5deg); }
+.note-b { right:18%; top:31%; font-size:18px; transform:rotate(7deg); }
+.note-c { left:28%; bottom:24%; font-size:15px; transform:rotate(3deg); text-decoration:line-through; }
+.note-d { right:12%; top:54%; font-size:14px; transform:rotate(-4deg); }
+.note-e { left:12%; bottom:34%; font-size:14px; transform:rotate(6deg); }
+.heirloom-crossout {
+  position:absolute;
+  right:30%;
+  bottom:12%;
+  font:14px/1.2 'Grape Nuts',cursive;
+  color:rgba(107,76,59,.34);
+  text-decoration:line-through;
+  transform:rotate(-7deg);
+  cursor:grab;
+  pointer-events:auto;
+  touch-action:none;
+  user-select:none;
+}
+.heirloom-crossout.is-dragging { cursor:grabbing; z-index:40; }
+.heirloom-doodle {
+  position:absolute;
+  width:29%;
+  left:9%;
+  bottom:8%;
+  fill:none;
+  stroke:rgba(107,76,59,.24);
+  stroke-width:1.2;
+  stroke-linecap:round;
+}
+.toc-heirloom-secondary .heirloom-botanical {
+  right:auto;
+  left:12%;
+  bottom:12%;
+  transform:rotate(-8deg);
+  stroke:rgba(74,103,65,.2);
+}
+.toc-heirloom-secondary .heirloom-ring {
+  left:auto;
+  right:13%;
+  top:12%;
+  width:92px;
+  height:92px;
+  transform:rotate(9deg);
+  border-color:rgba(107,76,59,.055);
+}
+.toc-heirloom-secondary .note-a { left:12%; top:17%; transform:rotate(4deg); }
+.toc-heirloom-secondary .note-b { right:16%; top:40%; transform:rotate(-6deg); }
+.toc-heirloom-secondary .note-c {
+  left:auto;
+  right:22%;
+  bottom:18%;
+  transform:rotate(-2deg);
+  text-decoration:none;
+}
+.toc-heirloom-secondary .note-d { right:auto; left:16%; top:48%; transform:rotate(5deg); }
+.toc-heirloom-secondary .note-e { left:auto; right:13%; bottom:33%; transform:rotate(-4deg); }
+.toc-heirloom-secondary .heirloom-crossout { right:auto; left:37%; bottom:10%; }
+.toc-heirloom-secondary .heirloom-doodle {
+  left:auto;
+  right:10%;
+  bottom:8%;
+  transform:rotate(5deg);
 }
 
-/* ══════════════════════════════════════
-   ABOUT [spread 4]
-══════════════════════════════════════ */
+/* ──────────────────────────
+   ABOUT
+─────────────────────────── */
 .about-page {
-  padding: 48px 44px 48px;
-  display: flex;
-  flex-direction: column;
-}
-.about-page .recipe-card-border {
-  margin: 0 0 32px 0;
-  height: auto;
-  flex: 1;
+  padding:48px 44px 48px;
+  display:flex; flex-direction:column;
 }
 .about-heading {
-  font-family: 'Homemade Apple', cursive;
-  font-size: 32px;
-  color: var(--c-ink);
-  line-height: 1.1;
-  margin-bottom: 20px;
+  font-family:'Homemade Apple',cursive;
+  font-size:32px; color:var(--c-ink); line-height:1.1; margin-bottom:20px;
 }
 .about-body {
-  font-family: 'Indie Flower', cursive;
-  font-size: 14px;
-  line-height: 1.9;
-  color: var(--c-ink);
+  font-family:'Indie Flower',cursive;
+  font-size:14px; line-height:1.9; color:var(--c-ink);
 }
-.about-body p { margin-bottom: 14px; }
+.about-body p { margin-bottom:12px; }
+.about-manual {
+  font-size:12.5px;
+  line-height:1.58;
+}
+.about-manual p { margin-bottom:8px; }
 .about-eyebrow {
-  font-family: 'Indie Flower', cursive;
-  font-size: 10px;
-  font-style: italic;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  color: var(--c-red-accent);
-  margin-bottom: 12px;
-  display: block;
+  font-family:'Cedarville Cursive',cursive;
+  font-size:10px; text-transform:capitalize;
+  letter-spacing:2px; color:var(--c-red-accent);
+  margin-bottom:12px; display:block;
 }
 
-/* ══════════════════════════════════════
-   SEARCH [spread 11]
-══════════════════════════════════════ */
+/* ──────────────────────────
+   SEARCH
+─────────────────────────── */
 .search-left {
-  padding: 48px 32px 48px 56px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  position: relative;
+  padding:48px 32px 48px 56px;
+  display:flex; flex-direction:column; justify-content:center; position:relative;
 }
 .search-intro-label {
-  font-family: 'Indie Flower', cursive;
-  font-size: 10px;
-  font-style: italic;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  color: var(--c-red-accent);
-  margin-bottom: 20px;
-  display: block;
+  font-family:'Cedarville Cursive',cursive;
+  font-size:10px; text-transform:capitalize;
+  letter-spacing:2px; color:var(--c-red-accent);
+  margin-bottom:20px; display:block;
 }
 .search-intro-heading {
-  font-family: 'Homemade Apple', cursive;
-  font-size: 26px;
-  color: var(--c-ink);
-  line-height: 1.6;
-  margin-bottom: 20px;
+  font-family:'Homemade Apple',cursive;
+  font-size:26px; color:var(--c-ink); line-height:1.6; margin-bottom:20px;
 }
 .search-intro-body {
-  font-family: 'Indie Flower', cursive;
-  font-size: 14px;
-  line-height: 1.8;
-  color: var(--c-ink-faded);
-  max-width: 340px;
+  font-family:'Indie Flower',cursive;
+  font-size:14px; line-height:1.8; color:var(--c-ink-faded); max-width:340px;
 }
 .search-annotation {
-  font-family: 'Grape Nuts', cursive;
-  font-size: 14px;
-  color: var(--c-annotation);
-  margin-top: 32px;
-  transform: rotate(-2deg);
-  display: inline-block;
-  line-height: 1.6;
-  white-space: pre-line;
+  font-family:'Grape Nuts',cursive;
+  font-size:14px; color:var(--c-annotation);
+  margin-top:28px; transform:rotate(-2deg);
+  display:inline-block; line-height:1.6; white-space:pre-line;
+}
+.search-right {
+  padding:48px 56px 48px 32px;
+  display:flex; flex-direction:column; justify-content:center;
+}
+.search-question {
+  font-family:'Homemade Apple',cursive;
+  font-size:20px; color:var(--c-ink); margin-bottom:12px;
+}
+.search-ruled-line { width:100%; height:1px; background:var(--c-border); margin-bottom:8px; }
+#recipe-search {
+  font-family:'Grape Nuts',cursive;
+  font-size:clamp(20px,2.5vw,28px);
+  color:var(--c-ink); background:transparent;
+  border:none; outline:none; width:100%;
+  padding:12px 0; line-height:1.4;
+  caret-color:var(--c-cover-red);
+  border-bottom:1px solid var(--c-rule);
+}
+#recipe-search::placeholder {
+  font-family:'Grape Nuts',cursive;
+  color:rgba(176,125,42,.38);
+}
+.search-hint {
+  font-family:'Indie Flower',cursive;
+  font-size:12px; font-style:italic;
+  color:var(--c-ink-faded); margin-top:12px; opacity:.7;
 }
 
 /* ── MODEL SELECTOR ── */
 .model-selector {
-  margin-top: 28px;
-  border-top: 0.75px solid var(--c-rule);
-  padding-top: 14px;
+  margin-top:24px; border-top:0.75px solid var(--c-rule); padding-top:12px;
 }
 .model-selector-label {
-  font-family: 'Indie Flower', cursive;
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  color: var(--c-ink-faded);
-  display: block;
-  margin-bottom: 8px;
+  font-family:'Cedarville Cursive',cursive;
+  font-size:10px; text-transform:capitalize;
+  letter-spacing:2px; color:var(--c-ink-faded);
+  display:block; margin-bottom:8px;
 }
-.model-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
+.model-list { list-style:none; display:flex; flex-direction:column; gap:3px; }
 .model-option {
-  font-family: 'Indie Flower', cursive;
-  font-size: 13px;
-  color: var(--c-ink-faded);
-  cursor: pointer;
-  padding: 3px 0 3px 14px;
-  position: relative;
-  transition: color 120ms;
-  line-height: 1.5;
-  border-radius: 1px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-family:'Indie Flower',cursive;
+  font-size:13px; color:var(--c-ink-faded);
+  cursor:pointer; padding:3px 0 3px 14px;
+  position:relative; transition:color 120ms;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
-.model-option::before {
-  content: '○';
-  position: absolute;
-  left: 0;
-  font-size: 9px;
-  color: var(--c-border);
-  top: 4px;
-  transition: color 120ms;
-}
-.model-option:hover { color: var(--c-ink); }
-.model-option.selected {
-  color: var(--c-ink);
-  font-style: italic;
-}
-.model-option.selected::before {
-  content: '●';
-  color: var(--c-gold);
-}
-.model-option.loading-models {
-  color: var(--c-ink-faded);
-  opacity: 0.5;
-  cursor: default;
-  font-style: italic;
-  font-size: 12px;
-}
+.model-option::before { content:'○'; position:absolute; left:0; font-size:9px; color:var(--c-border); top:4px; }
+.model-option:hover { color:var(--c-ink); }
+.model-option.selected { color:var(--c-ink); font-style:italic; }
+.model-option.selected::before { content:'●'; color:var(--c-gold); }
+.model-option.loading-models { color:var(--c-ink-faded); opacity:.5; cursor:default; font-style:italic; font-size:12px; }
 
-.search-right {
-  padding: 48px 56px 48px 32px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+/* ──────────────────────────
+   RESULT ACTIONS
+─────────────────────────── */
+.result-actions {
+  position:absolute; bottom:48px; left:28px;
+  display:flex; flex-wrap:wrap; gap:8px 10px; z-index:10;
+  max-width:calc(100% - 56px);
 }
-.search-question {
-  font-family: 'Homemade Apple', cursive;
-  font-size: 20px;
-  color: var(--c-ink);
-  margin-bottom: 12px;
+.save-recipe-btn, .share-recipe-btn, .back-to-search-btn {
+  font-family:'Cedarville Cursive',cursive;
+  font-size:11px; text-transform:capitalize;
+  letter-spacing:1px; color:var(--c-ink-faded);
+  background:transparent;
+  border:0.75px solid var(--c-border);
+  padding:6px 14px; cursor:pointer;
+  transition:color 150ms, border-color 150ms;
 }
-.search-ruled-line {
-  width: 100%;
-  height: 1px;
-  background: var(--c-border);
-  margin-bottom: 8px;
-}
-#recipe-search {
-  font-family: 'Homemade Apple', cursive;
-  font-size: clamp(20px, 2.5vw, 28px);
-  color: var(--c-ink);
-  background: transparent;
-  border: none;
-  outline: none;
-  width: 100%;
-  padding: 12px 0;
-  line-height: 1.4;
-  caret-color: var(--c-cover-red);
-  border-bottom: 1px solid var(--c-rule);
-}
-#recipe-search::placeholder {
-  font-family: 'Homemade Apple', cursive;
-  color: rgba(176,125,42,0.38);
-}
-.search-hint {
-  font-family: 'Indie Flower', cursive;
-  font-size: 12px;
-  font-style: italic;
-  color: var(--c-ink-faded);
-  margin-top: 12px;
-  opacity: 0.7;
-}
+.save-recipe-btn:hover { color:var(--c-cover-red); border-color:var(--c-cover-red); }
+.share-recipe-btn:hover { color:var(--c-gold); border-color:var(--c-gold); }
+.back-to-search-btn:hover { color:var(--c-annotation); border-color:var(--c-annotation); }
 
-/* ══════════════════════════════════════
+/* ──────────────────────────
+   FAVORITES (dog-ear)
+─────────────────────────── */
+.fav-btn {
+  position:absolute; top:0; right:0;
+  width:36px; height:36px;
+  background:transparent; border:none;
+  cursor:pointer; z-index:20; padding:0;
+}
+.fav-ear {
+  width:0; height:0;
+  border-top:36px solid transparent;
+  border-right:36px solid transparent;
+  transition:border-top-color 180ms ease-out, border-right-color 180ms ease-out;
+}
+.fav-btn.active .fav-ear { border-top-color:var(--c-gold); border-right-color:var(--c-gold); }
+.fav-btn:not(.active):hover .fav-ear { border-top-color:rgba(176,125,42,.3); border-right-color:rgba(176,125,42,.3); }
+
+/* ──────────────────────────
+   SAVED RECIPES
+─────────────────────────── */
+.user-annotation-block { margin-top:10px; }
+.user-annotation-text {
+  font-family:'Grape Nuts',cursive;
+  font-size:14px; color:var(--c-annotation);
+  line-height:24px; min-height:48px; outline:none;
+  cursor:text; word-break:break-word;
+  display:block; margin-top:6px;
+}
+.user-annotation-text:empty::before {
+  content:attr(placeholder); color:rgba(176,125,42,.35);
+}
+.saved-controls {
+  position:absolute; top:32px; left:10px;
+  display:flex; gap:6px; z-index:20;
+}
+.ctrl-delete {
+  font-size:10px; color:rgba(107,76,59,.4);
+  background:transparent; border:none;
+  cursor:pointer; transition:color 150ms; padding:2px 4px;
+}
+.ctrl-delete:hover { color:var(--c-cover-red); }
+
+/* ──────────────────────────
    PAGE TURN CURTAIN
-══════════════════════════════════════ */
+─────────────────────────── */
 #page-curtain {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to right,
-    var(--c-page-shadow) 0%,
-    var(--c-page-alt) 8%,
-    var(--c-page) 100%
-  );
-  z-index: 20;
-  pointer-events: none;
-  transform: scaleX(0);
-  transform-origin: right center;
-  will-change: transform;
+  position:absolute; inset:0;
+  background:linear-gradient(to right,var(--c-page-shadow) 0%,var(--c-page-alt) 8%,var(--c-page) 100%);
+  z-index:20; pointer-events:none;
+  transform:scaleX(0); transform-origin:right center;
+  will-change:transform;
 }
-/* Leading-edge shadow (simula espessura do papel) */
 #page-curtain::before {
-  content: '';
-  position: absolute;
-  top: 0; bottom: 0;
-  width: 18px;
-  background: linear-gradient(to right, rgba(0,0,0,0.18), transparent);
+  content:''; position:absolute; top:0; bottom:0; width:18px;
+  background:linear-gradient(to right,rgba(0,0,0,.18),transparent);
 }
-#page-curtain.forward::before { left: 0; }
-#page-curtain.backward::before { right: 0; left: auto;
-  background: linear-gradient(to left, rgba(0,0,0,0.18), transparent);
-}
+#page-curtain.forward::before  { left:0; }
+#page-curtain.backward::before { right:0; left:auto; background:linear-gradient(to left,rgba(0,0,0,.18),transparent); }
 
-/* ══════════════════════════════════════
-   PAGE ARROWS (navegação permanente)
-══════════════════════════════════════ */
-.page-corner {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 36px;
-  height: 88px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity 220ms ease, background 150ms;
-  z-index: 15;
-  pointer-events: none;
-  border-radius: 2px;
+/* ──────────────────────────
+   PAGE TURN LAYER (3D flip)
+─────────────────────────── */
+.page-turn-layer {
+  position:absolute; top:0; right:0; width:50%; height:100%;
+  transform-origin:left center;
+  transform-style:preserve-3d; -webkit-transform-style:preserve-3d;
+  backface-visibility:hidden; -webkit-backface-visibility:hidden;
+  will-change:transform;
+  pointer-events:none;
+  opacity:0; /* invisible by default — shown only during page turn animation */
 }
-.corner-prev { left: 0; }
-.corner-next { right: 0; }
-.page-corner.active {
-  opacity: 0.38;
-  pointer-events: auto;
+.turn-front {
+  position:absolute; inset:0;
+  backface-visibility:hidden; -webkit-backface-visibility:hidden;
+  background:var(--c-page-alt);
 }
-.page-corner.active:hover {
-  opacity: 1;
-  background: rgba(30,15,8,0.05);
+.turn-back {
+  position:absolute; inset:0;
+  background:var(--c-page);
+  backface-visibility:hidden; -webkit-backface-visibility:hidden;
+  transform:rotateY(180deg);
 }
 
-@keyframes corner-pulse {
-  0%, 100% { opacity: 0.9; }
-  50%       { opacity: 0.3; }
+/* ──────────────────────────
+   CURL ZONES
+─────────────────────────── */
+.curl-zone {
+  position:absolute; bottom:0; width:80px; height:80px;
+  cursor:pointer; z-index:25;
 }
-.page-corner.ready { animation: corner-pulse 1.4s ease-in-out infinite; }
+.curl-left  { left:0; }
+.curl-right { right:0; }
 
-/* ══════════════════════════════════════
-   STAGGER ITEMS
-══════════════════════════════════════ */
-[data-stagger] { opacity: 0; }
+.curl-surface {
+  position:absolute; bottom:0; width:68px; height:68px;
+  pointer-events:none;
+  transform:scale(0);
+  transform-origin:bottom right;
+  transition:transform 220ms cubic-bezier(.16,1,.3,1),box-shadow 220ms ease-out;
+}
+.curl-right .curl-surface {
+  right:0;
+  background:linear-gradient(225deg,#E8DECA 38%,rgba(220,205,175,.7) 42%,rgba(247,242,227,.25) 50%,transparent 52%);
+}
+.curl-left .curl-surface {
+  left:0;
+  transform-origin:bottom left;
+  background:linear-gradient(-45deg,#E8DECA 38%,rgba(220,205,175,.7) 42%,rgba(247,242,227,.25) 50%,transparent 52%);
+}
+.curl-zone:hover .curl-surface {
+  transform:scale(1);
+  box-shadow:-4px -4px 14px rgba(0,0,0,.14), 2px 2px 6px rgba(0,0,0,.08);
+}
+.curl-hint {
+  position:absolute; bottom:12px;
+  font-family:'Lora',serif; font-size:12px;
+  color:rgba(107,76,59,.35); opacity:0;
+  transition:opacity 200ms ease-out; pointer-events:none;
+}
+.curl-right .curl-hint { right:12px; }
+.curl-left  .curl-hint { left:12px; }
+.curl-zone:hover .curl-hint { opacity:1; }
+.curl-zone:active .curl-surface { transform:scale(.86); transition-duration:80ms; }
 
-/* ══════════════════════════════════════
-   TIPOGRAFIA — SISTEMA DE GERAÇÕES
-   Cinco mãos, uma enciclopédia
-══════════════════════════════════════ */
+/* ──────────────────────────
+   NAV EDGE ARROWS
+─────────────────────────── */
+.nav-edge-arrow {
+  position:absolute; top:50%; transform:translateY(-50%);
+  width:40px; height:40px; border-radius:50%;
+  background:rgba(247,242,227,.55); backdrop-filter:blur(3px);
+  border:0.75px solid rgba(180,155,110,.3);
+  box-shadow:0 2px 12px rgba(0,0,0,.12);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; opacity:0; pointer-events:none; z-index:30;
+  color:var(--c-ink-faded); transition:background 150ms ease-out;
+}
+.nav-arrow-left  { left:20px; }
+.nav-arrow-right { right:20px; }
+.nav-edge-arrow svg { width:16px; height:16px; }
+.nav-edge-arrow.is-visible { pointer-events:auto; }
+.nav-edge-arrow:hover { background:rgba(247,242,227,.8); }
 
-/* La Belle Aurore — a geração literária e romântica */
-.recipe-subtitle-italic,
-.story-text,
-.backcover-text {
-  font-family: 'La Belle Aurore', cursive;
-  font-size: 15px;
-  line-height: 1.9;
+/* ──────────────────────────
+   DIVIDER TABS
+─────────────────────────── */
+#divider-tabs {
+  position:absolute;
+  right:calc(var(--tab-w) * -1);
+  top:0;
+  display:flex; flex-direction:column;
+  gap:var(--tab-gap); z-index:30;
+  transform-style:preserve-3d;
+  will-change:transform;
+}
+.div-tab {
+  height:var(--tab-h);
+  display:flex;
+  align-items:stretch;
+  cursor:pointer;
+  padding:0;
+  border:0;
+  background:transparent;
+}
+.dt-body { width:0; }
+.dt-tag {
+  position:relative;
+  width:var(--tab-w);
+  display:flex; align-items:center; justify-content:center;
+  border-radius:0 2px 2px 0;
+  border-top:1px solid rgba(0,0,0,.07);
+  border-bottom:1px solid rgba(0,0,0,.1);
+  box-shadow:2px 0 5px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.22);
+  transform-origin:left center;
+  transition:transform 160ms cubic-bezier(.16,1,.3,1),box-shadow 160ms ease;
+}
+.dt-tag:hover  { transform:scaleX(1.12); }
+.dt-tag.active {
+  transform:scaleX(1.18);
+  box-shadow:3px 0 9px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.26);
+}
+.div-tab.is-ready .dt-tag {
+  animation:tab-ready 900ms ease-in-out infinite alternate;
+}
+@keyframes tab-ready {
+  from { filter:saturate(.9) brightness(1); }
+  to { filter:saturate(1.2) brightness(1.08); box-shadow:4px 0 12px rgba(176,125,42,.36); }
+}
+.div-tab:focus-within .dt-tag,
+.div-tab:focus-visible .dt-tag {
+  outline:2px solid rgba(30,15,8,.62);
+  outline-offset:2px;
+}
+.dt-lbl {
+  font-family:'Indie Flower',cursive;
+  font-size:12px; color:#2C1810; opacity:.88;
+  writing-mode:vertical-rl; transform:rotate(180deg);
+  letter-spacing:.4px; pointer-events:none; white-space:nowrap;
+}
+.favorite-tab-count {
+  position:absolute;
+  right:-6px; top:-6px;
+  min-width:16px; height:16px;
+  padding:0 3px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:50%;
+  background:var(--c-cover-red);
+  color:var(--c-cover-white);
+  font-family:'Indie Flower',cursive;
+  font-size:9px; line-height:1;
+  box-shadow:0 2px 4px rgba(30,15,8,.28);
+}
+.favorite-divider-tab .dt-tag {
+  background-image:linear-gradient(rgba(255,255,255,.08),rgba(107,76,59,.06));
 }
 
-/* Cedarville Cursive — o catalogador meticuloso */
-.cover-eyebrow, .cover-subtitle,
-.footer-brand, .page-number,
-.recipe-eyebrow,
-.meta-label, .meta-value,
-.section-label, .step-number, .tip-label,
-.backcover-footer,
-.titlepage-sub, .titlepage-year,
-.toc-label-bottom, .toc-entry, .toc-page,
-.about-eyebrow, .search-intro-label,
-.model-selector-label { font-family: 'Cedarville Cursive', cursive; }
+/* ── SEARCH HISTORY MARKS ── */
+#history-marks {
+  position:absolute;
+  right:calc(var(--tab-w) * -1);
+  top:398px;
+  z-index:31;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:4px;
+  transform-style:preserve-3d;
+  will-change:transform;
+}
+.history-mark {
+  position:relative;
+  width:22px;
+  height:22px;
+  border:0;
+  background:#C8B28C;
+  color:#2C1810;
+  clip-path:polygon(0 0,100% 50%,0 100%);
+  filter:drop-shadow(2px 1px 2px rgba(30,15,8,.24));
+  cursor:pointer;
+  padding:0;
+  transition:transform 150ms cubic-bezier(.16,1,.3,1);
+}
+.history-mark:nth-child(2) { background:#C6A7A0; }
+.history-mark:nth-child(3) { background:#AFC0A0; }
+.history-mark:nth-child(4) { background:#B0BFD0; }
+.history-mark:nth-child(5) { background:#D0BA92; }
+.history-mark span {
+  position:absolute;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+  clip:rect(0 0 0 0);
+}
+.history-mark:hover { transform:translateX(4px); }
+.history-mark:focus-visible { outline:2px solid var(--c-cover-white); outline-offset:2px; }
 
-/* Grape Nuts — quem rabiscou enquanto cozinhava */
-.tip-text,
-.handwritten-annotation,
-.search-annotation {
-  font-family: 'Grape Nuts', cursive;
-  font-size: 14px;
+#demo-banner {
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  z-index:180;
+  min-height:34px;
+  padding:6px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  background:#2C1810;
+  color:var(--c-cover-white);
+  font-family:'Indie Flower',cursive;
+  font-size:13px;
+}
+#demo-banner strong { color:#EDD09A; font-weight:400; }
+#demo-banner button {
+  border:0;
+  background:transparent;
+  color:#B7C994;
+  font-family:'Cedarville Cursive',cursive;
+  font-size:12px;
+  cursor:pointer;
 }
 
-/* ══════════════════════════════════════
+/* ── BOTTOM BINDER TABS ── */
+#bottom-tabs {
+  position:absolute;
+  right:calc(var(--tab-w) * -1);
+  bottom:18px;
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:3px;
+  z-index:34;
+  transform-style:preserve-3d;
+  will-change:transform;
+}
+.bottom-tab {
+  width:var(--tab-w);
+  min-height:48px;
+  padding:7px 4px;
+  border:1px solid rgba(30,15,8,.16);
+  border-left:0;
+  border-radius:0 4px 4px 0;
+  box-shadow:3px 0 7px rgba(30,15,8,.2),inset 0 1px 0 rgba(255,255,255,.28);
+  color:#2C1810;
+  font-family:'Indie Flower',cursive;
+  font-size:13px;
+  cursor:pointer;
+  transform-origin:left center;
+  transition:transform 160ms cubic-bezier(.16,1,.3,1),filter 160ms ease;
+}
+.bottom-tab[data-lang="pt"] { background:#7E96B0; }
+.bottom-tab[data-lang="en"] { background:#9488AA; }
+.bottom-tab.help-tab { background:#A87880; }
+.bottom-tab:hover { transform:scaleX(1.12); filter:saturate(1.08); }
+.bottom-tab.active {
+  transform:scaleX(1.18);
+  box-shadow:4px 0 9px rgba(30,15,8,.24),inset 0 1px 0 rgba(255,255,255,.3);
+}
+.bottom-tab:focus-visible {
+  outline:2px solid var(--c-cover-white);
+  outline-offset:3px;
+}
+
+#page-position {
+  position:absolute;
+  left:22px;
+  bottom:-31px;
+  display:flex;
+  gap:5px;
+  align-items:center;
+  color:rgba(250,247,240,.76);
+  font-family:'Cedarville Cursive',cursive;
+  font-size:12px;
+  font-variant-numeric:tabular-nums;
+  z-index:33;
+  opacity:0;
+}
+.page-position-separator { opacity:.5; }
+
+[data-role="result"].is-translating .recipe-card-border,
+[data-role="result"].is-translating .handwritten-annotation,
+[data-role="base-recipe"].is-translating .recipe-card-border,
+[data-role="base-recipe"].is-translating .handwritten-annotation {
+  opacity:.42;
+  transition:opacity 180ms ease-out;
+}
+.multiline-i18n { white-space:pre-line; }
+.result-continuation-card {
+  overflow:hidden;
+}
+.continuation-title {
+  font-family:'Homemade Apple',cursive;
+  font-size:22px;
+  line-height:1.2;
+  color:var(--c-ink);
+  margin:7px 0 20px;
+}
+.continuation-ornament {
+  width:34%;
+  margin:28px auto 0;
+  opacity:.42;
+  color:var(--c-gold);
+}
+.continuation-ornament svg { width:100%; height:auto; }
+
+/* ──────────────────────────
+   SHORTCUTS OVERLAY
+─────────────────────────── */
+#shortcuts-overlay {
+  position:fixed; inset:0; z-index:200;
+  background:rgba(30,15,8,.55);
+  display:flex; align-items:center; justify-content:center;
+  backdrop-filter:blur(4px);
+}
+.shortcuts-panel {
+  background:var(--c-page);
+  border:1px solid var(--c-border);
+  padding:40px 48px;
+  min-width:320px; text-align:center;
+  box-shadow:0 24px 60px rgba(0,0,0,.4);
+}
+.shortcuts-panel h3 {
+  margin:0 0 18px;
+  font-family:'Homemade Apple',cursive;
+  font-size:20px; color:var(--c-ink);
+}
+.shortcut-sheet { display:none; }
+.shortcut-sheet.active { display:block; }
+.shortcuts-grid {
+  display:grid; grid-template-columns:auto 1fr;
+  gap:10px 24px; text-align:left;
+  margin-top:4px;
+}
+.shortcut-key {
+  font-family:'Cedarville Cursive',cursive;
+  font-size:13px; color:var(--c-red-accent);
+  text-align:right;
+}
+.shortcut-desc {
+  font-family:'Indie Flower',cursive;
+  font-size:13px; color:var(--c-ink-faded);
+}
+.shortcut-sheet-nav {
+  display:flex; align-items:center; justify-content:center;
+  gap:18px; margin-top:22px;
+  font-family:'Cedarville Cursive',cursive;
+  color:var(--c-ink-faded);
+}
+.shortcut-sheet-nav button {
+  width:34px; height:30px;
+  border:1px solid var(--c-border);
+  background:var(--c-page-alt); color:var(--c-ink);
+  cursor:pointer; font:20px/1 'Cedarville Cursive',cursive;
+}
+.shortcut-sheet-nav button:hover { background:rgba(176,125,42,.12); }
+.shortcut-sheet-nav button:focus-visible {
+  outline:2px solid var(--c-red-accent); outline-offset:2px;
+}
+
+/* ──────────────────────────
+   ONBOARDING HINT
+─────────────────────────── */
+#onboarding-hint {
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+  background:rgba(30,15,8,.82); color:var(--c-cover-white);
+  font-family:'Indie Flower',cursive; font-size:13px;
+  padding:9px 20px; border-radius:2px; z-index:150;
+  pointer-events:none; white-space:nowrap;
+  display:flex; align-items:center; gap:8px;
+}
+
+#print-recipe { display:none; }
+
+/* ──────────────────────────
+   ENDPAPER + TITLE PAGE
+─────────────────────────── */
+.endpaper-page {
+  background:var(--c-page-alt);
+  display:flex; align-items:center; justify-content:center;
+}
+.endpaper-body {
+  text-align:center;
+  padding:40px 48px;
+}
+.endpaper-quote {
+  font-family:'La Belle Aurore',cursive;
+  font-size:15px;
+  color:var(--c-ink-faded);
+  line-height:2;
+}
+.endpaper-rule {
+  width:40px; height:1px;
+  background:var(--c-rule);
+  margin:20px auto 16px;
+}
+.title-page {
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+}
+.title-page-body {
+  flex:1;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  text-align:center;
+  padding:40px 48px;
+}
+.title-page-eyebrow {
+  display:block;
+  font-family:'Cedarville Cursive',cursive;
+  font-size:10px; text-transform:capitalize;
+  letter-spacing:2.5px; color:var(--c-red-accent);
+  margin-bottom:16px;
+}
+.title-page-title {
+  font-family:'Homemade Apple',cursive;
+  font-size:clamp(44px,5.5vw,68px);
+  color:var(--c-ink); line-height:1.1;
+  margin-bottom:20px;
+}
+.title-page-rule {
+  width:60px; height:1px;
+  background:var(--c-rule);
+  margin:4px auto 16px;
+}
+.title-page-sub {
+  font-family:'La Belle Aurore',cursive;
+  font-size:14px; color:var(--c-ink-faded);
+  margin-top:6px;
+}
+.title-page-year {
+  font-family:'Cedarville Cursive',cursive;
+  font-size:9px; color:var(--c-ink-faded);
+  letter-spacing:1.5px; text-transform:capitalize;
+}
+
+/* ──────────────────────────
+   STAGGER
+─────────────────────────── */
+[data-stagger] { opacity:0; }
+/* hide page content during flip while keeping background + gutter border visible */
+.page.is-leaving > * { opacity:0 !important; }
+
+/* ── CENTRE SPINE ── */
+.book-gutter {
+  display:none;
+  position:absolute; left:50%; top:0; bottom:0;
+  width:1px; transform:translateX(-50%);
+  background:var(--c-border);
+  pointer-events:none;
+  z-index:5;
+}
+.book-wrapper.is-open .book-gutter { display:block; }
+
+/* ──────────────────────────
+   MOBILE
+─────────────────────────── */
+@media (max-width:768px) {
+  .book-wrapper {
+    width:100dvw;
+    height:calc(100dvh - 78px);
+    margin-bottom:78px;
+  }
+  .book-spread.active {
+    display:block!important;
+    width:100dvw;
+    height:100%;
+    overflow:hidden;
+  }
+  .book-spread > .page-left,
+  .book-spread > .page-right {
+    position:absolute;
+    inset:0;
+    width:100dvw;
+    height:100%;
+    padding:28px 24px 52px;
+    transition:transform 320ms cubic-bezier(.16,1,.3,1);
+  }
+  .book-spread > .page-right { transform:translateX(100%)!important; }
+  .book-spread.mobile-right > .page-left { transform:translateX(-100%)!important; }
+  .book-spread.mobile-right > .page-right { transform:translateX(0)!important; }
+  #divider-tabs {
+    right:0;
+    top:auto;
+    bottom:0;
+    left:0;
+    transform:none;
+    flex-direction:row;
+    justify-content:center;
+    position:fixed;
+    z-index:50;
+    gap:2px;
+  }
+  .dt-body { display:none; }
+  .dt-tag {
+    width:auto;
+    min-height:38px;
+    padding:0 12px;
+    border-radius:3px 3px 0 0; border-bottom:none;
+    writing-mode:horizontal-tb;
+  }
+  .dt-lbl { writing-mode:horizontal-tb; transform:none; font-size:11px; }
+  .dt-tag:hover,
+  .dt-tag.active { transform:translateY(-4px); }
+  #bottom-tabs {
+    position:fixed;
+    right:0;
+    left:auto;
+    bottom:42px;
+    flex-direction:row;
+    z-index:52;
+  }
+  #history-marks {
+    display:none;
+  }
+  #demo-banner {
+    align-items:flex-start;
+    font-size:11px;
+    padding:5px 9px;
+  }
+  .bottom-tab {
+    min-width:50px;
+    min-height:34px;
+    padding:5px 13px 8px;
+    width:auto;
+    border-left:1px solid rgba(30,15,8,.16);
+    border-bottom:0;
+    border-radius:4px 4px 0 0;
+  }
+  .bottom-tab:hover,
+  .bottom-tab.active { transform:translateY(-4px); }
+  #page-position {
+    position:fixed;
+    left:12px;
+    bottom:48px;
+    color:var(--c-ink-faded);
+    background:rgba(247,242,227,.78);
+    padding:3px 7px;
+    border-radius:2px;
+  }
+  .recipe-title { font-size:clamp(22px,6vw,32px); }
+  #recipe-search { font-size:clamp(20px,5vw,28px); }
+  .toc-sheet { padding:30px 28px 52px; }
+  .toc-entry { font-size:13px; line-height:1.85; }
+  .toc-heading { font-size:30px; margin-bottom:14px; }
+  .recipe-card-border { margin:16px 12px 42px; padding:20px; }
+}
+
+/* ──────────────────────────
+   PRINT
+─────────────────────────── */
+@media print {
+  @page { size:A4 portrait; margin:12mm; }
+  html,body {
+    width:auto!important;
+    height:auto!important;
+    overflow:visible!important;
+    background:#F7F2E3!important;
+  }
+  body > *:not(#print-recipe) { display:none!important; }
+  #print-recipe {
+    display:block!important;
+    color:#1E0F08;
+    background:#F7F2E3;
+  }
+  .print-card-sheet {
+    position:relative;
+    width:100%;
+    padding:13mm 16mm 16mm;
+    background:#F7F2E3;
+    border:1.5px solid #BBA37A;
+    outline:1px solid #D8C8A7;
+    outline-offset:-4mm;
+    box-sizing:border-box;
+    font-family:'EB Garamond',Georgia,serif;
+  }
+  .print-card-header {
+    text-align:center;
+    padding-bottom:7mm;
+    margin-bottom:6mm;
+    border-bottom:1px solid #B07D2A;
+  }
+  .print-card-kicker {
+    display:block;
+    margin-bottom:3mm;
+    font:9.5pt/1.2 'Kalam',cursive;
+    letter-spacing:1.2px;
+    color:#8E2F2F;
+  }
+  .print-card-header h1 {
+    margin:0;
+    font:italic 600 25pt/1.15 'EB Garamond',Georgia,serif;
+    color:#1E0F08;
+  }
+  .print-card-header p {
+    margin:2mm 0 0;
+    font:italic 12pt/1.4 'EB Garamond',Georgia,serif;
+    color:#6B4C3B;
+  }
+  .print-card-meta {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    margin:0 0 7mm;
+    border-top:1px solid #D8C8A7;
+    border-bottom:1px solid #D8C8A7;
+  }
+  .print-card-meta div { padding:3mm 4mm; text-align:center; }
+  .print-card-meta div + div { border-left:1px solid #D8C8A7; }
+  .print-card-meta dt { font:9.5pt/1.2 'Kalam',cursive; color:#8E2F2F; }
+  .print-card-meta dd { margin:1mm 0 0; font:11pt/1.3 'EB Garamond',Georgia,serif; }
+  .print-card-body {
+    display:grid;
+    grid-template-columns:1fr 1.35fr;
+    gap:8mm;
+    margin-bottom:6mm;
+  }
+  .print-card-section { margin-bottom:5mm; }
+  .print-card-section h2 {
+    margin:0 0 3mm;
+    padding-bottom:1.5mm;
+    border-bottom:1px solid #D8C8A7;
+    font:600 12.5pt/1.2 'EB Garamond',Georgia,serif;
+    color:#8E2F2F;
+  }
+  .print-card-section ul,
+  .print-card-section ol { margin:0; padding-left:5mm; }
+  .print-card-section li {
+    margin:0 0 2mm;
+    padding-left:1mm;
+    break-inside:avoid;
+    font:10.5pt/1.4 'EB Garamond',Georgia,serif;
+  }
+  .print-card-story {
+    margin-bottom:4mm;
+    padding-bottom:4mm;
+    border-bottom:1px solid #D8C8A7;
+  }
+  .print-card-story p {
+    margin:0;
+    font:italic 9.5pt/1.55 'EB Garamond',Georgia,serif;
+    color:#6B4C3B;
+  }
+  .print-card-tip,
+  .print-card-personal-note {
+    margin-top:5mm;
+    padding:4mm 5mm;
+    border:1px solid #D8C8A7;
+    font:10.5pt/1.4 'Kalam',cursive;
+    break-inside:avoid;
+  }
+  .print-card-tip strong,
+  .print-card-personal-note strong { color:#8E2F2F; font-weight:700; }
+  .print-card-tip p,
+  .print-card-personal-note p { margin:1.5mm 0 0; }
+  .print-card-footer {
+    margin-top:5mm;
+    padding-top:3mm;
+    border-top:1px solid #D8C8A7;
+    text-align:center;
+    font:9.5pt/1.2 'Kalam',cursive;
+    color:#6B4C3B;
+  }
+}
+
+/* ──────────────────────────
    REDUCED MOTION
-══════════════════════════════════════ */
+─────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  *, *::before, *::after {
+    animation-duration:0.001ms!important;
+    transition-duration:0.001ms!important;
+  }
 }

@@ -4,15 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Foodpedia</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/book.css') }}">
-  <!-- GSAP must load before book.js -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Homemade+Apple&family=La+Belle+Aurore&family=Indie+Flower&family=Cedarville+Cursive&family=Grape+Nuts&family=Kalam:wght@300;400;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/book.css', v=asset_version) }}">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
           integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg=="
           crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
-<body>
+<body data-foodpedia-layout="dynamic-v1">
 
-<!-- Paper grain overlay -->
+{% if demo_mode %}
+<aside id="demo-banner" aria-label="Modo de demonstração">
+  <span>Modo demo: pesquise
+    {% for dish in demo_dishes %}
+      <strong>{{ dish }}</strong>{% if not loop.last %}, {% endif %}
+    {% endfor %}
+  </span>
+  <button type="button" onclick="showOllamaSetup()">Rodar localmente →</button>
+</aside>
+{% endif %}
+
 <svg class="grain-filter" xmlns="http://www.w3.org/2000/svg">
   <filter id="grain">
     <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
@@ -24,14 +36,22 @@
 <div class="book-scene">
   <div class="book-wrapper">
 
-    <!-- ════════════════════════════════
-         CAPA TRASEIRA (visível quando fechado)
-    ════════════════════════════════ -->
-    <div id="book-backcover">
+    <!-- ════════════════════════
+         CAPA TRASEIRA (exterior)
+    ════════════════════════ -->
+    <div id="book-backcover" role="button" tabindex="0"
+         aria-label="Clique para voltar à capa frontal">
       <div class="cover-checkerboard" id="backcover-checkerboard"></div>
       <div class="backcover-ext-content">
-        <div class="backcover-ext-ornament">{% include 'svg/ornament_floral.svg' %}</div>
-        <p class="backcover-ext-quote">
+        <div class="backcover-badge">
+          <div class="backcover-badge-stripe"></div>
+          <div class="backcover-badge-body">
+            <span class="backcover-badge-eyebrow" data-i18n="backcover_eyebrow">arquivo culinário local</span>
+            <strong class="backcover-badge-title">Foodpedia</strong>
+          </div>
+        </div>
+        <div class="backcover-ext-ornament">{% include 'svg/botanical/ornament_floral.svg' %}</div>
+        <p class="backcover-ext-quote" data-i18n="backcover_quote">
           Foodpedia é uma enciclopédia culinária<br>
           construída com curiosidade e código.<br>
           Cada receita é consultada ao vivo,<br>
@@ -39,237 +59,98 @@
         </p>
         <div class="backcover-ext-rule"></div>
         <p class="backcover-ext-footer">foodpedia &mdash; 2025</p>
+        <span class="backcover-return-hint" data-i18n="backcover_return">clique para voltar à capa</span>
       </div>
       <div class="backcover-ext-spine"></div>
     </div>
 
-    <!-- ════════════════════════════════
-         CAPA [spread 0]
-    ════════════════════════════════ -->
-    <div id="book-cover">
-      <!-- Xadrez vermelho+branco -->
-      <div class="cover-checkerboard" id="checkerboard"></div>
+    <!-- ════════════════════════
+         CAPA [spread 0] — 3D flip com endpaper
+    ════════════════════════ -->
+    <div id="cover-wrapper">
 
-      <!-- Badge / stamp central -->
-      <div class="cover-content">
-        <div class="cover-badge">
-          <div class="cover-badge-stripe"></div>
-          <div class="cover-badge-body">
-            <span class="cover-eyebrow">receitas do mundo</span>
-            <h1 class="cover-title">Foodpedia</h1>
-            <p class="cover-subtitle"></p>
+      <!-- Face frontal: xadrez vermelho -->
+      <div id="cover-front">
+        <div class="cover-checkerboard" id="checkerboard"></div>
+        <div class="cover-content">
+          <div class="cover-badge">
+            <div class="cover-badge-stripe"></div>
+            <div class="cover-badge-body">
+              <span class="cover-eyebrow" data-i18n="cover_eyebrow">receitas do mundo</span>
+              <h1 class="cover-title">Foodpedia</h1>
+            </div>
           </div>
         </div>
+        <div class="opening-shadow"></div>
       </div>
 
-      <!-- Ribbon decorativo na capa -->
-      <div class="ribbon"></div>
+      <!-- Face traseira: página em branco -->
+      <div id="cover-back">
+        <div class="cover-back-spine"></div>
+      </div>
 
-      <!-- Shadow for open animation -->
-      <div class="opening-shadow"></div>
+    </div><!-- /#cover-wrapper -->
+
+    <!-- Two-page blank spread revealed instantly on cover open -->
+    <div id="page-reveal">
+      <!-- Left page: quote + rule + year -->
+
+      <!-- Right page: blank -->
     </div>
 
-    <!-- ════════════════════════════════
-         BOOK INTERIOR (pages)
-    ════════════════════════════════ -->
-    <div id="book-pages">
+    <!-- ════════════════════════
+         SPREADS DO LIVRO
+    ════════════════════════ -->
+    <div id="book-spreads">
 
-      <!-- ── SPREAD 1: INTRO ── -->
-      <div class="book-spread" data-spread="1">
-        <div class="page page-left backcover-page">
-          <div class="backcover-ornament-top" data-stagger>
-            {% include 'svg/ornament_floral.svg' %}
-          </div>
-          <div class="backcover-spacer"></div>
-          <p class="backcover-text" data-stagger>
-            Foodpedia é uma enciclopédia culinária construída
-            com curiosidade e código. Cada receita é consultada
-            ao vivo, como perguntar a um chef de memória longa.
-          </p>
-          <div class="backcover-rule" data-stagger></div>
-          <p class="backcover-footer" data-stagger>foodpedia — 2025</p>
-          <div class="backcover-spacer"></div>
-          <div class="backcover-ornament-bottom" data-stagger>
-            {% include 'svg/ornament_floral.svg' %}
-          </div>
-          <div class="page-footer">
-            <span class="footer-brand">Foodpedia</span>
-            <span class="page-number">—</span>
+      <!-- ── SPREAD 1: ENDPAPER + FOLHA DE ROSTO ── -->
+      <div class="book-spread" data-role="endpaper">
+        <div class="page-turn-layer"><div class="turn-front"></div><div class="turn-back"></div></div>
+
+        <!-- Página esquerda: endpaper (parte interna da capa frontal) -->
+        <div class="page page-left endpaper-page">
+          <div class="curl-zone curl-left" role="button" aria-label="Página anterior"><div class="curl-surface"></div><div class="curl-hint">‹</div></div>
+          <div class="endpaper-body" data-stagger>
+            <p class="cover-back-quote" data-i18n="backcover_quote">
+              Foodpedia é uma enciclopédia culinária construída com curiosidade e código.
+              Cada receita é consultada ao vivo, como perguntar a um chef de memória longa.
+            </p>
+            <div class="cover-back-rule"></div>
+            <span class="cover-back-footer">Foodpedia &mdash; 2025</span>
+            <div class="endpaper-rule"></div>
           </div>
         </div>
-        <div class="page page-right titlepage-right">
-          <div class="titlepage-divider" data-stagger>
-            {% include 'svg/ornament_floral.svg' %}
+
+        <!-- Página direita: folha de rosto -->
+        <div class="page page-right title-page">
+          <div class="curl-zone curl-right" role="button" aria-label="Próxima página"><div class="curl-surface"></div><div class="curl-hint">›</div></div>
+          <div class="title-page-body">
+            <span class="title-page-eyebrow" data-stagger data-i18n="cover_eyebrow">receitas do mundo</span>
+            <h1 class="title-page-title" data-stagger>Foodpedia</h1>
+            <div class="title-page-rule" data-stagger></div>
+            <p class="title-page-sub" data-stagger data-i18n="backcover_eyebrow">arquivo culinário local</p>
           </div>
-          <h1 class="titlepage-main" data-stagger>Foodpedia</h1>
-          <p class="titlepage-year" data-stagger>— 2025</p>
           <div class="page-footer">
             <span class="footer-brand">Foodpedia</span>
-            <span class="page-number">—</span>
+            <span class="title-page-year">2025</span>
           </div>
         </div>
       </div>
 
-      <!-- ── SPREAD 2: FOLHA DE ROSTO ── -->
-      <div class="book-spread" data-spread="2">
-        <div class="page page-left empty-page">
-          <div class="page-footer">
-            <span class="footer-brand">Foodpedia</span>
-            <span class="page-number">—</span>
-          </div>
-        </div>
-        <div class="page page-right titlepage-right">
-          <p class="cover-eyebrow" data-stagger style="margin-bottom:24px;">Enciclopédia Culinária</p>
-          <div class="titlepage-divider" data-stagger>
-            {% include 'svg/divider.svg' %}
-          </div>
-          <h2 class="titlepage-main" data-stagger>Foodpedia</h2>
-          <div class="titlepage-divider" data-stagger style="transform:scaleX(-1);">
-            {% include 'svg/divider.svg' %}
-          </div>
-          <p class="titlepage-sub" data-stagger>Enciclopédia Culinária</p>
-          <div class="page-footer">
-            <span class="footer-brand">Foodpedia</span>
-            <span class="page-number">i</span>
-          </div>
-        </div>
-      </div>
+      <!-- Sumário paginado e numerado em tempo real -->
+      <div id="toc-spreads-container"></div>
 
-      <!-- ── SPREAD 3: SUMÁRIO ── -->
-      <div class="book-spread" data-spread="3">
-        <div class="page page-left toc-left">
-          <div class="toc-botanical" data-stagger>
-            {% include 'svg/ornament_botanical_large.svg' %}
-          </div>
-          <span class="toc-label-bottom" data-stagger>Índice</span>
-          <div class="page-footer">
-            <span class="footer-brand">Foodpedia</span>
-            <span class="page-number">ii</span>
-          </div>
-        </div>
-        <div class="page page-right toc-right">
-          <h2 class="toc-heading" data-stagger>Sumário</h2>
-          <ul class="toc-entries">
-            <li data-stagger>
-              <a class="toc-entry toc-capa" id="toc-capa-link">
-                <span class="toc-entry-title">← Capa</span>
-                <span class="toc-dots"></span>
-                <span class="toc-page">—</span>
-              </a>
-            </li>
-            <li><hr class="toc-rule"></li>
-            <li data-stagger>
-              <a class="toc-entry" data-goto="4">
-                <span class="toc-entry-title">Sobre o Foodpedia</span>
-                <span class="toc-dots"></span>
-                <span class="toc-page">2</span>
-              </a>
-            </li>
-            <li data-stagger>
-              <a class="toc-entry" data-goto="5">
-                <span class="toc-entry-title">Pesquisar um Prato</span>
-                <span class="toc-dots"></span>
-                <span class="toc-page">4</span>
-              </a>
-            </li>
-            <li><hr class="toc-rule"></li>
-            <li data-stagger>
-              <a class="toc-entry" style="opacity:0.6;cursor:default;">
-                <span class="toc-entry-title">Receitas Clássicas</span>
-                <span class="toc-dots"></span>
-                <span class="toc-page">6</span>
-              </a>
-            </li>
-            <li data-stagger>
-              <a class="toc-entry toc-sub" data-goto="6">
-                <span class="toc-entry-title">· Feijoada Brasileira</span>
-                <span class="toc-dots"></span>
-                <span class="toc-page">6</span>
-              </a>
-            </li>
-            <li data-stagger>
-              <a class="toc-entry toc-sub" data-goto="7">
-                <span class="toc-entry-title">· Risotto ai Funghi</span>
-                <span class="toc-dots"></span>
-                <span class="toc-page">8</span>
-              </a>
-            </li>
-            <li data-stagger>
-              <a class="toc-entry toc-sub" data-goto="8">
-                <span class="toc-entry-title">· Ramen Tonkotsu</span>
-                <span class="toc-dots"></span>
-                <span class="toc-page">10</span>
-              </a>
-            </li>
-            <li data-stagger>
-              <a class="toc-entry toc-sub" data-goto="9">
-                <span class="toc-entry-title">· Crème Brûlée</span>
-                <span class="toc-dots"></span>
-                <span class="toc-page">12</span>
-              </a>
-            </li>
-            <li data-stagger>
-              <a class="toc-entry toc-sub" data-goto="10">
-                <span class="toc-entry-title">· Paella Valenciana</span>
-                <span class="toc-dots"></span>
-                <span class="toc-page">14</span>
-              </a>
-            </li>
-            <li data-stagger>
-              <a class="toc-entry toc-sub" data-goto="11">
-                <span class="toc-entry-title">· Tacos de Carnitas</span>
-                <span class="toc-dots"></span>
-                <span class="toc-page">16</span>
-              </a>
-            </li>
-            <li data-stagger>
-              <a class="toc-entry toc-sub" data-goto="12">
-                <span class="toc-entry-title">· Spaghetti Carbonara</span>
-                <span class="toc-dots"></span>
-                <span class="toc-page">18</span>
-              </a>
-            </li>
-            <li data-stagger>
-              <a class="toc-entry toc-sub" data-goto="13">
-                <span class="toc-entry-title">· Pad Thai</span>
-                <span class="toc-dots"></span>
-                <span class="toc-page">20</span>
-              </a>
-            </li>
-            <li data-stagger>
-              <a class="toc-entry toc-sub" data-goto="14">
-                <span class="toc-entry-title">· Croissant</span>
-                <span class="toc-dots"></span>
-                <span class="toc-page">22</span>
-              </a>
-            </li>
-            <li data-stagger>
-              <a class="toc-entry toc-sub" data-goto="15">
-                <span class="toc-entry-title">· Moussaka</span>
-                <span class="toc-dots"></span>
-                <span class="toc-page">24</span>
-              </a>
-            </li>
-          </ul>
-          <div class="page-footer">
-            <span class="footer-brand">Foodpedia</span>
-            <span class="page-number">iii</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── SPREAD 4: SOBRE ── -->
-      <div class="book-spread" data-spread="4">
+      <!-- ── SPREAD 2: SOBRE ── -->
+      <div class="book-spread" data-role="about">
+        <div class="page-turn-layer"><div class="turn-front"></div><div class="turn-back"></div></div>
         <div class="page page-left about-page">
-          <span class="about-eyebrow" data-stagger>Sobre o Projeto</span>
-          <h2 class="about-heading" data-stagger>O que é<br>o Foodpedia?</h2>
+          <div class="curl-zone curl-left" role="button" aria-label="Página anterior"><div class="curl-surface"></div><div class="curl-hint">‹</div></div>
+          <span class="about-eyebrow" data-stagger data-i18n="about_eyebrow_left">Sobre o Projeto</span>
+          <h2 class="about-heading" data-stagger data-i18n="about_heading">O que é<br>o Foodpedia?</h2>
           <div class="about-body">
-            <p data-stagger>Foodpedia é uma enciclopédia culinária viva. Não tem banco de dados fixo — cada receita é consultada em tempo real, como se você perguntasse a um chef de memória longa.</p>
-            <p data-stagger>A estrutura editorial do livro serve de cenário para essa conversa. O ritmo de virar páginas é o ritmo de esperar por uma resposta boa.</p>
-            <p data-stagger>As dez receitas base são clássicos com história. A décima-primeira pode ser qualquer coisa que você quiser descobrir.</p>
-          </div>
-          <div data-stagger style="margin-top:20px;">
-            {% include 'svg/divider.svg' %}
+            <p data-stagger data-i18n="about_body_1">Foodpedia é uma enciclopédia culinária viva. Não tem banco de dados fixo: cada receita é consultada em tempo real, como perguntar a um chef de memória longa.</p>
+            <p data-stagger data-i18n="about_body_2">As dezesseis receitas clássicas cobrem doze países e estão sempre disponíveis para leitura. A próxima pode ser qualquer coisa que você quiser descobrir.</p>
+            <p data-stagger data-i18n="about_body_3">Toda a inteligência roda localmente via Ollama. Nenhuma consulta sai da sua máquina. Sem chave de API, sem custo por pergunta, sem nuvem.</p>
           </div>
           <div class="page-footer">
             <span class="footer-brand">Foodpedia</span>
@@ -277,14 +158,18 @@
           </div>
         </div>
         <div class="page page-right about-page">
-          <span class="about-eyebrow" data-stagger>Como Usar</span>
-          <div class="about-body">
-            <p data-stagger>Navegue pelo livro usando o sumário ou virando as páginas pelos cantos. As seis receitas clássicas estão sempre disponíveis para leitura.</p>
-            <p data-stagger>Para consultar um prato específico, vá até <em>Pesquisar um Prato</em>. Digite o nome e pressione Enter. O sistema consultará a enciclopédia enquanto você folheia as receitas.</p>
-            <p data-stagger>Quando o resultado estiver pronto, o marcador de fita piscará suavemente e o canto da página ganhará um pulso. Vire a página para ver a receita.</p>
-            <p data-stagger>Clique no marcador de fita vermelho a qualquer momento para voltar ao sumário.</p>
+          <div class="curl-zone curl-right" role="button" aria-label="Próxima página"><div class="curl-surface"></div><div class="curl-hint">›</div></div>
+          <span class="about-eyebrow" data-stagger data-i18n="about_eyebrow_right">Como Usar</span>
+          <div class="about-body about-manual">
+            <p data-stagger data-i18n="manual_1">Vire as páginas pelos cantos dobrados, pelas setas nas bordas ou com as teclas ← →. As divisórias coloridas levam direto a cada seção. Clique na capa a qualquer momento para fechar e reabrir.</p>
+            <p data-stagger data-i18n="manual_2">Na pesquisa, o Ollama roda inteiramente na sua máquina — sem API, sem nuvem. Enquanto o modelo cozinha a resposta, as receitas clássicas já estão disponíveis para leitura.</p>
+            <p data-stagger data-i18n="manual_3">Duplo clique em qualquer página abre uma anotação manuscrita que pode ser arrastada para qualquer canto. As anotações persistem entre sessões.</p>
+            <p data-stagger data-i18n="manual_4">A fita vermelha favorita a página com um clique e imprime uma ficha editorial com dois cliques. A divisória Favoritos aparece assim que houver alguma marcação.</p>
+            <p data-stagger data-i18n="manual_5">PT e EN trocam a edição completa do livro, traduzindo também a receita já carregada, se houver. O histórico de consultas fica nas setas triangulares na lateral.</p>
+            <p data-stagger data-i18n="manual_6">Salvas guarda receitas completas com anotação pessoal editável. Favoritos guarda qualquer página do livro, incluindo clássicas, resultado e spreads de sumário.</p>
+            <p data-stagger data-i18n="manual_7">A tecla ? abre o guia de atalhos. No fim do livro, a capa traseira fica aberta até um clique. No celular, cada metade da página é independente.</p>
           </div>
-          <div class="handwritten-annotation annotation-0" data-stagger>
+          <div class="handwritten-annotation annotation-0 multiline-i18n" data-stagger data-i18n="manual_annotation">
             qualquer prato<br>do mundo!
           </div>
           <div class="page-footer">
@@ -294,89 +179,45 @@
         </div>
       </div>
 
-      <!-- ── SPREAD 5: PESQUISAR ── -->
-      <div class="book-spread" data-spread="5">
-        <div class="page page-left search-left">
-          <span class="search-intro-label" data-stagger>Nova Consulta</span>
-          <h2 class="search-intro-heading" data-stagger>
-            Qualquer prato do mundo,<br>
-            qualquer culinária,<br>
-            qualquer época.
-          </h2>
-          <div data-stagger>{% include 'svg/divider.svg' %}</div>
-          <p class="search-intro-body" data-stagger>
-            Escreva o nome de um prato na página ao lado.
-            Pode ser o prato da vovó, o que você provou
-            em viagem, ou simplesmente o que quer comer hoje.
-            O Foodpedia consulta sua memória e conta a história.
-          </p>
-          <span class="search-annotation" data-stagger>até invenções&#10;funcionam!</span>
-
-          <!-- Model selector -->
-          <div class="model-selector" id="model-selector" data-stagger>
-            <span class="model-selector-label">modelo</span>
-            <ul class="model-list" id="model-list">
-              <li class="model-option loading-models">carregando...</li>
-            </ul>
-          </div>
-
-          <div class="page-footer">
-            <span class="footer-brand">Foodpedia</span>
-            <span class="page-number">4</span>
-          </div>
-        </div>
-        <div class="page page-right search-right">
-          <div class="recipe-card-border" style="display:flex;flex-direction:column;justify-content:center;">
-            <p class="search-question" data-stagger>Qual prato você quer conhecer?</p>
-            <div class="search-ruled-line" data-stagger></div>
-            <input type="text" id="recipe-search"
-                   placeholder="escreva um prato..."
-                   autocomplete="off" data-stagger>
-            <p class="search-hint" data-stagger>pressione Enter para consultar</p>
-          </div>
-          <div class="page-footer">
-            <span class="footer-brand">Foodpedia</span>
-            <span class="page-number">5</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── SPREADS 6–15: RECEITAS BASE ── -->
+      <!-- ── SPREADS 3–18: RECEITAS BASE ── -->
       {% for recipe in base_recipes %}
-      <div class="book-spread" data-spread="{{ recipe.spread_index }}">
+      <div class="book-spread" data-role="base-recipe" data-recipe-name="{{ recipe.name|e }}">
+        <script type="application/json" class="base-recipe-data">{{ recipe|tojson }}</script>
+        <script type="application/json" class="base-recipe-data-en">{{ base_recipes_en[recipe.name]|tojson }}</script>
+
+        <!-- Page turn layer (3D flip) -->
+        <div class="page-turn-layer"><div class="turn-front"></div><div class="turn-back"></div></div>
 
         <!-- Página esquerda -->
         <div class="page page-left">
+          <div class="curl-zone curl-left" role="button" aria-label="Página anterior"><div class="curl-surface"></div><div class="curl-hint">‹</div></div>
           <div class="recipe-card-border">
             <span class="recipe-eyebrow" data-stagger>{{ recipe.category }}</span>
             <div class="recipe-header-rule" data-stagger></div>
             <h2 class="recipe-title" data-stagger>{{ recipe.name }}</h2>
             <p class="recipe-subtitle-italic" data-stagger>{{ recipe.subtitle }}</p>
-
             <div class="recipe-meta-grid" data-stagger>
               <div class="meta-cell">
-                <span class="meta-label">Preparo</span>
+                <span class="meta-label" data-i18n="meta_prep">Preparo</span>
                 <span class="meta-value">{{ recipe.prep_time }}</span>
               </div>
               <div class="meta-cell">
-                <span class="meta-label">Porções</span>
+                <span class="meta-label" data-i18n="meta_servings">Porções</span>
                 <span class="meta-value">{{ recipe.servings }}</span>
               </div>
               <div class="meta-cell">
-                <span class="meta-label">Nível</span>
+                <span class="meta-label" data-i18n="meta_level">Nível</span>
                 <span class="meta-value">{{ recipe.difficulty }}</span>
               </div>
             </div>
-
             <div class="recipe-section">
-              <h3 class="section-label" data-stagger>Ingredientes</h3>
+              <h3 class="section-label" data-stagger data-i18n="sec_ingredients">Ingredientes</h3>
               <ul class="ingredients-list">
                 {% for ing in recipe.ingredients %}
                 <li data-stagger>{{ ing }}</li>
                 {% endfor %}
               </ul>
             </div>
-
           </div>
           <div class="handwritten-annotation annotation-{{ loop.index0 % 3 }}">{{ recipe.annotation }}</div>
           <div class="page-footer">
@@ -387,22 +228,20 @@
 
         <!-- Página direita -->
         <div class="page page-right">
+          <div class="curl-zone curl-right" role="button" aria-label="Próxima página"><div class="curl-surface"></div><div class="curl-hint">›</div></div>
           <div class="recipe-card-border">
             <div class="botanical-illustration" data-stagger>
-              {% include 'svg/botanical_' + recipe.illustration_key + '.svg' %}
+              {% include 'svg/botanical/botanical_' + recipe.illustration_key + '.svg' %}
             </div>
-
             <div class="recipe-story">
-              <h3 class="section-label" data-stagger>A História</h3>
+              <h3 class="section-label" data-stagger data-i18n="sec_story">A História</h3>
               <p class="story-text" data-stagger>{{ recipe.story }}</p>
             </div>
-
             <div class="divider-ornament" data-stagger>
-              {% include 'svg/divider.svg' %}
+              {% include 'svg/botanical/divider.svg' %}
             </div>
-
             <div class="recipe-section">
-              <h3 class="section-label" data-stagger>Modo de Preparo</h3>
+              <h3 class="section-label" data-stagger data-i18n="sec_prep">Modo de Preparo</h3>
               <ol class="steps-list">
                 {% for step in recipe.steps %}
                 <li data-stagger>
@@ -412,9 +251,8 @@
                 {% endfor %}
               </ol>
             </div>
-
             <div class="chef-tip" data-stagger>
-              <span class="tip-label">Dica</span>
+              <span class="tip-label" data-i18n="sec_tip">Dica</span>
               <p class="tip-text">{{ recipe.tip }}</p>
             </div>
           </div>
@@ -427,10 +265,55 @@
       </div>
       {% endfor %}
 
-      <!-- ── SPREAD 16: RESULTADO ── -->
-      <div class="book-spread" data-spread="16">
-        <!-- Página esquerda (preenchida por JS) -->
+      <!-- ── SPREAD 19: PESQUISAR ── -->
+      <div class="book-spread" data-role="search">
+        <div class="page-turn-layer"><div class="turn-front"></div><div class="turn-back"></div></div>
+        <div class="page page-left search-left">
+          <div class="curl-zone curl-left" role="button" aria-label="Página anterior"><div class="curl-surface"></div><div class="curl-hint">‹</div></div>
+          <span class="search-intro-label" data-stagger data-i18n="search_label">Nova Consulta</span>
+          <h2 class="search-intro-heading" data-stagger data-i18n="search_heading">
+            Qualquer prato do mundo,<br>
+            qualquer culinária,<br>
+            qualquer época.
+          </h2>
+          <p class="search-intro-body" data-stagger data-i18n="search_body">
+            Escreva o nome de um prato na página ao lado.
+            O Foodpedia consulta sua memória e conta a história.
+          </p>
+          <span class="search-annotation multiline-i18n" data-stagger data-i18n="search_annotation">até invenções&#10;funcionam!</span>
+          <div class="model-selector" id="model-selector" data-stagger>
+            <span class="model-selector-label" data-i18n="model_label">modelo</span>
+            <ul class="model-list" id="model-list">
+              <li class="model-option loading-models">carregando...</li>
+            </ul>
+          </div>
+          <div class="page-footer">
+            <span class="footer-brand">Foodpedia</span>
+            <span class="page-number">38</span>
+          </div>
+        </div>
+        <div class="page page-right search-right">
+          <div class="curl-zone curl-right" role="button" aria-label="Próxima página"><div class="curl-surface"></div><div class="curl-hint">›</div></div>
+          <div class="recipe-card-border" style="display:flex;flex-direction:column;justify-content:center;">
+            <p class="search-question" data-stagger data-i18n="search_question">Qual prato você quer conhecer?</p>
+            <div class="search-ruled-line" data-stagger></div>
+            <input type="text" id="recipe-search"
+                   placeholder="escreva um prato..."
+                   autocomplete="off" data-stagger>
+            <p class="search-hint" data-stagger data-i18n="search_hint">pressione Enter para consultar</p>
+          </div>
+          <div class="page-footer">
+            <span class="footer-brand">Foodpedia</span>
+            <span class="page-number">39</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SPREAD 20: RESULTADO ── -->
+      <div class="book-spread" data-role="result">
+        <div class="page-turn-layer"><div class="turn-front"></div><div class="turn-back"></div></div>
         <div class="page page-left" id="result-left">
+          <div class="curl-zone curl-left" role="button" aria-label="Página anterior"><div class="curl-surface"></div><div class="curl-hint">‹</div></div>
           <div class="recipe-card-border" id="result-left-card">
             <span class="recipe-eyebrow" id="res-category" data-stagger></span>
             <div class="recipe-header-rule" data-stagger></div>
@@ -438,80 +321,267 @@
             <p class="recipe-subtitle-italic" id="res-subtitle" data-stagger></p>
             <div class="recipe-meta-grid" data-stagger>
               <div class="meta-cell">
-                <span class="meta-label">Preparo</span>
+                <span class="meta-label" data-i18n="meta_prep">Preparo</span>
                 <span class="meta-value" id="res-prep"></span>
               </div>
               <div class="meta-cell">
-                <span class="meta-label">Porções</span>
+                <span class="meta-label" data-i18n="meta_servings">Porções</span>
                 <span class="meta-value" id="res-servings"></span>
               </div>
               <div class="meta-cell">
-                <span class="meta-label">Nível</span>
+                <span class="meta-label" data-i18n="meta_level">Nível</span>
                 <span class="meta-value" id="res-difficulty"></span>
               </div>
             </div>
             <div class="recipe-section">
-              <h3 class="section-label" data-stagger>Ingredientes</h3>
+              <h3 class="section-label" data-stagger data-i18n="sec_ingredients">Ingredientes</h3>
               <ul class="ingredients-list" id="res-ingredients" data-stagger></ul>
             </div>
           </div>
           <div class="handwritten-annotation annotation-0" id="res-annotation"></div>
+          <div class="result-actions" data-stagger>
+            <button class="save-recipe-btn" onclick="saveCurrentRecipe()" data-i18n="btn_save">Salvar no livro</button>
+            <button class="share-recipe-btn" onclick="shareRecipe()" data-i18n="btn_share">Compartilhar</button>
+            <button class="back-to-search-btn" onclick="goToSection('search')" data-i18n="btn_back">← Pesquisar outro prato</button>
+          </div>
           <div class="page-footer">
             <span class="footer-brand">Foodpedia</span>
-            <span class="page-number">28</span>
+            <span class="page-number">40</span>
           </div>
         </div>
-
-        <!-- Página direita (preenchida por JS) -->
         <div class="page page-right" id="result-right">
+          <div class="curl-zone curl-right" role="button" aria-label="Próxima página"><div class="curl-surface"></div><div class="curl-hint">›</div></div>
           <div class="recipe-card-border">
             <div class="botanical-illustration" id="res-illustration" data-stagger></div>
             <div class="recipe-story">
-              <h3 class="section-label" data-stagger>A História</h3>
+              <h3 class="section-label" data-stagger data-i18n="sec_story">A História</h3>
               <p class="story-text" id="res-story" data-stagger></p>
             </div>
-            <div class="divider-ornament" data-stagger>{% include 'svg/divider.svg' %}</div>
+            <div class="divider-ornament" data-stagger>{% include 'svg/botanical/divider.svg' %}</div>
             <div class="recipe-section">
-              <h3 class="section-label" data-stagger>Modo de Preparo</h3>
+              <h3 class="section-label" data-stagger data-i18n="sec_prep">Modo de Preparo</h3>
               <ol class="steps-list" id="res-steps" data-stagger></ol>
             </div>
             <div class="chef-tip" data-stagger>
-              <span class="tip-label">Dica</span>
+              <span class="tip-label" data-i18n="sec_tip">Dica</span>
               <p class="tip-text" id="res-tip"></p>
             </div>
           </div>
           <div class="page-footer">
             <span class="footer-brand">Foodpedia</span>
-            <span class="page-number">29</span>
+            <span class="page-number">41</span>
+          </div>
+        </div>
+      </div>
+      <div id="result-continuation-container"></div>
+
+      <!-- ── SPREAD 21: ERRO (Ollama offline) ── -->
+      <div class="book-spread" data-role="error" style="display:none;">
+        <div class="page-turn-layer"><div class="turn-front"></div><div class="turn-back"></div></div>
+        <div class="page page-left" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 40px;">
+          <svg viewBox="0 0 80 80" width="64" height="64" fill="none" stroke="var(--c-gold)" stroke-width="0.8">
+            <rect x="10" y="8" width="50" height="64" rx="1"/>
+            <path d="M35,38 C35,32 45,32 45,38 C45,42 40,44 40,48" stroke-linecap="round"/>
+            <circle cx="40" cy="54" r="2" fill="var(--c-gold)"/>
+          </svg>
+          <h2 class="multiline-i18n" data-i18n="error_heading" style="font-family:'Homemade Apple',cursive;font-size:22px;color:var(--c-ink);margin:20px 0 12px;">
+            O Foodpedia<br>está dormindo
+          </h2>
+          <p data-i18n="error_body" style="font-family:'La Belle Aurore',cursive;font-size:15px;color:var(--c-ink-faded);line-height:1.75;max-width:280px;">
+            O modelo local não respondeu. Verifique se o Ollama está rodando e tente novamente.
+          </p>
+          <div class="page-footer">
+            <span class="footer-brand">Foodpedia</span>
+            <span class="page-number">—</span>
+          </div>
+        </div>
+        <div class="page page-right" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:60px 40px;">
+          <button onclick="retryLastSearch()"
+                  style="font-family:'Cedarville Cursive',cursive;font-size:14px;color:#FAF7F0;
+                    background:var(--c-cover-red);padding:10px 28px;border-radius:2px;border:none;
+                    cursor:pointer;text-transform:capitalize;box-shadow:2px 2px 0 rgba(0,0,0,.2);">
+            <span data-i18n="retry">Tentar Novamente</span>
+          </button>
+          <button onclick="showOllamaSetup()"
+                  style="font-family:'Cedarville Cursive',cursive;font-size:13px;color:var(--c-gold);
+                    background:none;border:none;cursor:pointer;">
+            <span data-i18n="setup_link">Como instalar o Ollama</span>
+          </button>
+          <button onclick="goToPrevSpread()"
+                  style="font-family:'Indie Flower',cursive;font-size:13px;color:var(--c-ink-faded);
+                    background:none;border:none;cursor:pointer;">
+            <span data-i18n="back">← Voltar</span>
+          </button>
+          <div class="page-footer">
+            <span class="footer-brand">Foodpedia</span>
+            <span class="page-number">—</span>
           </div>
         </div>
       </div>
 
-      <!-- Page turn curtain — animated overlay, never holds content -->
+      <!-- ── SPREAD 22: SETUP OLLAMA ── -->
+      <div class="book-spread" data-role="setup" style="display:none;">
+        <div class="page-turn-layer"><div class="turn-front"></div><div class="turn-back"></div></div>
+        <div class="page page-left" style="display:flex;flex-direction:column;justify-content:center;padding:48px 40px;">
+          <div class="curl-zone curl-left" role="button" aria-label="Página anterior"><div class="curl-surface"></div><div class="curl-hint">‹</div></div>
+          <span class="about-eyebrow" data-i18n="setup_eyebrow" style="margin-bottom:16px;">Como Instalar</span>
+          <h2 class="multiline-i18n" data-i18n="setup_heading" style="font-family:'Homemade Apple',cursive;font-size:26px;color:var(--c-ink);line-height:1.2;margin-bottom:20px;">
+            Instale o Ollama<br>para começar
+          </h2>
+          <div class="about-body">
+            <p><strong>macOS / Linux</strong></p>
+            <code style="font-family:'Grape Nuts',cursive;font-size:13px;color:var(--c-ink);background:rgba(176,125,42,.08);padding:6px 10px;display:block;margin:8px 0 16px;border-left:2px solid var(--c-gold);">curl -fsSL https://ollama.com/install.sh | sh</code>
+            <p><strong>Windows</strong></p>
+            <p data-i18n="setup_windows" style="font-size:13px;color:var(--c-ink-faded);margin:6px 0 16px;">Baixe o instalador em ollama.com</p>
+            <p><strong data-i18n="setup_model">Depois, baixe um modelo:</strong></p>
+            <code style="font-family:'Grape Nuts',cursive;font-size:13px;color:var(--c-ink);background:rgba(176,125,42,.08);padding:6px 10px;display:block;margin:8px 0;">ollama pull gemma3</code>
+          </div>
+          <div class="page-footer">
+            <span class="footer-brand">Foodpedia</span>
+            <span class="page-number">—</span>
+          </div>
+        </div>
+        <div class="page page-right" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:48px 40px;">
+          <div class="curl-zone curl-right" role="button" aria-label="Próxima página"><div class="curl-surface"></div><div class="curl-hint">›</div></div>
+          <p data-i18n="setup_privacy" style="font-family:'La Belle Aurore',cursive;font-size:15px;color:var(--c-ink-faded);line-height:1.8;text-align:center;max-width:280px;">
+            O Foodpedia funciona inteiramente offline. Nenhuma consulta sai da sua máquina.
+          </p>
+          <div style="width:40px;height:1px;background:var(--c-rule);"></div>
+          <button onclick="retryLastSearch()"
+                  style="font-family:'Cedarville Cursive',cursive;font-size:13px;color:#FAF7F0;
+                    background:var(--c-cover-red);padding:10px 28px;border-radius:2px;border:none;
+                    cursor:pointer;text-transform:capitalize;box-shadow:2px 2px 0 rgba(0,0,0,.2);">
+            <span data-i18n="retry">Tentar Novamente</span>
+          </button>
+          <button onclick="goToPrevSpread()"
+                  style="font-family:'Indie Flower',cursive;font-size:13px;color:var(--c-ink-faded);
+                    background:none;border:none;cursor:pointer;">
+            <span data-i18n="back">← Voltar</span>
+          </button>
+          <div class="page-footer">
+            <span class="footer-brand">Foodpedia</span>
+            <span class="page-number">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Spreads de receitas salvas são injetados aqui dinamicamente pelo JS -->
+      <div id="saved-spreads-container"></div>
+
+      <!-- ── NAVEGAÇÃO POR BORDA ── -->
+      <div class="nav-edge-arrow nav-arrow-left" role="button" aria-label="Página anterior">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </div>
+      <div class="nav-edge-arrow nav-arrow-right" role="button" aria-label="Próxima página">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </div>
+
+      <!-- Cortina de virada de página -->
       <div id="page-curtain"></div>
 
-      <!-- Ribbon visível no livro aberto — pisca quando receita fica pronta -->
-      <div id="ribbon-pages"></div>
+      <!-- Ribbon: clique favorito, duplo clique imprime -->
+      <button id="ribbon-pages" type="button" aria-label="Favoritar página"
+              title="Um clique: favoritar. Dois cliques: imprimir."></button>
 
-    </div><!-- /#book-pages -->
+    </div><!-- /#book-spreads -->
 
-    <!-- Page arrows — navegação por setas nas bordas do livro -->
-    <div id="corner-prev" class="page-corner corner-prev" onclick="handleManualTurn('prev')">
-      <svg width="18" height="32" viewBox="0 0 18 32" fill="none"
-           stroke="var(--c-ink)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 4 L4 16 L12 28"/>
-      </svg>
+    <!-- Centre spine line — sits above spreads (z:5) but below cover (z:10) -->
+    <div class="book-gutter" aria-hidden="true"></div>
+
+    <!-- ── DIVIDER TABS ── -->
+    <div id="divider-tabs">
+      <button class="div-tab" type="button" data-section="toc" onclick="goToSection('toc')">
+        <div class="dt-body" style="background:#A87068"></div>
+        <div class="dt-tag" style="background:#A87068"><span class="dt-lbl" data-i18n="nav_toc">Sumário</span></div>
+      </button>
+      <button class="div-tab" type="button" data-section="search" onclick="goToSection('search')">
+        <div class="dt-body" style="background:#A8924E"></div>
+        <div class="dt-tag" style="background:#A8924E"><span class="dt-lbl" data-i18n="nav_search">Pesquisar</span></div>
+      </button>
+      <button class="div-tab" type="button" data-section="recipes" onclick="goToSection('recipes')">
+        <div class="dt-body" style="background:#65855C"></div>
+        <div class="dt-tag" style="background:#65855C"><span class="dt-lbl" data-i18n="nav_recipes">Receitas</span></div>
+      </button>
+      <button class="div-tab" type="button" data-section="result" onclick="goToSection('result')" style="display:none;">
+        <div class="dt-body" style="background:#6A8878"></div>
+        <div class="dt-tag" style="background:#6A8878"><span class="dt-lbl" data-i18n="nav_result">Resultado</span></div>
+      </button>
+      <button class="div-tab" type="button" id="tab-saved" data-section="saved" onclick="goToSection('saved')" style="display:none;">
+        <div class="dt-body" style="background:#9E7A88"></div>
+        <div class="dt-tag" style="background:#9E7A88">
+          <span class="dt-lbl" data-i18n="nav_saved">Salvas</span>
+        </div>
+      </button>
+      <button class="div-tab favorite-divider-tab" type="button" id="tab-favorites"
+              data-section="favorites" onclick="goToFavorites()" style="display:none;">
+        <div class="dt-body" style="background:#8C7052"></div>
+        <div class="dt-tag" style="background:#8C7052">
+          <span class="dt-lbl" data-i18n="nav_favorites">Favoritos</span>
+          <span class="favorite-tab-count" aria-label="Quantidade de páginas favoritas">0</span>
+        </div>
+      </button>
     </div>
-    <div id="corner-next" class="page-corner corner-next" onclick="handleManualTurn('next')">
-      <svg width="18" height="32" viewBox="0 0 18 32" fill="none"
-           stroke="var(--c-ink)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M6 4 L14 16 L6 28"/>
-      </svg>
+
+    <nav id="history-marks" aria-label="Pesquisas recentes"></nav>
+
+    <!-- Divisórias inferiores do livro -->
+    <nav id="bottom-tabs" aria-label="Idioma e ajuda">
+      <button class="bottom-tab lang-tab active" data-lang="pt" onclick="applyLang('pt')" aria-pressed="true" style="background:#7E96B0">PT</button>
+      <button class="bottom-tab lang-tab" data-lang="en" onclick="applyLang('en')" aria-pressed="false" style="background:#9488AA">EN</button>
+      <button class="bottom-tab help-tab" onclick="toggleShortcutsOverlay()" aria-label="Atalhos de teclado" style="background:#A87880">?</button>
+    </nav>
+
+    <div id="page-position" aria-live="polite">
+      <span data-current-page>1</span>
+      <span class="page-position-separator">/</span>
+      <span data-total-pages>1</span>
     </div>
 
   </div><!-- /.book-wrapper -->
 </div><!-- /.book-scene -->
 
-<script src="{{ url_for('static', filename='js/book.js') }}"></script>
+<section id="print-recipe" aria-hidden="true"></section>
+
+
+<!-- ── SHORTCUTS OVERLAY ── -->
+<div id="shortcuts-overlay" style="display:none;" onclick="if(event.target===this)toggleShortcutsOverlay()">
+  <div class="shortcuts-panel">
+    <h3 data-i18n="shortcuts_title">Atalhos</h3>
+    <div class="shortcut-sheet active" data-shortcut-page="0">
+      <div class="shortcuts-grid">
+        <span class="shortcut-key">← →</span><span class="shortcut-desc" data-i18n="shortcut_turn">virar página</span>
+        <span class="shortcut-key">Home</span><span class="shortcut-desc" data-i18n="shortcut_toc">ir ao sumário</span>
+        <span class="shortcut-key">/</span><span class="shortcut-desc" data-i18n="shortcut_search">abrir pesquisa</span>
+        <span class="shortcut-key">F</span><span class="shortcut-desc" data-i18n="shortcut_favorite">favoritar / desfavoritar</span>
+        <span class="shortcut-key">duplo clique</span><span class="shortcut-desc" data-i18n="shortcut_annotate">nova anotação na página</span>
+      </div>
+    </div>
+    <div class="shortcut-sheet" data-shortcut-page="1">
+      <div class="shortcuts-grid">
+        <span class="shortcut-key">P</span><span class="shortcut-desc" data-i18n="shortcut_print">imprimir ficha</span>
+        <span class="shortcut-key">L</span><span class="shortcut-desc" data-i18n="shortcut_language">trocar PT / EN</span>
+        <span class="shortcut-key">Esc</span><span class="shortcut-desc" data-i18n="shortcut_close">fechar livro</span>
+        <span class="shortcut-key">?</span><span class="shortcut-desc" data-i18n="shortcut_help">este guia</span>
+        <span class="shortcut-key">Enter</span><span class="shortcut-desc" data-i18n="shortcut_submit">pesquisar</span>
+      </div>
+    </div>
+    <div class="shortcut-sheet-nav">
+      <button type="button" onclick="changeShortcutPage(-1)" aria-label="Atalhos anteriores">‹</button>
+      <span id="shortcut-page-label">1 / 2</span>
+      <button type="button" onclick="changeShortcutPage(1)" aria-label="Próximos atalhos">›</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── ONBOARDING HINT ── -->
+<div id="onboarding-hint" style="display:none;">
+  <span data-i18n="onboarding">Clique na capa para abrir o livro</span>
+</div>
+
+<script src="{{ url_for('static', filename='js/book.js', v=asset_version) }}"></script>
 </body>
 </html>

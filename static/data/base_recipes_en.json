@@ -1,0 +1,457 @@
+[
+  {
+    "name": "Feijoada Brasileira",
+    "subtitle": "The embrace of Brazil's kitchen",
+    "category": "Brazilian Cuisine",
+    "illustration_key": "bowl",
+    "prep_time": "3 hours",
+    "servings": "8 people",
+    "difficulty": "Medium",
+    "story": "Feijoada grew from the slow meeting of Portuguese stews, African knowledge, and Brazilian ingredients. More than a recipe, it became a Saturday ritual: a full table, orange slices, farofa, and enough time for another conversation.",
+    "annotation": "make it the day before.\nit always tastes\nbetter reheated.",
+    "ingredients": [
+      "1kg black beans",
+      "500g dried beef, desalted",
+      "300g pork ribs",
+      "200g smoked sausage",
+      "200g paio sausage",
+      "1 pork trotter or ear (optional)",
+      "2 onions + 6 garlic cloves",
+      "Bay leaves, black pepper, and salt"
+    ],
+    "steps": [
+      "Soak the beans overnight. Desalt the dried meats separately, changing the water several times.",
+      "Cook the beans with bay leaves until tender but still holding their shape.",
+      "Brown the fresh and smoked meats in batches. Add them to the beans according to the cooking time each one needs.",
+      "Sauté onion and garlic, mash in a ladle of beans, then return the mixture to the pot.",
+      "Simmer until the broth is thick. Serve with rice, collard greens, farofa, and orange."
+    ],
+    "tip": "resting is part of the recipe. let the pot sit before serving so the broth becomes rounder and deeper."
+  },
+  {
+    "name": "Risotto ai Funghi",
+    "subtitle": "The slow ritual of northern Italy",
+    "category": "Italian Cuisine",
+    "illustration_key": "herbs",
+    "prep_time": "40 minutes",
+    "servings": "4 people",
+    "difficulty": "Medium",
+    "story": "Risotto belongs to northern Italy, where rice fields replaced the wheat landscape. Its creaminess does not come from cream, but from patiently releasing the rice starch while hot stock is added little by little.",
+    "annotation": "the stock must\nstay hot.\nalways.",
+    "ingredients": [
+      "320g arborio or carnaroli rice",
+      "300g fresh mushrooms",
+      "30g dried porcini",
+      "1 small onion or 2 shallots",
+      "120ml dry white wine",
+      "1.2L hot vegetable stock",
+      "60g butter",
+      "80g Parmigiano Reggiano"
+    ],
+    "steps": [
+      "Soak the porcini in warm water for 20 minutes. Strain and reserve the liquid.",
+      "Sauté the fresh mushrooms over high heat until golden. Season and reserve.",
+      "Cook the onion in half the butter. Add the rice and toast it for 2 minutes.",
+      "Pour in the wine. Once it evaporates, add hot stock one ladle at a time, stirring often.",
+      "When al dente, fold in mushrooms, remaining butter, and Parmesan off the heat."
+    ],
+    "tip": "mantecatura happens away from the flame. butter and cheese emulsify best when the pan is no longer boiling."
+  },
+  {
+    "name": "Ramen Tonkotsu",
+    "subtitle": "Eighteen hours in a bowl",
+    "category": "Japanese Cuisine",
+    "illustration_key": "bowl",
+    "prep_time": "18 hours",
+    "servings": "4 people",
+    "difficulty": "Hard",
+    "story": "Tonkotsu ramen was born in Fukuoka, on the island of Kyushu. Pork bones are boiled fiercely until collagen, fat, and marrow emulsify into the opaque white broth that defines the style.",
+    "annotation": "the broth should\nboil hard.\nnot simmer.",
+    "ingredients": [
+      "1kg pork bones (knuckle)",
+      "200g pork belly for chashu",
+      "4 marinated boiled eggs (ajitsuke tamago)",
+      "4 portions fresh ramen noodles",
+      "4 sheets nori",
+      "Scallions and sesame to serve",
+      "Tare: soy sauce, mirin, sake",
+      "Sesame oil"
+    ],
+    "steps": [
+      "Blanch the bones in boiling water for 10 minutes. Discard the water and scrub the bones clean.",
+      "Boil the bones vigorously in fresh water for 4 hours, topping up the water as needed.",
+      "Reduce to medium-high and cook for another 12 hours, until the broth is white and creamy.",
+      "Make the chashu: roll and tie the belly, then braise for 2 hours in soy sauce, sake, and mirin.",
+      "Assemble with hot broth, tare, noodles, chashu, egg, nori, and scallions."
+    ],
+    "tip": "do not cover the pot. evaporation and agitation are what emulsify the collagen."
+  },
+  {
+    "name": "Crème Brûlée",
+    "subtitle": "The flame that reveals caramel",
+    "category": "French Pastry",
+    "illustration_key": "vanilla",
+    "prep_time": "1 hour + 4 hours chilling",
+    "servings": "6 ramekins",
+    "difficulty": "Medium",
+    "story": "France, England, and Spain have argued for centuries over this custard. One thing is certain: the torch melting sugar into a brittle amber shell remains one of Western pastry's most satisfying spectacles.",
+    "annotation": "the vanilla bean\nmakes all the difference.\nno substitute.",
+    "ingredients": [
+      "500ml heavy cream (35%)",
+      "6 egg yolks",
+      "100g granulated sugar",
+      "1 vanilla bean",
+      "Demerara sugar for caramelizing"
+    ],
+    "steps": [
+      "Split the vanilla bean and scrape the seeds. Heat the cream with the bean until almost boiling.",
+      "Whisk yolks and sugar until pale. Slowly add the hot cream while stirring constantly.",
+      "Strain into ramekins. Bake in a water bath at 150°C for 45 minutes.",
+      "Cool, then refrigerate for at least 4 hours.",
+      "Before serving, cover with demerara sugar and torch until a crisp shell forms."
+    ],
+    "tip": "the custard is ready when the edges are set but the center still trembles like jelly."
+  },
+  {
+    "name": "Paella Valenciana",
+    "subtitle": "The pan that fed the fields",
+    "category": "Spanish Cuisine",
+    "illustration_key": "grain",
+    "prep_time": "1 hour 20 minutes",
+    "servings": "6 people",
+    "difficulty": "Medium",
+    "story": "The original Valencian paella contains no seafood. It began in the fields with what farm workers had nearby: chicken, rabbit, green beans, tomato, and the rice they cultivated.",
+    "annotation": "socarrat is sacred.\nnever stir after\nthe stock goes in.",
+    "ingredients": [
+      "400g Valencian bomba rice",
+      "300g chicken pieces",
+      "200g rabbit pieces",
+      "150g green beans",
+      "2 ripe tomatoes, grated",
+      "1 spoon smoked paprika",
+      "Saffron threads",
+      "Olive oil and salt"
+    ],
+    "steps": [
+      "Heat olive oil in the paella pan. Brown chicken and rabbit over medium-high heat for 12 minutes.",
+      "Add green beans and tomato. Cook for 8 minutes until caramelized.",
+      "Add paprika for 30 seconds, then hot water, about twice the rice volume.",
+      "Bloom saffron in a little hot broth and add it to the pan.",
+      "Distribute the rice evenly. Cook without stirring over medium heat for 18 to 20 minutes."
+    ],
+    "tip": "raise the heat for the final 2 minutes to form socarrat, the caramelized crust on the bottom."
+  },
+  {
+    "name": "Tacos de Carnitas",
+    "subtitle": "Fat and time, nothing more",
+    "category": "Mexican Cuisine",
+    "illustration_key": "herbs",
+    "prep_time": "2 hours 30 minutes",
+    "servings": "8 tacos",
+    "difficulty": "Easy",
+    "story": "Carnitas literally means little meats. Pork cooks slowly in its own fat until it pulls apart and its edges caramelize. The technique resembles French confit, but its Mexican life is brighter, crisper, and meant for warm tortillas.",
+    "annotation": "warm corn tortillas\nover the stove flame.\nalways.",
+    "ingredients": [
+      "1kg bone-in pork shoulder",
+      "Lard or oil to cover",
+      "1 orange, juice and peel",
+      "4 garlic cloves",
+      "1 spoon cumin",
+      "Salt and pepper",
+      "Corn tortillas to serve",
+      "Cilantro, onion, and lime"
+    ],
+    "steps": [
+      "Season pork with salt, pepper, and cumin. Marinate for 1 hour.",
+      "Cover the meat with lard or oil in a heavy pot. Add garlic and orange, then cook gently for 2 hours.",
+      "Remove the meat. Raise the heat and fry for 10 minutes until browned and crisp.",
+      "Pull apart roughly with two forks.",
+      "Serve in warm tortillas with cilantro, white onion, lime, and green salsa."
+    ],
+    "tip": "the cooking fat is gold. save it for frying eggs or potatoes during the next few days."
+  },
+  {
+    "name": "Spaghetti alla Carbonara",
+    "subtitle": "The egg that never scrambles",
+    "category": "Italian Cuisine",
+    "illustration_key": "grain",
+    "prep_time": "20 minutes",
+    "servings": "4 people",
+    "difficulty": "Medium",
+    "story": "Carbonara contains no cream. It was born in Lazio from spare, durable ingredients: eggs, aged cheese, guanciale, and black pepper. Its only acceptable creaminess is the emulsion of egg, cheese, pork fat, and pasta water.",
+    "annotation": "turn off the heat\nbefore adding eggs.\nalways.",
+    "ingredients": [
+      "400g spaghetti or rigatoni",
+      "150g guanciale, or pancetta, diced",
+      "4 egg yolks + 1 whole egg",
+      "80g Pecorino Romano, grated",
+      "40g Parmigiano Reggiano, grated",
+      "Plenty of black pepper",
+      "Salt, only for the pasta water"
+    ],
+    "steps": [
+      "Start guanciale in a cold skillet. Cook over medium-low heat until the fat renders and the meat lightly browns.",
+      "Whisk yolks, whole egg, cheeses, and generous black pepper. Set aside.",
+      "Cook pasta until al dente. Reserve a cup of pasta water.",
+      "Off the heat, toss pasta with the guanciale and its fat. Add the egg mixture.",
+      "Add pasta water gradually while stirring quickly until creamy. Serve immediately."
+    ],
+    "tip": "temperature is everything. too hot makes an omelet; too cool prevents the emulsion. use the residual heat of the pan."
+  },
+  {
+    "name": "Pad Thai",
+    "subtitle": "The wok that unified a nation",
+    "category": "Thai Cuisine",
+    "illustration_key": "citrus",
+    "prep_time": "25 minutes",
+    "servings": "2 people",
+    "difficulty": "Medium",
+    "story": "Pad Thai was promoted as a national dish in the 1930s, when Thailand wanted a unifying culinary symbol. It became the country's most recognizable dish abroad without losing the sharp balance of tamarind, fish sauce, sugar, and fire.",
+    "annotation": "the wok must\nbe smoking hot.\ndo not compromise.",
+    "ingredients": [
+      "200g rice noodles (sen lek)",
+      "200g shrimp or firm tofu",
+      "2 eggs",
+      "3 spoons tamarind sauce",
+      "2 spoons fish sauce (nam pla)",
+      "1 spoon palm sugar",
+      "2 garlic cloves + 2 shallots",
+      "Crushed peanuts, bean sprouts, scallions, and lime"
+    ],
+    "steps": [
+      "Soak noodles in warm water for 20 minutes. Drain.",
+      "Mix tamarind sauce, fish sauce, and palm sugar. Reserve.",
+      "Heat oil in a very hot wok. Cook garlic and shallots for 30 seconds, then add shrimp.",
+      "Push everything aside, crack in the eggs, and stir until half set. Fold into the shrimp.",
+      "Add noodles, sauce, and bean sprouts. Stir-fry over high heat for 2 minutes. Serve with peanuts and lime."
+    ],
+    "tip": "if the wok smokes, it is ready. that breath of fire is wok hei, the soul of the dish."
+  },
+  {
+    "name": "Croissant",
+    "subtitle": "Two hundred and forty-six layers",
+    "category": "French Pastry",
+    "illustration_key": "grain",
+    "prep_time": "3 days",
+    "servings": "12 croissants",
+    "difficulty": "Hard",
+    "story": "The croissant is Austrian in origin, descended from the Viennese kipferl brought to nineteenth-century Paris. French bakers transformed it through lamination, folding cold butter into dough until every bite became an equation of steam and layers.",
+    "annotation": "dry, cold butter.\nnever\nsoftened.",
+    "ingredients": [
+      "500g wheat flour, type 00",
+      "280ml whole milk",
+      "10g dry yeast",
+      "10g salt",
+      "50g sugar",
+      "280g cold dry butter for lamination",
+      "1 egg for brushing"
+    ],
+    "steps": [
+      "Knead everything except the lamination butter. Refrigerate the dough for 1 hour.",
+      "Roll into a rectangle. Place the butter in the center and close the dough around it like an envelope.",
+      "Make 3 single folds, chilling for 30 minutes between folds.",
+      "Roll to 3mm thick. Cut triangles and roll from the wide end toward the point.",
+      "Proof for 2 hours at room temperature. Brush with egg and bake at 200°C for 18 minutes."
+    ],
+    "tip": "butter and dough should have the same firmness during lamination. cracking means the butter became too cold."
+  },
+  {
+    "name": "Moussaka",
+    "subtitle": "Layers that feed the Mediterranean",
+    "category": "Greek Cuisine",
+    "illustration_key": "spice",
+    "prep_time": "1 hour 45 minutes",
+    "servings": "6 people",
+    "difficulty": "Medium",
+    "story": "Moussaka crossed the Mediterranean before becoming a Greek classic. The béchamel-topped version was consolidated in the twentieth century by chef Nikolaos Tselementes after his studies in France.",
+    "annotation": "eggplant wants\nsalt and weight\nfor 30 minutes.",
+    "ingredients": [
+      "1kg eggplant, sliced",
+      "600g ground lamb, or beef",
+      "2 ripe tomatoes, chopped",
+      "1 onion + 4 garlic cloves",
+      "Cinnamon, allspice, nutmeg",
+      "500ml whole milk",
+      "40g butter + 40g flour for béchamel",
+      "100g kefalotyri, or Parmesan"
+    ],
+    "steps": [
+      "Salt the eggplant slices and rest under a weight for 30 minutes. Rinse and dry thoroughly.",
+      "Fry or roast the eggplant until golden. Drain on paper.",
+      "Cook onion and garlic. Add meat, tomato, cinnamon, and allspice; cook until nearly dry.",
+      "Prepare a thick béchamel. Mix in 2 yolks and half the cheese.",
+      "Layer eggplant, meat, eggplant, béchamel, and cheese. Bake at 180°C for 45 minutes."
+    ],
+    "tip": "rest moussaka for 20 minutes before slicing. it needs time to set and hold its layers."
+  },
+  {
+    "name": "Dal Makhani",
+    "subtitle": "All night over a low flame",
+    "category": "Indian Cuisine",
+    "illustration_key": "spice",
+    "prep_time": "14 hours",
+    "servings": "6 people",
+    "difficulty": "Medium",
+    "story": "Dal makhani was created in 1947 at Delhi's Moti Mahal. Cooking black lentils overnight in the tandoor, then finishing them with cream and butter, turned a practical method into a restaurant classic.",
+    "annotation": "the longer it cooks\non low heat,\nthe better.",
+    "ingredients": [
+      "250g whole black gram (urad dal)",
+      "50g kidney beans",
+      "3 ripe tomatoes",
+      "Onion, ginger, garlic",
+      "Cumin, cardamom, cinnamon, cloves",
+      "200ml cream",
+      "100g butter",
+      "Salt and cilantro"
+    ],
+    "steps": [
+      "Soak black gram and kidney beans overnight. Drain.",
+      "Cook in plenty of water until completely tender, about 2 hours.",
+      "Cook onion, ginger, garlic, spices, and tomato until dark and concentrated.",
+      "Add beans and some cooking liquid. Simmer very gently for at least 4 hours, stirring occasionally.",
+      "Finish with butter and cream. Adjust salt and serve with cilantro."
+    ],
+    "tip": "a small amount of smoked charcoal under a lid gives the dal the aroma of a tandoor."
+  },
+  {
+    "name": "Ceviche Peruano",
+    "subtitle": "The Pacific served cold",
+    "category": "Peruvian Cuisine",
+    "illustration_key": "citrus",
+    "prep_time": "25 minutes",
+    "servings": "4 people",
+    "difficulty": "Easy",
+    "story": "Ceviche is one of Peru's clearest expressions of geography: cold Pacific fish, lime, chile, red onion, and the milky marinade known as leche de tigre. It must be prepared and eaten without delay.",
+    "annotation": "fish icy cold.\nlime only at\nthe last moment.",
+    "ingredients": [
+      "600g very fresh firm white fish",
+      "10 Peruvian limes",
+      "1 red onion, thinly sliced",
+      "1 ají limo or red chile",
+      "Cilantro leaves",
+      "1 garlic clove",
+      "Salt",
+      "Sweet potato and corn to serve"
+    ],
+    "steps": [
+      "Cut the cold fish into even cubes and keep over ice.",
+      "Rinse sliced onion briefly in cold water and drain.",
+      "Season fish with salt, garlic, chile, and cilantro.",
+      "Squeeze lime directly over the fish and mix gently for less than 2 minutes.",
+      "Add onion and serve immediately with sweet potato and corn."
+    ],
+    "tip": "never squeeze limes to the bitter white pith. press lightly and stop while the juice is still fragrant."
+  },
+  {
+    "name": "Shakshuka",
+    "subtitle": "Eggs in a sea of tomato",
+    "category": "North African Cuisine",
+    "illustration_key": "spice",
+    "prep_time": "35 minutes",
+    "servings": "4 people",
+    "difficulty": "Easy",
+    "story": "Shakshuka traveled through North Africa and became a breakfast staple in Israel and across the eastern Mediterranean. Its name suggests a mixture, exactly what the pan offers: tomato, pepper, spice, and eggs.",
+    "annotation": "runny yolks.\nfirm whites.\nwatch closely.",
+    "ingredients": [
+      "6 eggs",
+      "800g peeled tomatoes",
+      "1 red bell pepper",
+      "1 onion",
+      "3 garlic cloves",
+      "Cumin and smoked paprika",
+      "Harissa or chile",
+      "Cilantro or parsley"
+    ],
+    "steps": [
+      "Cook onion and bell pepper in olive oil until very soft.",
+      "Add garlic, cumin, paprika, and harissa; cook until fragrant.",
+      "Add tomatoes and simmer until the sauce is thick.",
+      "Make six wells and crack in the eggs.",
+      "Cover and cook just until the whites set. Finish with herbs."
+    ],
+    "tip": "take the pan off the heat slightly early. the eggs keep cooking in the hot tomato sauce."
+  },
+  {
+    "name": "Boeuf Bourguignon",
+    "subtitle": "Burgundy in a heavy pot",
+    "category": "French Cuisine",
+    "illustration_key": "herbs",
+    "prep_time": "4 hours",
+    "servings": "6 people",
+    "difficulty": "Medium",
+    "story": "Once a practical Burgundian stew for tough cuts of beef, boeuf bourguignon became a symbol of French cooking through slow heat, red wine, bacon, mushrooms, and patient reduction.",
+    "annotation": "better the next day.\nleave the pot\nalone overnight.",
+    "ingredients": [
+      "1.2kg beef chuck, cubed",
+      "750ml Burgundy or dry red wine",
+      "150g bacon lardons",
+      "300g mushrooms",
+      "12 pearl onions",
+      "2 carrots",
+      "Garlic and bouquet garni"
+    ],
+    "steps": [
+      "Dry the beef thoroughly. Brown in batches in bacon fat.",
+      "Cook carrots, onion, and garlic in the same pot.",
+      "Return the beef, add wine and bouquet garni, and bring to a simmer.",
+      "Cover and cook gently for about 3 hours, until the beef is tender.",
+      "Brown mushrooms and pearl onions separately, then fold them into the finished stew."
+    ],
+    "tip": "reduce the sauce uncovered at the end if needed. it should coat a spoon without becoming heavy."
+  },
+  {
+    "name": "Kimchi Jjigae",
+    "subtitle": "The stew that rescues old kimchi",
+    "category": "Korean Cuisine",
+    "illustration_key": "bowl",
+    "prep_time": "45 minutes",
+    "servings": "4 people",
+    "difficulty": "Easy",
+    "story": "Kimchi jjigae is built for kimchi that has fermented past the polite stage. Its acidity, chile, pork, and tofu become a bubbling communal stew, usually placed at the center of the table.",
+    "annotation": "older kimchi\nmakes a deeper\nbroth.",
+    "ingredients": [
+      "500g well-fermented kimchi",
+      "300g pork belly",
+      "300g firm tofu",
+      "1 onion",
+      "2 scallions",
+      "1 spoon gochugaru",
+      "1 spoon gochujang",
+      "600ml anchovy or kelp stock"
+    ],
+    "steps": [
+      "Cook pork belly in a pot until lightly browned.",
+      "Add kimchi and onion; cook for 5 minutes.",
+      "Stir in gochugaru and gochujang, then add stock.",
+      "Simmer for 25 minutes until the broth is rich and sharp.",
+      "Add tofu and scallions. Simmer 5 more minutes and serve bubbling."
+    ],
+    "tip": "add a spoonful of kimchi brine. it carries more fermented flavor than extra paste."
+  },
+  {
+    "name": "Brigadeiro",
+    "subtitle": "A Brazilian party in one bite",
+    "category": "Brazilian Confectionery",
+    "illustration_key": "vanilla",
+    "prep_time": "30 minutes",
+    "servings": "24 pieces",
+    "difficulty": "Easy",
+    "story": "Brigadeiro appeared in Brazil in the 1940s and quickly escaped its political origin to become the country's essential birthday sweet. Condensed milk, cocoa, and butter are cooked until they can be rolled by hand.",
+    "annotation": "butter your hands.\nchill the mixture\nbefore rolling.",
+    "ingredients": [
+      "1 can sweetened condensed milk (395g)",
+      "25g unsweetened cocoa powder",
+      "20g butter",
+      "Chocolate sprinkles",
+      "Extra butter for shaping"
+    ],
+    "steps": [
+      "Mix condensed milk, cocoa, and butter in a heavy saucepan.",
+      "Cook over low heat, stirring constantly and scraping the bottom.",
+      "When the mixture pulls away from the pan in one mass, cook for 1 more minute.",
+      "Spread on a buttered plate and cool completely.",
+      "Butter your hands, roll small balls, and coat with chocolate sprinkles."
+    ],
+    "tip": "low heat prevents a grainy texture. patience makes the center smooth and glossy."
+  }
+]

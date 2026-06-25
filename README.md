@@ -44,12 +44,13 @@ switch between any model installed locally without touching a config file.
 Works completely offline once set up.
 
 **2. Physical craft — a web app that behaves like a printed object**
-The book has sixteen "spreads" living simultaneously in the DOM.
+The book has sixteen spreads living simultaneously in the DOM.
 GSAP choreographs the cover opening, page turns, and content stagger with
 easing curves borrowed from the physics of paper — not the defaults of CSS.
-Typography spans five generations of handwriting: Homemade Apple for original print titles,
+Typography spans seven voices: Homemade Apple for original print titles,
 La Belle Aurore for literary passages, Indie Flower for body text,
-Cedarville Cursive for catalogued labels and metadata, Grape Nuts for margin annotations.
+Cedarville Cursive for catalogued labels and metadata, Grape Nuts for margin annotations,
+Kalam and EB Garamond reserved for print output.
 
 **3. Opinionated stack — deliberate choices over convention**
 Flask serves a single Jinja2 template. Vanilla JS handles all interaction.
@@ -59,15 +60,31 @@ No framework, no build step, no hydration. The reasoning is in the section below
 
 ### The experience
 
-1. A red-and-white gingham book cover fills the viewport. Click to open.
-2. The cover swings open with a `power4.out` easing that simulates cloth weight.
+1. A red-and-white gingham book cover rests on a dark wood table. Click to open.
+2. The cover swings open with a `power4.out` easing that simulates cloth weight. Both pages go blank instantly as the flip begins — the new spread fades in after the animation.
 3. An introduction spread, a title page, a table of contents with clickable chapter links, and an About spread.
-4. Ten curated classic recipes from world cuisines, browsable as physical book pages.
-5. On the search spread, the user writes a dish name into an input styled with `Homemade Apple`. A model selector lists every locally installed Ollama model.
+4. Sixteen curated classic recipes from world cuisines, browsable as physical book pages.
+5. On the search spread, the user writes a dish name into an input styled with `Grape Nuts`. A model selector lists every locally installed Ollama model.
 6. Press Enter. The classic recipes become browsable while Ollama processes — the user turns pages manually, like waiting at a bookshelf.
-7. When inference completes, the ribbon bookmark pulses. The next page turn the user initiates reveals the result.
+7. When inference completes, the ribbon bookmark pulses. The next page turn reveals the result.
 8. The result spread shows: dish name, origin story, metadata grid, ingredient list, numbered steps, botanical SVG illustration, and a handwritten chef's tip.
 9. At the very end, turning past the last page reveals the back cover — the book closes itself to the front.
+
+---
+
+### Screenshots
+
+| Cover | Opening |
+|-------|---------|
+| ![Cover](assets/01-cover.png) | ![Opening](assets/02-opening.gif) |
+
+| Table of contents | Search |
+|-------------------|--------|
+| ![TOC](assets/06-toc.png) | ![Search](assets/04-search.png) |
+
+| Classic recipes | Recipe result |
+|-----------------|---------------|
+| ![Recipes](assets/05-loading.png) | ![Result](assets/03-result.png) |
 
 ---
 
@@ -78,7 +95,7 @@ These are the choices that were deliberate, not defaults.
 #### Flask + Jinja2 + Vanilla JS over a modern framework
 
 The book experience is a **DOM choreography problem**, not a component tree problem.
-All sixteen spreads live in the DOM at load time. GSAP moves between them by
+All spreads live in the DOM at load time. GSAP moves between them by
 toggling visibility and running Timeline sequences. Adding a framework would introduce
 hydration overhead, a reconciler between GSAP and the DOM, and a build pipeline —
 three things that work against direct, frame-precise animation control.
@@ -93,6 +110,10 @@ you cannot chain two curves on the same property without JavaScript.
 GSAP Timeline makes this a three-line operation and gives millisecond-level
 control over when the "other side" of the page becomes visible.
 
+The page turn also includes an instant content-blank: both pages clear the moment
+navigation is triggered, and the new spread fades in after the flip completes —
+matching how a physical book feels rather than how a web carousel behaves.
+
 #### No food photography
 
 Fetching photos from an external API introduces: a third-party dependency, a rate
@@ -105,11 +126,10 @@ the Homemade Apple headings.
 #### Loading as browsing
 
 When Ollama is processing a query, most apps show a spinner. Foodpedia shows
-ten curated classic recipes that the user browses by turning pages manually.
+sixteen curated classic recipes that the user browses by turning pages manually.
 This isn't a distraction pattern — it's the app doing useful work while inference
 runs. The model typically finishes within one or two page turns on modern hardware.
-When it does, a visual signal appears and the next turn the user initiates
-reveals the result.
+When it does, a visual signal appears and the next turn reveals the result.
 
 #### Local AI as a first-class architectural constraint
 
@@ -119,14 +139,16 @@ problem above had to be solved creatively — a cloud API would respond in under
 a second; a local model takes 5–30 seconds depending on hardware. That constraint
 is what created the browsing-while-waiting mechanic.
 
-#### Five-font typography as narrative
+#### Seven-font typography as narrative
 
-Most web apps use two fonts at most. Foodpedia uses five — each assigned to a
+Most web apps use two fonts at most. Foodpedia uses seven — each assigned to a
 distinct voice in the book. Homemade Apple is the original printer. La Belle Aurore
-is the literary annotator. Indie Flower is the home cook. Cedarville Cursive
-is the meticulous cataloguer. Grape Nuts is whoever scribbled in the margins.
-The constraint that each font serves only one semantic role means the typography
-reinforces content hierarchy without a single line of font-weight or font-size override.
+is the literary annotator. Indie Flower is the home cook. Cedarville Cursive is the
+meticulous cataloguer. Grape Nuts is whoever scribbled in the margins. Kalam and
+EB Garamond appear exclusively in print output, preserving the editorial voice
+even on paper. The constraint that each font serves only one semantic role means
+the typography reinforces content hierarchy without a single line of font-weight
+or font-size override.
 
 ---
 
@@ -140,7 +162,9 @@ reinforces content hierarchy without a single line of font-weight or font-size o
 | Animation | GSAP 3.12 (CDN) | Timeline control for physical book physics |
 | Frontend | Vanilla JS | Direct DOM access; no framework overhead |
 | Styling | CSS Custom Properties | Design tokens without build tooling |
-| Typography | Google Fonts | Homemade Apple · La Belle Aurore · Indie Flower · Cedarville Cursive · Grape Nuts |
+| Typography | Google Fonts | Homemade Apple · La Belle Aurore · Indie Flower · Cedarville Cursive · Grape Nuts · Kalam · EB Garamond |
+| Illustrations | Inline SVG | Botanical + kitchen drawings; zero network requests |
+| i18n | JSON + JS | PT/EN toggle; all UI strings externalised |
 
 ---
 
@@ -170,47 +194,37 @@ flask run --port 5001
 Open `http://localhost:5001` and click the book.
 The model selector on the search page lists every model currently available in your local Ollama installation.
 
+**Demo mode** (no Ollama required):
+
+```bash
+open "http://localhost:5001/?demo=true"
+```
+
+Search for `Butter Chicken`, `Tiramisù`, or `Pierogi` to see pre-canned recipe results.
+
 ---
 
 ### Project structure
 
 ```
 foodpedia/
-├── app.py                      # Flask app, routes, Ollama call
+├── app.py                          # Flask app, routes, Ollama call
 ├── requirements.txt
 ├── static/
 │   ├── css/
-│   │   └── book.css            # Custom properties, typography, book layout
+│   │   └── book.css                # Custom properties, typography, book layout
 │   ├── js/
-│   │   └── book.js             # GSAP animations, page turn logic, API fetch
+│   │   └── book.js                 # GSAP animations, page turn logic, API fetch
 │   └── data/
-│       └── base_recipes.json   # 10 curated classic recipes
+│       ├── base_recipes.json       # 16 curated classic recipes (PT)
+│       ├── base_recipes_en.json    # 16 curated classic recipes (EN)
+│       └── i18n.json               # UI strings for PT/EN toggle
 └── templates/
-    ├── index.html              # Full book DOM (all 16 spreads)
+    ├── index.html                  # Full book DOM (all spreads)
     └── svg/
-        ├── botanical_herbs.svg
-        ├── botanical_grain.svg
-        ├── botanical_bowl.svg
-        ├── botanical_vanilla.svg
-        ├── botanical_citrus.svg
-        ├── botanical_spice.svg
-        ├── botanical_mortar.svg
-        ├── ornament_floral.svg
-        ├── ornament_botanical_large.svg
-        └── divider.svg
+        ├── botanical/              # Botanical SVG illustrations (per recipe category)
+        └── kitchen/                # Kitchen object SVGs (endpaper, about, search)
 ```
-
----
-
-### Screenshots
-
-| Cover | Table of contents | Search |
-|-------|------------------|--------|
-| ![Cover](assets/01-cover.png) | ![TOC](assets/06-toc.png) | ![Search](assets/04-search.png) |
-
-| Recipe result |
-|---------------|
-| ![Result](assets/03-result.png) |
 
 ---
 
@@ -243,13 +257,13 @@ da página de pesquisa — troque entre qualquer modelo instalado localmente sem
 em arquivo de configuração. Funciona completamente offline após a configuração.
 
 **2. Artesanato físico — um app web que se comporta como um objeto impresso**
-O livro tem dezesseis "spreads" vivendo simultaneamente no DOM.
+O livro tem dezesseis spreads vivendo simultaneamente no DOM.
 O GSAP coreografa a abertura da capa, as viradas de página e o stagger do conteúdo
 com curvas de easing inspiradas na física do papel — não nos defaults do CSS.
-A tipografia percorre cinco gerações de caligrafia: Homemade Apple para títulos
-impressos originais, La Belle Aurore para passagens literárias, Indie Flower para
-corpo de texto, Cedarville Cursive para labels e metadados catalogados, Grape Nuts
-para anotações de margem.
+A tipografia percorre sete vozes: Homemade Apple para títulos impressos originais,
+La Belle Aurore para passagens literárias, Indie Flower para corpo de texto,
+Cedarville Cursive para labels e metadados catalogados, Grape Nuts para anotações
+de margem, Kalam e EB Garamond reservadas para saída em impressão.
 
 **3. Stack opinativa — escolhas deliberadas, não convenção**
 Flask serve um único template Jinja2. Vanilla JS cuida de toda a interação.
@@ -259,15 +273,31 @@ Sem framework, sem build step, sem hidratação. O raciocínio está na seção 
 
 ### A experiência
 
-1. Uma capa xadrez vermelho-e-branco preenche o viewport. Clique para abrir.
-2. A capa abre com easing `power4.out` que simula o peso do tecido.
+1. Uma capa xadrez vermelho-e-branco repousa sobre uma mesa de madeira escura. Clique para abrir.
+2. A capa abre com easing `power4.out` que simula o peso do tecido. As duas páginas ficam brancas instantaneamente quando o flip começa — o novo spread faz fade-in após a animação.
 3. Um spread de introdução, uma página de título, um sumário com links de capítulo clicáveis e uma página Sobre.
-4. Dez receitas clássicas de culinárias do mundo, navegáveis como páginas físicas de livro.
-5. Na página de pesquisa, o usuário escreve o nome de um prato em um input estilizado com `Homemade Apple`. Um seletor de modelo lista todos os modelos Ollama instalados localmente.
+4. Dezesseis receitas clássicas de culinárias do mundo, navegáveis como páginas físicas de livro.
+5. Na página de pesquisa, o usuário escreve o nome de um prato em um input estilizado com `Grape Nuts`. Um seletor de modelo lista todos os modelos Ollama instalados localmente.
 6. Enter. As receitas clássicas ficam disponíveis para folhear enquanto o Ollama processa — o usuário vira as páginas manualmente, como quem espera folheando uma estante.
 7. Quando a inferência termina, o marcador de fita pulsa. A próxima virada iniciada pelo usuário revela o resultado.
 8. O spread de resultado mostra: nome do prato, história da origem, grid de metadados, lista de ingredientes, passos numerados, ilustração botânica SVG e a dica do chef em manuscrito.
 9. No final do livro, virar além da última página revela a capa traseira — o livro se fecha voltando para a frente.
+
+---
+
+### Screenshots
+
+| Capa | Abertura |
+|------|----------|
+| ![Capa](assets/01-cover.png) | ![Abertura](assets/02-opening.gif) |
+
+| Sumário | Pesquisa |
+|---------|---------|
+| ![Sumário](assets/06-toc.png) | ![Pesquisa](assets/04-search.png) |
+
+| Receitas clássicas | Resultado da receita |
+|--------------------|---------------------|
+| ![Receitas](assets/05-loading.png) | ![Resultado](assets/03-result.png) |
 
 ---
 
@@ -278,7 +308,7 @@ Estas são as escolhas que foram deliberadas, não padrão.
 #### Flask + Jinja2 + Vanilla JS em vez de um framework moderno
 
 A experiência do livro é um **problema de coreografia de DOM**, não uma árvore de componentes.
-Todos os dezesseis spreads vivem no DOM no momento do load. O GSAP move entre eles
+Todos os spreads vivem no DOM no momento do load. O GSAP move entre eles
 alternando visibilidade e executando sequências de Timeline. Adicionar um framework
 introduziria overhead de hidratação, uma camada de reconciliação entre GSAP e o DOM,
 e um pipeline de build — três coisas que trabalham contra o controle de animação direto
@@ -294,6 +324,10 @@ não é possível encadear duas curvas na mesma propriedade sem JavaScript.
 O GSAP Timeline torna isso uma operação de três linhas e dá controle milimétrico
 sobre quando o "verso" da página se torna visível.
 
+A virada também inclui um blank instantâneo: as duas páginas somem no momento em que
+a navegação é acionada, e o novo spread faz fade-in após o flip — correspondendo à
+sensação de um livro físico em vez de um carrossel web.
+
 #### Sem fotografia de pratos
 
 Buscar fotos de uma API externa introduz: uma dependência de terceiros, um rate limit,
@@ -305,11 +339,10 @@ de acesso à rede e parecem pertencer à mesma publicação que os títulos em H
 #### Loading como navegação
 
 Quando o Ollama está processando, a maioria dos apps mostra um spinner. O Foodpedia
-mostra dez receitas clássicas que o usuário navega virando páginas manualmente.
+mostra dezesseis receitas clássicas que o usuário navega virando páginas manualmente.
 Esse não é um padrão de distração — é o app fazendo trabalho útil enquanto a inferência
 roda. O modelo tipicamente termina em uma ou duas viradas de página em hardware moderno.
-Quando isso acontece, um sinal visual aparece e a próxima virada iniciada pelo usuário
-revela o resultado.
+Quando isso acontece, um sinal visual aparece e a próxima virada revela o resultado.
 
 #### IA local como restrição arquitetural de primeira classe
 
@@ -319,14 +352,15 @@ problema do "loading" acima precisava ser resolvido criativamente — uma API na
 responderia em menos de um segundo; um modelo local leva 5 a 30 segundos dependendo
 do hardware. Essa restrição é o que criou a mecânica de navegar-enquanto-espera.
 
-#### Tipografia de cinco gerações como narrativa
+#### Tipografia de sete vozes como narrativa
 
-A maioria dos apps web usa no máximo duas fontes. O Foodpedia usa cinco — cada uma
+A maioria dos apps web usa no máximo duas fontes. O Foodpedia usa sete — cada uma
 atribuída a uma voz distinta do livro. Homemade Apple é o impressor original. La Belle Aurore
 é o anotador literário. Indie Flower é a cozinheira prática. Cedarville Cursive é o
-catalogador meticuloso. Grape Nuts é quem rabiscou nas margens. A restrição de que cada
-fonte serve apenas um papel semântico significa que a tipografia reforça a hierarquia
-do conteúdo sem uma única linha de override de font-weight ou font-size.
+catalogador meticuloso. Grape Nuts é quem rabiscou nas margens. Kalam e EB Garamond
+aparecem exclusivamente na saída de impressão, preservando a voz editorial até no papel.
+A restrição de que cada fonte serve apenas um papel semântico significa que a tipografia
+reforça a hierarquia do conteúdo sem uma única linha de override de font-weight ou font-size.
 
 ---
 
@@ -340,7 +374,9 @@ do conteúdo sem uma única linha de override de font-weight ou font-size.
 | Animação | GSAP 3.12 (CDN) | Controle de Timeline para física real de livro |
 | Frontend | Vanilla JS | Acesso direto ao DOM; sem overhead de framework |
 | Estilização | CSS Custom Properties | Tokens de design sem build tooling |
-| Tipografia | Google Fonts | Homemade Apple · La Belle Aurore · Indie Flower · Cedarville Cursive · Grape Nuts |
+| Tipografia | Google Fonts | Homemade Apple · La Belle Aurore · Indie Flower · Cedarville Cursive · Grape Nuts · Kalam · EB Garamond |
+| Ilustrações | SVG inline | Desenhos botânicos e de cozinha; zero requisições de rede |
+| i18n | JSON + JS | Toggle PT/EN; todas as strings da UI externalizadas |
 
 ---
 
@@ -370,44 +406,34 @@ flask run --port 5001
 Abra `http://localhost:5001` e clique no livro.
 O seletor de modelo na página de pesquisa lista todos os modelos disponíveis na sua instalação local do Ollama.
 
+**Modo demo** (sem Ollama):
+
+```bash
+open "http://localhost:5001/?demo=true"
+```
+
+Pesquise `Butter Chicken`, `Tiramisù` ou `Pierogi` para ver resultados pré-definidos.
+
 ---
 
 ### Estrutura do projeto
 
 ```
 foodpedia/
-├── app.py                      # App Flask, rotas, chamada ao Ollama
+├── app.py                          # App Flask, rotas, chamada ao Ollama
 ├── requirements.txt
 ├── static/
 │   ├── css/
-│   │   └── book.css            # Custom properties, tipografia, layout do livro
+│   │   └── book.css                # Custom properties, tipografia, layout do livro
 │   ├── js/
-│   │   └── book.js             # Animações GSAP, lógica de virada, fetch da API
+│   │   └── book.js                 # Animações GSAP, lógica de virada, fetch da API
 │   └── data/
-│       └── base_recipes.json   # 10 receitas clássicas curadas
+│       ├── base_recipes.json       # 16 receitas clássicas curadas (PT)
+│       ├── base_recipes_en.json    # 16 receitas clássicas curadas (EN)
+│       └── i18n.json               # Strings da UI para toggle PT/EN
 └── templates/
-    ├── index.html              # DOM completo do livro (todos os 16 spreads)
+    ├── index.html                  # DOM completo do livro (todos os spreads)
     └── svg/
-        ├── botanical_herbs.svg
-        ├── botanical_grain.svg
-        ├── botanical_bowl.svg
-        ├── botanical_vanilla.svg
-        ├── botanical_citrus.svg
-        ├── botanical_spice.svg
-        ├── botanical_mortar.svg
-        ├── ornament_floral.svg
-        ├── ornament_botanical_large.svg
-        └── divider.svg
+        ├── botanical/              # Ilustrações SVG botânicas (por categoria de receita)
+        └── kitchen/                # SVGs de utensílios de cozinha (endpaper, sobre, pesquisa)
 ```
-
----
-
-### Screenshots
-
-| Capa | Sumário | Pesquisa |
-|------|---------|---------|
-| ![Capa](assets/01-cover.png) | ![Sumário](assets/06-toc.png) | ![Pesquisa](assets/04-search.png) |
-
-| Resultado da receita |
-|----------------------|
-| ![Resultado](assets/03-result.png) |
