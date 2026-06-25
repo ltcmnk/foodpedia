@@ -1,18 +1,27 @@
 # Python
 __pycache__/
-*.py[cod]
+*.pyc
 *.pyo
-.venv/
-venv/
+*.pyd
 *.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+venv/
+.venv/
+env/
 
-# Env
+# Environment
 .env
 
 # macOS
 .DS_Store
+**/.DS_Store
 
-# Editor
+# IDE
 .vscode/
 .idea/
-*.swp
+
+# Logs
+*.log

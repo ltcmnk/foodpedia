@@ -27,6 +27,10 @@ const BookState = {
   loadingQuery: null,
   isAnimating: false,
   selectedModel: null,
+  selectedProvider: null,
+  geminiKey: null,
+  geminiKeyConfigured: false,
+  lastErrorCode: null,
   currentRecipe: null,
   currentRecipeVariants: {},
   layout: [],
@@ -879,10 +883,11 @@ document.addEventListener('mousedown', e => { mStart = e.clientX; dragged = fals
 document.addEventListener('mousemove', e => { if (Math.abs(e.clientX - mStart) > 10) dragged = true })
 document.addEventListener('mouseup', e => {
   if (!dragged) return
+  dragged = false
+  if (window.getSelection()?.toString().length > 0) return
   const dx = e.clientX - mStart
   if (Math.abs(dx) < 80) return
   dx < 0 ? goToNextSpread() : goToPrevSpread()
-  dragged = false
 })
 
 // ── KEYBOARD ──
@@ -1021,17 +1026,24 @@ function populateResultSpread(recipe) {
 
   const ingEl = document.getElementById('res-ingredients')
   if (ingEl && recipe.ingredients)
-    ingEl.innerHTML = recipe.ingredients.map(i => `<li>${i}</li>`).join('')
+    ingEl.innerHTML = recipe.ingredients.map(i => `<li data-stagger>${i}</li>`).join('')
 
   const stepsEl = document.getElementById('res-steps')
   if (stepsEl && recipe.steps)
     stepsEl.innerHTML = recipe.steps.map((s, i) =>
-      `<li><span class="step-number">${i+1}</span><span class="step-text">${s}</span></li>`).join('')
+      `<li data-stagger><span class="step-number">${i+1}</span><span class="step-text">${s}</span></li>`).join('')
 
   const illEl = document.getElementById('res-illustration')
   if (illEl) {
     const key = recipe.illustration_key || 'mortar'
     illEl.innerHTML = illustrationSVG[key] || illustrationSVG.mortar
+  }
+
+  // demo stamp
+  const stamp = document.getElementById('res-demo-stamp')
+  if (stamp) {
+    const isDemo = BookState.selectedProvider === 'demo' || IS_DEMO
+    stamp.classList.toggle('visible', isDemo)
   }
 
   BookState.currentRecipe = recipe
@@ -1116,54 +1128,119 @@ function ensureResultPagination(recipe) {
   rebuildBookLayout({ keepCurrent: true })
 }
 
-// ── MODEL SELECTOR ──
-async function loadModels() {
-  try {
-    const res  = await fetch('/api/models')
-    const data = await res.json()
-    const models = data.models || []
-    const list   = document.getElementById('model-list')
-    if (!list) return
+// ── PROVIDER + MODEL SELECTOR ──
+const _PROVIDER_ORDER = ['gemini', 'ollama', 'demo']
 
-    if (models.length === 0) {
-      list.innerHTML = '<li class="model-option loading-models">nenhum modelo encontrado</li>'
-      return
-    }
-
-    if (!BookState.selectedModel) BookState.selectedModel = models[0]
-
-    list.innerHTML = models.map(m =>
-      `<li class="model-option${m === BookState.selectedModel ? ' selected' : ''}" data-model="${m}">${m}</li>`
-    ).join('')
-
-    list.querySelectorAll('.model-option').forEach(el => {
-      el.addEventListener('click', () => {
-        BookState.selectedModel = el.dataset.model
-        list.querySelectorAll('.model-option').forEach(o => o.classList.remove('selected'))
-        el.classList.add('selected')
-      })
-    })
-  } catch {
-    const list = document.getElementById('model-list')
-    if (list) list.innerHTML = '<li class="model-option loading-models">ollama offline</li>'
-  }
+function _updateGeminiKeyRow() {
+  const row = document.getElementById('gemini-key-row')
+  if (!row) return
+  const isGemini = BookState.selectedProvider === 'gemini'
+  const hasKey = !!BookState.geminiKey
+  row.style.display = isGemini && !hasKey ? 'flex' : 'none'
 }
 
-loadModels()
+function confirmGeminiKey() {
+  const input = document.getElementById('gemini-key-input')
+  if (!input) return
+  const key = input.value.trim()
+  if (!key) return
+  BookState.geminiKey = key
+  BookState.geminiKeyConfigured = true
+  try { localStorage.setItem('fp_gemini_key', key) } catch {}
+  input.value = ''
+  _updateGeminiKeyRow()
+  showToast(currentLang === 'en' ? 'Gemini key saved.' : 'Chave do Gemini salva.')
+}
+
+async function loadProviders() {
+  const list = document.getElementById('model-list')
+  if (!list) return
+
+  // restore persisted gemini key
+  if (!BookState.geminiKey) {
+    try { BookState.geminiKey = localStorage.getItem('fp_gemini_key') || null } catch {}
+  }
+
+  let data = {}
+  try {
+    const res = await fetch('/api/models')
+    data = await res.json()
+  } catch {}
+
+  const providers = data.providers || {}
+  const items = []
+
+  for (const pid of _PROVIDER_ORDER) {
+    const p = providers[pid]
+    if (!p?.available && pid !== 'demo') continue
+    const models = p?.models?.length ? p.models : [pid]
+    const label = { ollama: 'Ollama', gemini: 'Gemini', demo: 'Demo' }[pid] || pid
+    items.push({ type: 'header', label })
+    for (const m of models) {
+      items.push({ type: 'model', provider: pid, model: m, label: m })
+    }
+  }
+
+  if (items.length === 0) {
+    list.innerHTML = '<li class="model-option loading-models">demo</li>'
+    BookState.selectedProvider = 'demo'
+    BookState.selectedModel = 'demo'
+    _updateGeminiKeyRow()
+    return
+  }
+
+  // auto-select: first available provider in priority order
+  if (!BookState.selectedProvider) {
+    const first = items.find(i => i.type === 'model')
+    if (first) {
+      BookState.selectedProvider = first.provider
+      BookState.selectedModel    = first.model
+    }
+  }
+
+  list.innerHTML = items.map(item => {
+    if (item.type === 'header') {
+      return `<li class="model-option provider-section-header">${item.label}</li>`
+    }
+    const sel = item.provider === BookState.selectedProvider && item.model === BookState.selectedModel
+    return `<li class="model-option${sel ? ' selected' : ''}" data-provider="${item.provider}" data-model="${item.model}">${item.label}</li>`
+  }).join('')
+
+  list.querySelectorAll('.model-option[data-provider]').forEach(el => {
+    el.addEventListener('click', () => {
+      BookState.selectedProvider = el.dataset.provider
+      BookState.selectedModel    = el.dataset.model
+      list.querySelectorAll('.model-option').forEach(o => o.classList.remove('selected'))
+      el.classList.add('selected')
+      _updateGeminiKeyRow()
+    })
+  })
+
+  _updateGeminiKeyRow()
+}
+
+loadProviders()
 
 // ── FETCH RECIPE ──
 const IS_DEMO = new URLSearchParams(window.location.search).get('demo') === 'true'
 
-async function fetchRecipeFromOllama(query) {
+async function fetchRecipe(query) {
   const body = { dish: query, lang: currentLang }
-  if (BookState.selectedModel) body.model = BookState.selectedModel
+  if (BookState.selectedProvider) body.provider = BookState.selectedProvider
+  if (BookState.selectedModel)    body.model    = BookState.selectedModel
+  if (BookState.geminiKey)        body.gemini_api_key = BookState.geminiKey
   if (IS_DEMO) body.demo = true
   const res = await fetch('/api/recipe', {
     method:  'POST',
     headers: { 'Content-Type': 'application/json' },
     body:    JSON.stringify(body),
   })
-  if (!res.ok) throw new Error('Erro na consulta')
+  if (!res.ok) {
+    let errorCode = 'INTERNAL_ERROR'
+    try { errorCode = (await res.json()).error || errorCode } catch {}
+    BookState.lastErrorCode = errorCode
+    throw new Error(errorCode)
+  }
   return res.json()
 }
 
@@ -1182,6 +1259,37 @@ function notifyRecipeReady(recipe) {
     onComplete: () => gsap.set('#ribbon-pages', { opacity: 1 })
   })
   showArrow(arrowR, 0.9)
+}
+
+// ── ERROR SPREAD ──
+function populateErrorSpread(code) {
+  const heading = document.getElementById('error-heading')
+  const body    = document.getElementById('error-body')
+  const action  = document.getElementById('error-action')
+  if (!heading || !body || !action) return
+
+  const t = (key, fallback) => {
+    const map = window._i18nStrings?.[currentLang] || {}
+    return map[key] || fallback
+  }
+
+  const map = {
+    OLLAMA_OFFLINE:    ['error_ollama_heading',  'error_ollama_body',  'error_ollama_action',  () => showSetup('ollama')],
+    GEMINI_KEY_MISSING:['error_gemini_heading',  'error_gemini_body',  'error_gemini_action',  () => showSetup('gemini')],
+    TIMEOUT:           ['error_timeout_heading', 'error_timeout_body', null,                   null],
+    PARSE_ERROR:       ['error_parse_heading',   'error_parse_body',   null,                   null],
+  }
+
+  const entry = map[code] || ['error_heading', 'error_body', null, null]
+  heading.textContent = t(entry[0], 'Algo deu errado')
+  body.textContent    = t(entry[1], 'Não foi possível obter a receita.')
+  if (entry[2] && entry[3]) {
+    action.textContent = t(entry[2], 'Como configurar →')
+    action.onclick = entry[3]
+    action.style.display = ''
+  } else {
+    action.style.display = 'none'
+  }
 }
 
 // ── RETRY ──
@@ -1216,7 +1324,23 @@ function showRecipeResult(recipe) {
   })
 }
 
-function showOllamaSetup() {
+function showSetup(mode = 'all') {
+  const setupSpread = document.querySelector('[data-role="setup"]')
+  if (setupSpread) setupSpread.dataset.setupMode = mode
+
+  // update privacy note based on mode
+  const privacyEl = document.getElementById('setup-privacy')
+  if (privacyEl) {
+    const t = (key, fallback) => window._i18nStrings?.[currentLang]?.[key] || fallback
+    if (mode === 'gemini') {
+      privacyEl.dataset.i18n = 'setup_privacy_gemini'
+      privacyEl.textContent = t('setup_privacy_gemini', 'With Gemini, queries go to Google.')
+    } else {
+      privacyEl.dataset.i18n = 'setup_privacy_ollama'
+      privacyEl.textContent = t('setup_privacy_ollama', 'Runs completely offline with Ollama.')
+    }
+  }
+
   BookState.errorActive = true
   BookState.setupActive = true
   BookState.resultAvailable = false
@@ -1229,6 +1353,8 @@ function showOllamaSetup() {
   navigateToSpread(SPREAD_SETUP)
 }
 
+function showOllamaSetup() { showSetup('ollama') }
+
 function navigateToSpread(target) {
   if (!target || BookState.isAnimating || target === BookState.currentSpread) return Promise.resolve()
   const direction = target > BookState.currentSpread ? 'forward' : 'backward'
@@ -1236,33 +1362,71 @@ function navigateToSpread(target) {
 }
 
 // ── START SEARCH ──
+const FAST_THRESHOLD_MS = 1500
+
 async function startRecipeSearch(query) {
   if (BookState.phase === 'loading') return
   BookState.resultAvailable = false
   BookState.errorActive = false
   BookState.setupActive = false
+  BookState.lastErrorCode = null
   rebuildBookLayout({ keepCurrent: true })
   BookState.phase = 'loading'
   BookState.loadingQuery = query
   BookState.pendingRecipe = null
 
-  const recipeDirection = SPREAD_RECIPES_START > BookState.currentSpread ? 'forward' : 'backward'
-  await animatePageTurn(BookState.currentSpread, SPREAD_RECIPES_START, recipeDirection)
-  animateContentIn(SPREAD_RECIPES_START)
+  let resolved = false
+  let recipe = null
+  let fetchError = null
 
-  try {
-    const recipe = await fetchRecipeFromOllama(query)
-    BookState.pendingRecipe = recipe
-    notifyRecipeReady(recipe)
-    showToast('Receita pronta! Avance para ver o resultado.')
-  } catch {
+  const fetchPromise = fetchRecipe(query).then(r => { recipe = r }).catch(e => { fetchError = e })
+  const timerPromise = new Promise(res => setTimeout(res, FAST_THRESHOLD_MS))
+
+  // race: if fetch wins before threshold, go straight to result
+  await Promise.race([fetchPromise, timerPromise])
+
+  if (fetchError) {
     BookState.phase = 'browsing'
     BookState.resultAvailable = false
     BookState.errorActive = true
     BookState.setupActive = false
     rebuildBookLayout({ keepCurrent: true })
+    populateErrorSpread(BookState.lastErrorCode || 'INTERNAL_ERROR')
     await navigateToSpread(SPREAD_ERROR)
+    return
   }
+
+  if (recipe) {
+    // fast path: response came before threshold
+    resolved = true
+    BookState.pendingRecipe = recipe
+    showRecipeResult(recipe)
+    return
+  }
+
+  // slow path: browse while loading
+  const recipeDirection = SPREAD_RECIPES_START > BookState.currentSpread ? 'forward' : 'backward'
+  await animatePageTurn(BookState.currentSpread, SPREAD_RECIPES_START, recipeDirection)
+  animateContentIn(SPREAD_RECIPES_START)
+
+  // wait for fetch to complete
+  await fetchPromise
+
+  if (fetchError) {
+    BookState.phase = 'browsing'
+    BookState.resultAvailable = false
+    BookState.errorActive = true
+    BookState.setupActive = false
+    rebuildBookLayout({ keepCurrent: true })
+    populateErrorSpread(BookState.lastErrorCode || 'INTERNAL_ERROR')
+    await navigateToSpread(SPREAD_ERROR)
+    return
+  }
+
+  BookState.pendingRecipe = recipe
+  notifyRecipeReady(recipe)
+  const t = (key, fallback) => window._i18nStrings?.[currentLang]?.[key] || fallback
+  showToast(t('recipe_ready_toast', 'Receita pronta! Avance para ver o resultado.'))
 }
 
 // ── SEARCH INPUT ──
@@ -1693,6 +1857,7 @@ async function loadI18n() {
   try {
     const res = await fetch('/static/data/i18n.json')
     i18nData = await res.json()
+    window._i18nStrings = i18nData
     applyLang(currentLang)
   } catch { /* fail silently — default strings in HTML */ }
 }
@@ -1758,6 +1923,7 @@ async function translateCurrentRecipe(targetLang) {
     const body = {
       recipe: BookState.currentRecipe,
       target_lang: targetLang,
+      provider: BookState.selectedProvider || 'ollama',
       model: BookState.selectedModel || 'gemma3:latest',
     }
     const response = await fetch('/api/translate', {
@@ -2131,6 +2297,19 @@ window.addEventListener('afterprint', () => {
     printRecipe.innerHTML = ''
     printRecipe.setAttribute('aria-hidden', 'true')
   }
+})
+
+// ── SETUP COLUMN DBLCLICK ──
+document.addEventListener('dblclick', e => {
+  const title = e.target.closest('.setup-col-title')
+  if (!title) return
+  const col = title.closest('.setup-col')
+  if (!col) return
+  const colId = col.dataset.setupCol
+  const spread = col.closest('[data-role="setup"]')
+  if (!spread) return
+  const current = spread.dataset.setupMode
+  spread.dataset.setupMode = current === colId ? 'all' : colId
 })
 
 // ── INIT ──

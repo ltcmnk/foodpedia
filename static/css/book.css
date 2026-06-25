@@ -1442,8 +1442,9 @@ body {
    STAGGER
 ─────────────────────────── */
 [data-stagger] { opacity:0; }
-/* hide page content during flip while keeping background + gutter border visible */
-.page.is-leaving > * { opacity:0 !important; }
+/* during flip: hide content but keep the structural footer (brand + page number line)
+   — gives "blank book page" fidelity. endpaper-page has no footer so stays fully blank. */
+.page.is-leaving > *:not(.page-footer) { opacity:0 !important; }
 
 /* ── CENTRE SPINE ── */
 .book-gutter {
@@ -1675,3 +1676,132 @@ body {
     transition-duration:0.001ms!important;
   }
 }
+
+/* ──────────────────────────
+   PROVIDER SELECTOR
+─────────────────────────── */
+.provider-section-header {
+  list-style:none;
+  font-family:'Cedarville Cursive',cursive;
+  font-size:9px; text-transform:uppercase;
+  letter-spacing:0.1em; color:var(--c-ink-faded);
+  padding:7px 0 2px; cursor:default; user-select:none;
+  opacity:.65;
+}
+.provider-section-header:not(:first-child) {
+  margin-top:4px;
+  border-top:0.5px solid var(--c-rule);
+}
+
+.gemini-key-row {
+  display:none;
+  align-items:center;
+  gap:4px;
+  margin-top:6px;
+  padding-top:6px;
+  border-top:0.5px dashed var(--c-rule);
+}
+.gemini-key-input {
+  flex:1; min-width:0;
+  background:rgba(176,125,42,.05);
+  border:none; border-bottom:1px solid var(--c-border);
+  padding:3px 6px;
+  font-family:'Grape Nuts',cursive;
+  font-size:12px; color:var(--c-ink);
+  outline:none; border-radius:0;
+}
+.gemini-key-input::placeholder { color:rgba(176,125,42,.45); }
+.gemini-key-input:focus { border-bottom-color:var(--c-gold); }
+.gemini-key-confirm {
+  flex-shrink:0;
+  font-family:'Cedarville Cursive',cursive;
+  font-size:11px; color:var(--c-ink-faded);
+  background:none; border:0.75px solid var(--c-border);
+  padding:3px 8px; cursor:pointer; border-radius:1px;
+  transition:color 120ms, border-color 120ms;
+}
+.gemini-key-confirm:hover { color:var(--c-annotation); border-color:var(--c-annotation); }
+
+/* ──────────────────────────
+   DEMO STAMP
+─────────────────────────── */
+.demo-stamp {
+  position:absolute;
+  bottom:76px; right:16px;
+  width:68px; height:68px;
+  opacity:0; pointer-events:none;
+  transform:rotate(14deg);
+  transition:opacity 0.4s ease;
+  color:var(--c-cover-red);
+}
+.demo-stamp.visible { opacity:0.28; }
+
+/* ──────────────────────────
+   SETUP 2-COLUMN SPREAD
+─────────────────────────── */
+.setup-columns {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  width:100%;
+  margin-top:16px;
+}
+.setup-col {
+  background:rgba(176,125,42,.04);
+  border:0.75px solid var(--c-rule);
+  border-radius:2px;
+  padding:12px 10px;
+  transition:border-color 160ms;
+}
+.setup-col:hover { border-color:var(--c-border); }
+.setup-col-title {
+  font-family:'Cedarville Cursive',cursive;
+  font-size:13px; color:var(--c-ink);
+  cursor:pointer; user-select:none;
+  margin-bottom:4px;
+  padding-bottom:6px;
+  border-bottom:0.5px solid var(--c-rule);
+  transition:color 120ms;
+}
+.setup-col-title:hover { color:var(--c-cover-red); }
+.setup-col-desc {
+  font-family:'Indie Flower',cursive;
+  font-size:11px; color:var(--c-ink-faded);
+  font-style:italic; margin-bottom:8px;
+}
+.setup-col-steps {
+  font-family:'Indie Flower',cursive;
+  font-size:12px; line-height:1.75;
+  color:var(--c-ink); list-style:none;
+}
+.setup-col-steps li { margin-bottom:4px; }
+.setup-col-steps code {
+  font-family:'Grape Nuts',cursive;
+  font-size:11px; color:var(--c-ink);
+  background:rgba(176,125,42,.08);
+  padding:2px 6px; display:block;
+  margin:4px 0; border-left:2px solid var(--c-gold);
+}
+.setup-dbl-hint {
+  font-family:'Grape Nuts',cursive;
+  font-size:11px; color:var(--c-ink-faded);
+  font-style:italic; margin-top:12px;
+  text-align:center; opacity:.6;
+}
+
+/* Full mode: one column expands to full width */
+[data-setup-mode="ollama"] .setup-col[data-setup-col="gemini"],
+[data-setup-mode="gemini"] .setup-col[data-setup-col="ollama"] {
+  display:none;
+}
+[data-setup-mode="ollama"] .setup-col[data-setup-col="ollama"],
+[data-setup-mode="gemini"] .setup-col[data-setup-col="gemini"] {
+  grid-column:1 / -1;
+}
+[data-setup-mode="ollama"] .setup-columns,
+[data-setup-mode="gemini"] .setup-columns {
+  grid-template-columns:1fr;
+}
+
+/* Contrast fix: annotation at 13px */
+:root { --c-annotation:#3A5232; }
