@@ -183,7 +183,7 @@
       {% for recipe in base_recipes %}
       <div class="book-spread" data-role="base-recipe" data-recipe-name="{{ recipe.name|e }}">
         <script type="application/json" class="base-recipe-data">{{ recipe|tojson }}</script>
-        <script type="application/json" class="base-recipe-data-en">{{ base_recipes_en[recipe.name]|tojson }}</script>
+        <script type="application/json" class="base-recipe-data-en">{{ base_recipes_en.get(recipe.spread_index, recipe)|tojson }}</script>
 
         <!-- Page turn layer (3D flip) -->
         <div class="page-turn-layer"><div class="turn-front"></div><div class="turn-back"></div></div>

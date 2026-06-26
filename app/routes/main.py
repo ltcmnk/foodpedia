@@ -20,7 +20,7 @@ def index():
     )
     base_recipes = _load_json('base_recipes.json')
     base_recipes_en_list = _load_json('base_recipes_en.json')
-    base_recipes_en = {r['name']: r for r in base_recipes_en_list}
+    base_recipes_en = {r['spread_index']: r for r in base_recipes_en_list}
 
     css_path = root / 'static' / 'css' / 'book.css'
     js_path = root / 'static' / 'js' / 'book.js'
