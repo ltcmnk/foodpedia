@@ -4,7 +4,7 @@ from flask import current_app
 logger = logging.getLogger(__name__)
 
 
-def get_recipe_from_ai(dish: str, provider: str = None, model: str = None, lang: str = 'pt', gemini_api_key: str = None) -> dict:
+def get_recipe_from_ai(dish: str, provider: str = None, model: str = None, lang: str = 'pt') -> dict:
     if provider is None:
         provider = current_app.config.get('AI_PROVIDER', 'ollama')
 
@@ -14,7 +14,7 @@ def get_recipe_from_ai(dish: str, provider: str = None, model: str = None, lang:
 
     if provider == 'gemini':
         from app.services.gemini_service import call_gemini
-        return call_gemini(dish, model=model, lang=lang, gemini_api_key=gemini_api_key)
+        return call_gemini(dish, model=model, lang=lang)
 
     # default: ollama
     from app.services.ollama_service import call_ollama, build_recipe_prompts

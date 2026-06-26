@@ -1,434 +1,322 @@
 [
   {
-    "name": "Feijoada Brasileira",
-    "subtitle": "O abraço da cozinha nacional",
-    "category": "Culinária Brasileira",
-    "illustration_key": "herbs",
-    "prep_time": "3 horas",
-    "servings": "8 pessoas",
-    "difficulty": "Médio",
-    "story": "A feijoada chegou ao Brasil com os portugueses, mas foi nas senzalas que ganhou alma. Feita com os cortes que os senhores não queriam, transformou escassez em fartura. Hoje é patrimônio afetivo de todo o país.",
-    "annotation": "servir com\nfarofa torrada\ne laranja fatiada!",
-    "ingredients": [
-      "500g de feijão preto",
-      "300g de carne-seca dessalgada",
-      "200g de linguiça defumada",
-      "150g de paio fatiado",
-      "2 folhas de louro",
-      "1 cebola grande",
-      "4 dentes de alho",
-      "Sal e pimenta-do-reino"
-    ],
-    "steps": [
-      "Deixe o feijão de molho por 12 horas. Dessalgue as carnes por 24 horas trocando a água.",
-      "Refogue o alho e a cebola até dourar. Adicione as carnes e doure por 10 minutos.",
-      "Junte o feijão escorrido, cubra com água e cozinhe por 2h na pressão.",
-      "Ajuste o sal, adicione o louro e deixe apurar por mais 30 minutos sem tampa.",
-      "Sirva com arroz branco, farofa, couve refogada e laranja fatiada."
-    ],
-    "tip": "um cálice de cachaça na feijoada enquanto cozinha. na sua e na dela."
-  },
-  {
-    "name": "Risotto ai Funghi",
-    "subtitle": "O ritual lento do norte italiano",
-    "category": "Culinária Italiana",
-    "illustration_key": "grain",
-    "prep_time": "35 minutos",
-    "servings": "4 pessoas",
-    "difficulty": "Médio",
-    "story": "O risotto nasceu no Vêneto no século XVI quando o açafrão vazou acidentalmente sobre o arroz de um discípulo de mestre vidreiro. A versão com funghi é seu herdeiro mais nobre — terrosa, aromática, impossível de apressar.",
-    "annotation": "o segredo está\nno brodo quente\ncolher por colher",
-    "ingredients": [
-      "320g de arroz Arborio ou Carnaroli",
-      "30g de funghi secchi reidratados",
-      "1L de caldo de legumes quente",
-      "1 cebola pequena picada",
-      "120ml de vinho branco seco",
-      "60g de parmesão ralado",
-      "40g de manteiga gelada",
-      "Azeite, sal e pimenta"
-    ],
-    "steps": [
-      "Reidrate os funghi em água morna por 20 min. Reserve a água coada e pique os funghi.",
-      "Refogue a cebola no azeite até transparente. Adicione o arroz e toste por 2 min.",
-      "Deglaze com o vinho branco. Quando evaporar, adicione a água dos funghi.",
-      "Adicione o caldo quente concha por concha, mexendo sempre até absorver.",
-      "Na última concha, desligue o fogo. Incorpore manteiga gelada e parmesão. Sirva imediatamente."
-    ],
-    "tip": "manteiga gelada faz toda a diferença na cremosidade final. não substitua por temperatura ambiente."
-  },
-  {
-    "name": "Ramen Tonkotsu",
-    "subtitle": "A alma do caldo que ferve por horas",
-    "category": "Culinária Japonesa",
-    "illustration_key": "bowl",
-    "prep_time": "12 horas",
-    "servings": "4 pessoas",
-    "difficulty": "Difícil",
-    "story": "Nascido em Fukuoka nos anos 1940 nos quiosques do Hakata, o tonkotsu foi criado por acidente quando um cozinheiro esqueceu os ossos de porco fervendo em fogo alto. O caldo leitoso e denso que resultou mudou o ramen para sempre.",
-    "annotation": "paciência é\no ingrediente\nmais importante",
-    "ingredients": [
-      "1kg de ossos de porco (joelho + medula)",
-      "400g de barriga de porco",
-      "4 porções de macarrão ramen",
-      "4 ovos cozidos marinados (ajitsuke tamago)",
-      "100g de bamboo (menma)",
-      "2 folhas de nori",
-      "Cebolinha e gergelim para servir",
-      "Tare: shoyu, mirin, sake"
-    ],
-    "steps": [
-      "Cozinhe os ossos em água fervente por 5 min, descarte a água e lave bem.",
-      "Ferva os ossos em água nova em fogo alto por 10-12h até o caldo ficar leitoso e denso.",
-      "Cozinhe a barriga de porco sous vide ou braseada com shoyu, sake e açúcar.",
-      "Prepare o tare: reduza shoyu, mirin e sake até xaroposo. Reserve.",
-      "Monte a tigela: tare no fundo, macarrão cozido, caldo quente, fatiado de barriga, ovo, bamboo e nori."
-    ],
-    "tip": "o caldo nunca pode parar de ferver. é o borbulhar constante que emulsiona a gordura e cria a textura leitosa."
-  },
-  {
-    "name": "Crème Brûlée",
-    "subtitle": "O prazer proibido de quebrar a crosta",
-    "category": "Confeitaria Francesa",
-    "illustration_key": "vanilla",
-    "prep_time": "4 horas (inclui geladeira)",
-    "servings": "6 ramekins",
-    "difficulty": "Médio",
-    "story": "Aparece pela primeira vez no livro de François Massialot em 1691, mas franceses, ingleses e catalães ainda brigam pela paternidade. O que importa é que a combinação de creme gelado e caramelo quente é uma das mais elegantes da confeitaria ocidental.",
-    "annotation": "açúcar refinado\ndá a crosta\nmais uniforme",
-    "ingredients": [
-      "500ml de creme de leite fresco",
-      "6 gemas",
-      "100g de açúcar",
-      "1 fava de baunilha (ou 1 col. chá extrato)",
-      "Açúcar demerara para caramelizar"
-    ],
-    "steps": [
-      "Aqueça o creme com a fava de baunilha aberta até quase ferver. Deixe infusionar 15 min.",
-      "Bata as gemas com o açúcar até pálido. Adicione o creme quente aos poucos, mexendo sempre.",
-      "Passe pela peneira. Distribua nos ramekins. Asse em banho-maria a 150°C por 40-50 min.",
-      "Esfrie e leve à geladeira por mínimo 3h.",
-      "Na hora de servir, polvilhe açúcar demerara e caramelize com maçarico até formar crosta âmbar."
-    ],
-    "tip": "o creme deve tremer levemente no centro ao sair do forno. vai firmar na geladeira. se estiver duro, cozinhou demais."
-  },
-  {
-    "name": "Paella Valenciana",
-    "subtitle": "O arroz que cheira a açafrão e mar",
-    "category": "Culinária Espanhola",
-    "illustration_key": "spice",
-    "prep_time": "1 hora",
-    "servings": "6 pessoas",
-    "difficulty": "Médio",
-    "story": "A paella nasceu nos campos de Valência como comida de trabalhadores rurais — arroz, legumes, coelho e caracóis cozidos em fogo de laranjeira. O nome vem da frigideira larga, a paella. A versão com frutos do mar é heresia valenciana, mas deliciosa.",
-    "annotation": "o socarrat\n(fundo dourado)\né o ponto mais\nprecioso",
-    "ingredients": [
-      "400g de arroz de grão curto (Bomba ou Calasparra)",
-      "300g de frango em pedaços",
-      "200g de camarão grande",
-      "200g de mexilhão",
-      "1 sachê de açafrão",
-      "1 pimentão vermelho e 1 verde",
-      "400g de tomate pelado",
-      "1L de caldo de frango quente",
-      "Azeite, alho, páprica defumada, sal"
-    ],
-    "steps": [
-      "Dissolva o açafrão em caldo quente. Reserve.",
-      "Doure o frango na paella com azeite. Retire e reserve.",
-      "Refogue alho, pimentões e tomate até virar molho. Adicione páprica.",
-      "Adicione o arroz, mexa 2 min. Junte o caldo com açafrão e o frango.",
-      "Cozinhe em fogo médio sem mexer por 18 min. Adicione frutos do mar nos últimos 5 min.",
-      "Aumente o fogo 1 min para criar o socarrat. Deixe descansar 5 min coberta."
-    ],
-    "tip": "nunca mexa o arroz depois de adicionar o caldo. o movimento libera amido e estraga a textura."
-  },
-  {
-    "name": "Tacos de Carnitas",
-    "subtitle": "A carne que derrete no tempo",
-    "category": "Culinária Mexicana",
-    "illustration_key": "citrus",
-    "prep_time": "3 horas",
-    "servings": "6 pessoas (20 tacos)",
-    "difficulty": "Médio",
-    "story": "As carnitas são a resposta mexicana ao confite francês — porco cozido lentamente em sua própria gordura. Originária do estado de Michoacán, a técnica chegou com os colonizadores espanhóis e foi transformada em arte pelos cozinheiros locais.",
-    "annotation": "suco de laranja\nnaturaliza a gordura\ne dá cor linda",
-    "ingredients": [
-      "1,5kg de pernil de porco em cubos",
-      "Suco de 2 laranjas",
-      "Suco de 2 limas",
-      "1 col. cominho",
-      "1 col. orégano mexicano",
-      "4 dentes de alho",
-      "Sal e pimenta",
-      "Tortilhas de milho para servir",
-      "Coentro, cebola, salsa verde"
-    ],
-    "steps": [
-      "Tempere o porco com sal, pimenta, cominho, orégano e alho amassado.",
-      "Coloque em panela larga com suco de laranja e lima. Fogo médio-alto.",
-      "Quando o líquido evaporar (±1h30), o porco começará a fritar em sua própria gordura.",
-      "Frite até dourar bem em todos os lados (±30 min). Desfie grosseiramente.",
-      "Sirva em tortilhas com coentro, cebola picada e salsa verde."
-    ],
-    "tip": "o momento de virar é quando você ouve a diferença entre borbulhar e fritar. confie nos ouvidos."
-  },
-  {
-    "name": "Spaghetti alla Carbonara",
-    "subtitle": "Roma em quatro ingredientes",
-    "category": "Culinária Italiana",
-    "illustration_key": "grain",
-    "prep_time": "25 minutos",
-    "servings": "4 pessoas",
-    "difficulty": "Médio",
-    "story": "Apareceu documentada pela primeira vez em 1944 em Roma, possivelmente influenciada pelas rações dos soldados americanos (bacon em pó e ovos desidratados). Hoje é símbolo da cucina romana — e motivo de guerras sobre o uso de creme.",
-    "annotation": "JAMAIS creme\nde leite.\né errado.\nponto final.",
-    "ingredients": [
-      "400g de spaghetti",
-      "200g de guanciale (bochechas) ou pancetta",
-      "4 gemas + 1 ovo inteiro",
-      "100g de Pecorino Romano ralado",
-      "50g de parmesão ralado",
-      "Pimenta-do-reino generosa",
-      "Sal para a água do macarrão"
-    ],
-    "steps": [
-      "Cozinhe o macarrão em água bem salgada até al dente. Reserve 1 xícara de água do cozimento.",
-      "Frite o guanciale em fogo médio sem óleo até ficar crocante. Desligue o fogo.",
-      "Bata as gemas com o ovo, queijos ralados e muita pimenta.",
-      "Transfira o macarrão para a frigideira com o guanciale (fogo desligado).",
-      "Adicione o creme de ovos e meia xícara de água do macarrão. Mexa vigorosamente até cremoso."
-    ],
-    "tip": "o truque é a temperatura. o fogo desligado e a água com amido criam o creme sem cozinhar os ovos."
-  },
-  {
-    "name": "Pad Thai",
-    "subtitle": "O macarrão que unificou uma nação",
-    "category": "Culinária Tailandesa",
-    "illustration_key": "citrus",
-    "prep_time": "30 minutos",
-    "servings": "4 pessoas",
-    "difficulty": "Médio",
-    "story": "Criado nos anos 1930 pelo governo tailandês para promover identidade nacional e reduzir o consumo de arroz. O molho de tamarindo, o nam pla e o açúcar de palma são a assinatura impossível de falsificar — doce, azedo, salgado e umami ao mesmo tempo.",
-    "annotation": "wok muito quente.\nfogo baixo faz\npad thai ensopado",
-    "ingredients": [
-      "300g de macarrão de arroz (sen lek)",
-      "300g de camarão ou tofu",
-      "3 col. molho de tamarindo",
-      "2 col. nam pla (molho de peixe)",
-      "1 col. açúcar de palma",
-      "2 ovos",
-      "150g de broto de feijão",
-      "Cebolinha, amendoim triturado, lima, pimenta"
-    ],
-    "steps": [
-      "Hidrate o macarrão em água fria por 30 min. Escorra bem.",
-      "Misture tamarindo, nam pla e açúcar. Reserve.",
-      "Wok no fogo máximo. Frite o camarão/tofu até dourar. Empurre para o lado.",
-      "Frite os ovos no centro, quebre e misture.",
-      "Adicione o macarrão e o molho. Refogue em fogo alto por 2 min.",
-      "Finalize com broto de feijão e cebolinha. Sirva com amendoim, lima e pimenta."
-    ],
-    "tip": "hidrate o macarrão em água fria, nunca quente. vai terminar de cozinhar no wok e não vai quebrar."
-  },
-  {
-    "name": "Croissant",
-    "subtitle": "O laminado que exige devoção",
-    "category": "Viennoiserie Francesa",
-    "illustration_key": "grain",
-    "prep_time": "2 dias",
-    "servings": "12 croissants",
-    "difficulty": "Difícil",
-    "story": "Veio de Viena para Paris no século XIX e foi transformado em símbolo da França. A técnica de laminação — dobrar manteiga em camadas finas de massa — vem dos kipferl austríacos, mas foi a manteiga francesa que fez a diferença.",
-    "annotation": "manteiga seca\n(beurrage) é vital.\nnão economize.",
-    "ingredients": [
-      "500g de farinha de trigo forte",
-      "280ml de leite integral morno",
-      "10g de sal, 50g de açúcar",
-      "7g de fermento biológico seco",
-      "30g de manteiga para a massa",
-      "280g de manteiga seca europeia para laminação",
-      "1 gema + 2 col. leite para dorá"
-    ],
-    "steps": [
-      "Dia 1: Misture farinha, sal, açúcar, fermento, leite e 30g de manteiga. Sove 8 min. Geladeira 12h.",
-      "Bata a manteiga de laminação em retângulo de 20x15cm. Geladeira junto.",
-      "Dia 2: Envolva a manteiga na massa. Faça 3 dobras simples com descanso de 30 min entre cada.",
-      "Abra a massa em retângulo, corte triângulos e enrole do lado largo para a ponta.",
-      "Prove 2-3h até duplicar. Pincele com gema e asse a 190°C por 18-20 min até caramelizado."
-    ],
-    "tip": "a manteiga e a massa precisam ter a mesma temperatura fria. se a manteiga derreter nas camadas, perdeu."
-  },
-  {
-    "name": "Moussaka",
-    "subtitle": "As camadas da Grécia antiga",
-    "category": "Culinária Grega",
-    "illustration_key": "herbs",
-    "prep_time": "1h 30min",
-    "servings": "8 pessoas",
-    "difficulty": "Médio",
-    "story": "A moussaka existe em variações por todo o Mediterrâneo e Oriente Médio, mas a versão grega que conhecemos hoje foi codificada por Nikos Tselementes nos anos 1920, influenciado pela culinária francesa — daí o béchamel no topo.",
-    "annotation": "sal grosso na\nberinjela tira\no amargor. não\npule esse passo.",
-    "ingredients": [
-      "3 berinjelas grandes fatiadas",
-      "500g de carne moída de cordeiro ou boi",
-      "400g de tomate pelado",
-      "1 cebola, 3 dentes de alho",
-      "1 col. canela em pó, 1 col. cominho",
-      "Para o béchamel: 60g manteiga, 60g farinha, 600ml leite, 2 gemas, noz-moscada",
-      "Parmesão para gratinar"
-    ],
-    "steps": [
-      "Sale as berinjelas, espere 30 min, enxágue e seque. Grelhe ou asse até dourar.",
-      "Refogue cebola e alho. Adicione a carne e doure. Junte tomate, canela, cominho. Cozinhe 20 min.",
-      "Béchamel: derreta manteiga, adicione farinha, depois leite quente mexendo sempre. Tempere, retire do fogo e misture as gemas.",
-      "Monte: berinjela, bolonhesa, berinjela, béchamel. Polvilhe parmesão.",
-      "Asse a 180°C por 45 min até borbulhar e dourar. Deixe descansar 15 min antes de cortar."
-    ],
-    "tip": "moussaka do dia seguinte é melhor. as camadas assentam e fica mais fácil de cortar em fatias perfeitas."
-  },
-  {
-    "name": "Dal Makhani",
-    "subtitle": "A lentilha que cozinhou por gerações",
-    "category": "Culinária Indiana",
-    "illustration_key": "spice",
-    "prep_time": "8 horas",
-    "servings": "6 pessoas",
-    "difficulty": "Médio",
-    "story": "Dal Makhani nasceu em 1947 no Moti Mahal de Delhi, criado por Kundan Lal Gujral. Cozinha em fogo baixíssimo por horas — originalmente em brasas que arrefeciam durante a noite. O resultado é um creme escuro, rico e profundamente aromático.",
-    "annotation": "fogo baixo\nfeito de noite\né o jeito certo.\npaciência.",
-    "ingredients": [
-      "250g de urad dal inteiro (lentilha preta)",
-      "50g de feijão rajma",
-      "400g de tomate pelado",
-      "1 cebola grande",
-      "2 col. gengibre-alho em pasta",
-      "100g de manteiga",
-      "100ml de creme de leite",
-      "Garam masala, cominho, páprica, sal"
-    ],
-    "steps": [
-      "Deixe o dal e o rajma de molho por 8h. Cozinhe na pressão por 30 min até muito macios.",
-      "Refogue cebola até dourar. Adicione pasta de gengibre-alho e tomate. Cozinhe 15 min.",
-      "Misture o dal cozido ao molho de tomate. Tempere com especiarias.",
-      "Cozinhe em fogo mínimo por 2-3h mexendo ocasionalmente. Adicione água se necessário.",
-      "Finalize com manteiga e creme de leite. Sirva com naan."
-    ],
-    "tip": "quanto mais tempo em fogo baixo, mais cremoso fica. o ideal é cozinhar 4-6h. dá para fazer de véspera."
-  },
-  {
-    "name": "Ceviche Peruano",
-    "subtitle": "O mar curado pelo limão andino",
-    "category": "Culinária Peruana",
-    "illustration_key": "citrus",
-    "prep_time": "30 minutos",
-    "servings": "4 pessoas",
-    "difficulty": "Fácil",
-    "story": "O ceviche existe no Peru há mais de 2000 anos — os Mochica curavam peixe em suco de maracujá. Os limões chegaram com os espanhóis e transformaram a receita. O leche de tigre — o líquido sobrante — virou bebida e afrodisíaco lendário.",
-    "annotation": "peixe fresco\né inegociável.\nsem exceção.",
-    "ingredients": [
-      "500g de peixe branco firme (linguado ou corvina)",
-      "Suco de 10-12 limões tahiti",
-      "1 cebola roxa em fatias finas",
-      "2 pimentas aji amarillo (ou dedo-de-moça)",
-      "Coentro fresco a gosto",
-      "1 dente de alho amassado",
-      "Sal, pimenta e gengibre fresco ralado",
-      "Choclo (milho andino) e batata-doce para acompanhar"
-    ],
-    "steps": [
-      "Corte o peixe em cubos de 2cm. Tempere com sal e reserve 5 min.",
-      "Misture o suco de limão com alho, gengibre e metade da pimenta. Tempere.",
-      "Despeje o leche de tigre sobre o peixe. O peixe 'cozinha' em 3-5 min.",
-      "Adicione cebola, coentro e o restante da pimenta.",
-      "Sirva imediatamente com choclo e batata-doce."
-    ],
-    "tip": "o tempo de 'cozimento' no limão importa. 3 min = textura de sashimi. 10 min = cozido. você escolhe."
-  },
-  {
+    "spread_index": 21,
     "name": "Shakshuka",
-    "subtitle": "Os ovos que afogaram no tomate",
+    "subtitle": "O amanhecer vibrante em um mar de tomates",
     "category": "Culinária do Oriente Médio",
     "illustration_key": "spice",
+    "page_left": "40",
+    "page_right": "41",
+    "prep_time": "25 minutos",
+    "servings": "3 pessoas",
+    "difficulty": "Fácil",
+    "story": "Nascida no norte da África e popularizada nos mercados de Israel, a Shakshuka é o café da manhã dos campeões. O nome significa 'uma mistura', e o prato celebra a beleza simples de ovos perfeitamente cozidos no vapor de um molho de tomate denso, picante e perfumado.",
+    "annotation": "sirva direto na panela\ncom muito pão pita\nou rústico quentinho!",
+    "ingredients": [
+      "1 cebola média + 1 pimentão vermelho, picados",
+      "3 dentes de alho picados",
+      "400g de tomates pelados picados",
+      "1 colher de chá de cominho + 1 colher de chá de páprica defumada",
+      "5 ovos caipiras",
+      "Azeite de oliva, sal, pimenta-do-reino e coentro fresco",
+      "100g de queijo feta esfarelado (opcional)"
+    ],
+    "steps": [
+      "Aqueça o azeite em uma frigideira grande e refogue a cebola e o pimentão até que fiquem bem macios.",
+      "Adicione o alho, o cominho e a páprica, mexendo por 1 minuto para liberar os óleos aromáticos.",
+      "Despeje os tomates pelados com seu suco, tempere com sal e pimenta, e deixe reduzir em fogo baixo por 10 minutos.",
+      "Com as costas de uma colher, faça 5 pequenas cavidades no molho encorpado.",
+      "Quebre um ovo em cada cavidade. Tampe a frigideira e cozinhe em fogo baixo por 5 a 8 minutos, até as claras firmarem e as gemas continuarem moles.",
+      "Retire do fogo, salpique o queijo feta, o coentro fresco e sirva imediatamente."
+    ],
+    "tip": "Não deixe as gemas passarem do ponto; o grande charme do prato é quebrá-las e misturá-las ao molho de tomate com o pão."
+  },
+  {
+    "spread_index": 22,
+    "name": "Tom Yum Goong",
+    "subtitle": "A sinfonia de fogo, acidez e frescor de Bangkok",
+    "category": "Culinária Tailandesa",
+    "illustration_key": "bowl",
+    "page_left": "42",
+    "page_right": "43",
     "prep_time": "30 minutos",
+    "servings": "2 pessoas",
+    "difficulty": "Médio",
+    "story": "Se a Tailândia pudesse ser resumida em uma única colherada, seria a Tom Yum. Esta sopa icônica equilibra de forma magistral os quatro pilares da gastronomia tailandesa: o picante da pimenta, o ácido do limão, o salgado do molho de peixe e o aroma inconfundível do capim-limão.",
+    "annotation": "esprema um limão extra\nbem na hora de servir\npara abrir os aromas.",
+    "ingredients": [
+      "500ml de caldo de camarão (ou água)",
+      "200g de camarões limpos (mantenha os rabos)",
+      "2 talos de capim-limão (esmagados) + 4 folhas de limão kaffir",
+      "3 fatias de galanga (ou gengibre fresco)",
+      "150g de cogumelos frescos (shimeji ou Paris), fatiados",
+      "2 colheres de sopa de pasta de pimenta nam prik pao",
+      "2 colheres de sopa de molho de peixe (nam pla) + suco de 1 limão",
+      "Coentro e pimentas dedo-de-moça a gosto"
+    ],
+    "steps": [
+      "Em uma panela, leve o caldo de camarão ao fogo junto com o capim-limão, a galanga e as folhas de limão kaffir. Deixe ferver por 5 minutos.",
+      "Adicione a pasta de pimenta (nam prik pao) e mexa bem até que ela se dissolva por completo no caldo.",
+      "Tire os cogumelos fatiados e cozinhe por mais 3 minutos.",
+      "Adicione os camarões limpos e cozinhe por apenas 2 a 3 minutos, até que fiquem rosados e opacos (não passe do ponto).",
+      "Desligue o fogo imediatamente. Adicione o molho de peixe e o suco de limão fresco.",
+      "Guloseie com folhas de coentro e fatias de pimenta fresca antes de montar as tigelas."
+    ],
+    "tip": "O suco de limão nunca deve ser fervido na panela, ou ele perderá o frescor e deixará o caldo com um retrogosto amargo."
+  },
+  {
+    "spread_index": 23,
+    "name": "Risotto ai Funghi",
+    "subtitle": "O abraço cremoso das florestas do Piemonte",
+    "category": "Culinária Italiana",
+    "illustration_key": "grain",
+    "page_left": "44",
+    "page_right": "45",
+    "prep_time": "40 minutos",
+    "servings": "2 pessoas",
+    "difficulty": "Médio",
+    "story": "O risoto é um exercício de paciência e técnica. No norte da Itália, combinar a textura rica do arroz arbóreo com a profundidade terrosa dos cogumelos secos e frescos é um ritual de inverno que transforma ingredientes simples em pura sofisticação.",
+    "annotation": "o arroz deve ficar\nal dente, deslizando\ncremoso no prato.",
+    "ingredients": [
+      "150g de arroz arbóreo ou carnaroli",
+      "20g de cogumelo porcini seco + 150g de cogumelos frescos (Paris ou portobello)",
+      "1/2 cebola finamente picada + 1 dente de alho",
+      "100ml de vinho branco seco",
+      "1L de caldo de legumes caseiro (quente)",
+      "50g de manteiga gelada + 50g de Parmigiano Reggiano ralado",
+      "Azeite, sal, pimenta e tomilho fresco"
+    ],
+    "steps": [
+      "Hidrate o porcini seco em uma xícara de água morna por 20 minutos. Coe a água e junte-a ao caldo de legumes quente. Pique o porcini.",
+      "Em uma frigideira com azeite, salteie os cogumelos frescos fatiados até dourarem. Reserve.",
+      "Na panela principal, refogue a cebola e o alho no azeite. Adicione o arroz e torre por 2 minutos.",
+      "Despeje o vinho branco e mexe até evaporar completamente.",
+      "Adicione o porcini picado e comece a despejar o caldo quente, uma concha por vez, mexendo sempre à medida que o arroz absorve o líquido.",
+      "Após 18 minutos, quando o arroz estiver al dente, junte os cogumelos salteados, desligue o fogo e incorpore a manteiga gelada e o parmesão (mantecatura)."
+    ],
+    "tip": "Mexer o risoto constantemente é crucial: esse movimento esfrega os grãos de arroz uns nos outros, liberando o amido que cria a cremosidade sem precisar de creme de leite."
+  },
+  {
+    "spread_index": 24,
+    "name": "Guacamole",
+    "subtitle": "O ouro verde que pulsa no coração do México",
+    "category": "Culinária Mexicana",
+    "illustration_key": "mortar",
+    "page_left": "46",
+    "page_right": "47",
+    "prep_time": "15 minutos",
     "servings": "4 pessoas",
     "difficulty": "Fácil",
-    "story": "Shakshuka em árabe significa 'mistureba' ou 'tudo junto'. Popularizada na Tunísia e levada para Israel por imigrantes norte-africanos nos anos 1950, virou café da manhã nacional israelense e prato favorito de quem descobriu que ovo no molho é a resposta para qualquer hora do dia.",
-    "annotation": "harissa transforma.\ncoloca uma\ncolher no molho.",
+    "story": "Preparada originalmente pelos astecas como um tributo aos deuses, a guacamole atravessou séculos intocada em sua essência. É a celebração do frescor: o contraste perfeito entre a gordura aveludada do abacate e a acidez cítrica do limão.",
+    "annotation": "use uma textura rústica,\ndeixando pequenos pedaços\nde abacate inteiros.",
     "ingredients": [
-      "6 ovos",
-      "800g de tomates pelados (ou 2 latas)",
-      "2 pimentões vermelhos",
-      "1 cebola grande",
-      "4 dentes de alho",
-      "1 col. cominho, 1 col. páprica defumada",
-      "½ col. pimenta caiena",
-      "Azeite, sal, coentro ou salsinha",
-      "Pão para acompanhar"
+      "2 abacates maduros (ou 4 avocados)",
+      "1 tomate médio, sem sementes, cortado em cubos pequenos",
+      "1/2 cebola roxa, finamente picada",
+      "Suco de 1 limão tahiti grande",
+      "1/2 xícara de coentro fresco picado",
+      "1 pimenta jalapeño ou dedo-de-moça (sem sementes), picadinha",
+      "Sal e um fio de azeite de oliva de boa qualidade"
     ],
     "steps": [
-      "Refogue cebola e pimentão em azeite até macios (±10 min).",
-      "Adicione alho e especiarias. Refogue 2 min até perfumar.",
-      "Adicione os tomates, amasse com a colher. Cozinhe 15 min em fogo médio.",
-      "Abra espaços no molho com a colher e quebre os ovos dentro.",
-      "Tampe e cozinhe em fogo baixo até as claras estarem firmes mas as gemas ainda cremosas (5-7 min).",
-      "Finalize com coentro e sirva direto na frigideira com pão."
+      "Abra os abacates, descarte os caroços e cave a polpa com uma colher, colocando tudo em uma tigela ou pilão.",
+      "Com um garfo, amasse a polpa grosseiramente, preservando alguns pedaços para garantir textura.",
+      "Adicione imediatamente o suco de limão sobre o abacate para evitar que ele oxide e escureça.",
+      "Incorpore a cebola roxa picada, o tomate em cubos e a pimenta picadinha.",
+      "Adicione o coentro fresco e misture delicadamente todos os ingredientes.",
+      "Finalize com uma pitada generosa de sal e um fio de azeite. Sirva imediatamente com totopos (tortilhas de milho)."
     ],
-    "tip": "não tampe na pressão. os ovos precisam cozinhar lento para a gema ficar cremosa. observa através da tampa."
+    "tip": "Se não for servir a guacamole na hora, coloque o próprio caroço do abacate de volta no meio da mistura e cubra com filme plástico encostado na superfície."
   },
   {
-    "name": "Boeuf Bourguignon",
-    "subtitle": "A Borgonha em forma de braseado",
-    "category": "Culinária Francesa",
-    "illustration_key": "herbs",
-    "prep_time": "4 horas",
-    "servings": "6 pessoas",
-    "difficulty": "Médio",
-    "story": "Prato de camponeses da Borgonha que usavam o vinho local e os cortes mais duros do boi. Julia Child o popularizou no mundo anglofônico nos anos 1960. É a prova de que tempo e vinho transformam ingredientes humildes em alta cozinha.",
-    "annotation": "use o mesmo\nvinho que você\nbeberia. barato\ndestrói o prato.",
-    "ingredients": [
-      "1,5kg de coxão duro em cubos grandes",
-      "750ml de vinho tinto Borgonha (ou Pinot Noir)",
-      "200g de bacon defumado em lardon",
-      "300g de cogumelos Paris",
-      "200g de cebola pérola",
-      "3 cenouras, 1 cebola grande, bouquet garni",
-      "3 col. farinha de trigo",
-      "Azeite, sal, pimenta"
-    ],
-    "steps": [
-      "Marine a carne no vinho com legumes e ervas por 24h na geladeira.",
-      "Escorra e seque a carne. Doure em etapas em panela de ferro. Reserve.",
-      "Frite o bacon. Refogue os legumes da marinada. Adicione a farinha, mexa.",
-      "Devolva a carne. Cubra com o vinho da marinada e caldo. Asse tampo a 160°C por 3h.",
-      "Refogue os cogumelos e cebola pérola separado. Adicione ao braseado 30 min antes de servir."
-    ],
-    "tip": "a carne deve estar quase se desfazendo. se ainda oferecer resistência ao garfo, volta para o forno."
-  },
-  {
-    "name": "Brigadeiro",
-    "subtitle": "O doce que nasceu de uma eleição",
-    "category": "Confeitaria Brasileira",
+    "spread_index": 25,
+    "name": "Panna Cotta",
+    "subtitle": "A dança sedutora do creme e das frutas vermelhas",
+    "category": "Confeitaria Italiana",
     "illustration_key": "vanilla",
-    "prep_time": "30 minutos",
-    "servings": "30 unidades",
+    "page_left": "48",
+    "page_right": "49",
+    "prep_time": "20 minutos (mais 4h de geladeira)",
+    "servings": "6 porções",
     "difficulty": "Fácil",
-    "story": "Criado na campanha eleitoral do Brigadeiro Eduardo Gomes em 1945 por Heloísa Nabuco de Oliveira. A receita simples usava ingredientes que não faltavam em tempo de guerra — leite condensado e achocolatado. Décadas depois, nenhuma festa brasileira existe sem ele.",
-    "annotation": "o ponto certo é\no que desgruda\nda panela.\ntesta antes.",
+    "story": "Nascida na região de Piemonte, a Panna Cotta significa literalmente 'nata cozida'. É uma das sobremesas mais elegantes do mundo precisamente por sua simplicidade minimalista: um creme sedoso, levemente adocicado, que deve balançar graciosamente no prato.",
+    "annotation": "a panna cotta perfeita\ndeve apenas 'tremer',\nsem ficar borrachuda.",
     "ingredients": [
-      "1 lata de leite condensado (395g)",
-      "3 col. sopa de cacau em pó (ou chocolate em pó 50%)",
-      "1 col. sopa de manteiga sem sal",
-      "Granulado de chocolate para enrolar",
-      "Manteiga para untar as mãos"
+      "500ml de creme de leite fresco (com alto teor de gordura)",
+      "100ml de leite integral",
+      "70g de açúcar refinado + 1 fava de baunilha (ou 1 colher de chá de extrato)",
+      "6g de gelatina em folha incolor (ou meia caixinha de gelatina em pó)",
+      "Calda: 200g de frutas vermelhas (morangos, amoras, mirtilos)",
+      "2 colheres de sopa de açúcar + suco de 1/2 limão"
     ],
     "steps": [
-      "Misture leite condensado, cacau e manteiga em panela de fundo grosso.",
-      "Cozinhe em fogo médio-baixo, mexendo SEM PARAR com colher de pau.",
-      "O ponto chega quando a mistura desgruda completamente do fundo (±15-20 min).",
-      "Despeje em prato untado e deixe esfriar completamente (pelo menos 1h).",
-      "Unte as mãos com manteiga. Enrole bolinhas e passe no granulado."
+      "Hidrate as folhas de gelatina em água bem gelada por 5 minutos.",
+      "Em uma panela, junte o creme de leite, o leite, o açúcar e as sementes da fava de baunilha. Leve ao fogo médio até quase ferver.",
+      "Retire o creme do fogo, esprema o excesso de água das folhas de gelatina e adicione-as ao creme quente, mexendo até dissolver.",
+      "Distribua o creme em potinhos individuais ou formas untadas levemente com óleo neutro. Leve à geladeira por pelo menos 4 horas.",
+      "Para a calda: junte as frutas vermelhas, o açúcar e o limão em uma panela e cozinhe em fogo baixo por 10 minutos até virar uma geleia fluida.",
+      "Desenforme a panna cotta no prato e cubra generosamente com a calda de frutas já fria."
     ],
-    "tip": "mexer sem parar não é exagero. a mistura queima no fundo em segundos se você parar. fique perto."
+    "tip": "Use sempre creme de leite fresco de garrafinha. O creme de caixinha ou lata não entrega a mesma textura aveludada e gordura necessárias para o doce estruturar."
+  },
+  {
+    "spread_index": 26,
+    "name": "Penne alla Vodka",
+    "subtitle": "O glamour rebelde das noites dos anos 80",
+    "category": "Culinária Italiana",
+    "illustration_key": "herbs",
+    "page_left": "50",
+    "page_right": "51",
+    "prep_time": "20 minutos",
+    "servings": "2 pessoas",
+    "difficulty": "Fácil",
+    "story": "Uma fusão audaciosa que divide puristas e modernos. O Penne alla Vodka ganhou fama nas discotecas e restaurantes badalados de Nova York e da Itália nos anos 1980. A vodka entra não pelo sabor alcoólico, mas para fixar e emulsionar os aromas do tomate e do creme.",
+    "annotation": "o molho deve ficar\ncom uma cor rosa-alaranjada\nprofundamente brilhante.",
+    "ingredients": [
+      "200g de massa penne de boa qualidade",
+      "1 colher de sopa de manteiga + 1 colher de sopa de azeite",
+      "1/2 cebola pequena, finamente picada",
+      "2 dentes de alho picados + 1 pitada de pimenta calabresa",
+      "80g de extrato de tomate concentrado",
+      "50ml de vodka de boa qualidade",
+      "100ml de creme de leite fresco",
+      "50g de queijo Parmigiano Reggiano ralado + manjericão"
+    ],
+    "steps": [
+      "Cozinhe o penne em água abundantemente salgada até ficar um minuto antes do ponto al dente.",
+      "Em uma frigideira grande, derreta a manteiga com o azeite e refogue a cebola, o alho e a pimenta calabresa até murcharem.",
+      "Adicione o extrato de tomate e cozinhe por 3 minutos, mexendo sempre, até que ele mude de cor para um vermelho escuro.",
+      "Despeje a vodka (fora do fogo se estiver usando fogão a gás) e retorne para deixar o álcool evaporar por 2 minutos.",
+      "Adicione o creme de leite fresco, mexendo até criar um molho homogêneo e aveludado. Deixe borbulhar.",
+      "Transfira a massa direto para o molho com um pouco da água do cozimento, junte o parmesão e envolva tudo até emulsionar."
+    ],
+    "tip": "A água do cozimento da massa contém amido. Guarde sempre uma xícara dela para ajustar a consistência do molho se ele reduzir demais na frigideira."
+  },
+  {
+    "spread_index": 27,
+    "name": "French Toast (Rabanada Francesa)",
+    "subtitle": "A manhã dourada com perfume de canela",
+    "category": "Café da Manhã Internacional",
+    "illustration_key": "citrus",
+    "page_left": "52",
+    "page_right": "53",
+    "prep_time": "15 minutos",
+    "servings": "2 pessoas",
+    "difficulty": "Fácil",
+    "story": "Conhecida na França como 'pain perdu' (pão perdido), esta receita foi criada para salvar o pão amanhecido que já estava duro. Ao ser mergulhado em um creme rico de ovos e baunilha e dourado na manteiga, o pão renasce com um interior que lembra um pudim.",
+    "annotation": "sirva com um fio\ngeneroso de mel de abelha\nou xarope de bordo.",
+    "ingredients": [
+      "4 fatias grossas de pão amanhecido (brioche, challah ou pão de forma rústico)",
+      "2 ovos grandes",
+      "100ml de leite integral + 50ml de creme de leite",
+      "1 colher de sopa de açúcar + 1 colher de chá de extrato de baunilha",
+      "1/2 colher de chá de canela em pó + raspas de 1/2 laranja",
+      "2 colheres de sopa de manteiga para dourar"
+    ],
+    "steps": [
+      "Em um prato fundo ou tigela larga, bata os ovos vigorosamente com um garfo.",
+      "Adicione o leite, o creme de leite, o açúcar, a baunilha, a canela e as raspas de laranja, misturando bem.",
+      "Mergulhe as fatias de pão na mistura líquida, deixando que absorvam bem o creme por cerca de 1 minuto de cada lado.",
+      "Derreta a manteiga em uma frigideira antiaderente em fogo médio-baixo.",
+      "Coloque as fatias de pão e doure por 3 a 4 minutos de cada lado, até que fiquem com uma crosta dourada e caramelizada.",
+      "Retire da frigideira, polvilhe um pouco mais de açúcar e canela se desejar, e sirva imediatamente com frutas frescas."
+    ],
+    "tip": "Pães macios e ricos em manteiga, como o brioche, entregam a melhor experiência de textura, derretendo na boca após fritos."
+  },
+  {
+    "spread_index": 28,
+    "name": "Moules Frites",
+    "subtitle": "O casamento perfeito do mar e da terra belga",
+    "category": "Culinária Belga / Francesa",
+    "illustration_key": "herbs",
+    "page_left": "54",
+    "page_right": "55",
+    "prep_time": "25 minutos",
+    "servings": "2 pessoas",
+    "difficulty": "Médio",
+    "story": "Embora os mexilhões com batatas fritas sejam uma instituição nacional na Bélgica, o prato conquistou os bistrôs de toda a costa francesa. É um banquete rústico e altamente satisfatório, onde o caldo aromático pede para ser limpo com a casca do mexilhão.",
+    "annotation": "coma com as mãos,\nusando uma concha vazia\npara pinçar os outros mexilhões.",
+    "ingredients": [
+      "1kg de mexilhões frescos na concha (limpos e lavados)",
+      "2 colheres de sopa de manteiga + 1 colher de sopa de azeite",
+      "2 chalotas (ou 1 cebola pequena) finamente picadas",
+      "2 dentes de alho amassados",
+      "150ml de vinho branco seco de boa qualidade",
+      "50ml de creme de leite fresco (opcional)",
+      "1 punhado de salsinha fresca picada",
+      "Batatas fritas crocantes para acompanhar"
+    ],
+    "steps": [
+      "Descarte qualquer mexilhão que esteja quebrado ou que permaneça aberto mesmo após ser batido levemente na bancada.",
+      "Em uma panela grande e funda com tampa, derreta a manteiga com o azeite e doure as chalotas e o alho.",
+      "Aumente o fogo, despeje o vinho branco seco e deixe levantar fervura por 1 minuto para evaporar o álcool.",
+      "Adicione todos os mexilhões de uma vez na panela, feche a tampa imediatamente e balance a panela.",
+      "Cozinhe no vapor por 5 minutos em fogo alto. Desligue assim que as conchas se abrirem por completo.",
+      "Incorpore o creme de leite fresco (se usar) e a salsinha picada no caldo. Descarte as conchas que não abriram e sirva com as batatas."
+    ],
+    "tip": "Mexilhões soltam muita água salgada natural ao cozinharem, então evite salgar o molho antes de prová-lo no final do processo."
+  },
+  {
+    "spread_index": 29,
+    "name": "Pad Kra Pao",
+    "subtitle": "O fast-food sagrado que incendeia as ruas da Tailândia",
+    "category": "Culinária Tailandesa",
+    "illustration_key": "spice",
+    "page_left": "56",
+    "page_right": "57",
+    "prep_time": "15 minutos",
+    "servings": "2 pessoas",
+    "difficulty": "Fácil",
+    "story": "Se você estiver com pressa em Bangkok, você pede um Pad Kra Pao. Este salteado ultraveloz combina carne moída com manjericão sagrado tailandês e uma quantidade generosa de pimentas, culminando no topo com um ovo frito de bordas rendadas e crocantes.",
+    "annotation": "o ovo frito por cima\ndeve ter a gema super\nmole para escorrer na carne.",
+    "ingredients": [
+      "300g de carne suína ou bovina moída",
+      "1 xícara de folhas de manjericão fresco (de preferência o tailandês ou Santo)",
+      "5 dentes de alho + 4 pimentas de cheiro ou dedo-de-moça",
+      "1 colher de sopa de molho de ostra + 1 colher de chá de molho de peixe",
+      "1 colher de chá de molho de soja escuro + 1 colher de chá de açúcar",
+      "2 ovos (para fritar por cima)",
+      "Óleo neutro para saltear"
+    ],
+    "steps": [
+      "Em um almofariz e pilão, esmague o alho e as pimentas juntos até formarem uma pasta rústica.",
+      "Em uma tigela pequena, misture o molho de ostra, o molho de peixe, o molho de soja escuro e o açúcar.",
+      "Aqueça o óleo em uma frigideira ou wok em fogo bem alto e frite os ovos até as bordas dourarem e dourarem. Reserve.",
+      "Na mesma wok com óleo quente, adicione a pasta de alho e pimenta, salteando por 30 segundos até perfumar o ambiente.",
+      "Adicione a carne moída, quebrando-a com a colher, e frite até que mude completamente de cor e comece a dourar.",
+      "Despeje a mistura de molhos, salteie por 1 minuto e, por fim, desligue o fogo e incorpore as folhas de manjericão até murcharem."
+    ],
+    "tip": "O manjericão entra com o fogo já desligado; o calor residual da carne é mais do que suficiente para murchá-lo sem que ele perca seu aroma fresco."
+  },
+  {
+    "spread_index": 30,
+    "name": "Tarte Tatin",
+    "subtitle": "O erro glorioso que virou poesia invertida",
+    "category": "Confeitaria Francesa",
+    "illustration_key": "grain",
+    "page_left": "58",
+    "page_right": "59",
+    "prep_time": "50 minutos",
+    "servings": "6 porções",
+    "difficulty": "Médio",
+    "story": "Diz a lenda que no final do século XIX, no Hotel Tatin, uma das irmãs proprietárias se distraiu e deixou as maçãs do recheio passarem do ponto no caramelo. Para salvar a torta, ela cobriu a frigideira com a massa e assou ao contrário. O resultado foi uma obra-prima.",
+    "annotation": "desenforme a torta\nenquanto ela ainda estiver\nmorna para o caramelo não colar.",
+    "ingredients": [
+      "6 maçãs (tipo Gala ou Fuji), descascadas, sem sementes e cortadas em quartos",
+      "100g de açúcar refinado",
+      "60g de manteiga sem sal, em cubos",
+      "1 rolo de massa folhada de boa qualidade",
+      "1 pitada de flor de sal",
+      "Sorvete de creme para acompanhar"
+    ],
+    "steps": [
+      "Em uma frigideira pesada que possa ir ao forno, espalhe o açúcar uniformemente e leve ao fogo médio até derreter em um caramelo dourado.",
+      "Adicione os cubos de manteiga e a pitada de sal ao caramelo, mexendo a frigideira para emulsionar.",
+      "Disponha os quartos de maçã de pé, bem apertados uns contra os outros em círculos concêntricos sobre o caramelo.",
+      "Cozinhe as maçãs no fogo por 12 a 15 minutos, até que fiquem ligeiramente macias e envolvidas pela calda espessa.",
+      "Retire do fogo. Cubra as maçãs com o disco de massa folhada, empurrando as bordas para dentro da frigideira, como se estivesse cobrindo-as.",
+      "Faça um pequeno furo no centro da massa e asse a 200°C por 25 minutos. Inverta sobre um prato grande após sair do forno."
+    ],
+    "tip": "Pressione bem as maçãs na frigideira antes de cobrir com a massa; elas encolhem significativamente enquanto cozinham no caramelo."
   }
 ]

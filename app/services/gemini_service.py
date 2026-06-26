@@ -86,8 +86,8 @@ def _post_gemini(prompt: str, model: str, api_key: str, timeout: int) -> dict:
         raise ValueError("Resposta do Gemini não é JSON válido") from e
 
 
-def call_gemini(dish: str, model: str = None, lang: str = 'pt', gemini_api_key: str = None) -> dict:
-    api_key = gemini_api_key or current_app.config.get('GEMINI_API_KEY', '')
+def call_gemini(dish: str, model: str = None, lang: str = 'pt') -> dict:
+    api_key = current_app.config.get('GEMINI_API_KEY', '')
     if not api_key:
         raise ValueError("GEMINI_API_KEY não configurado")
 

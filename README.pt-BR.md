@@ -43,6 +43,8 @@
 
 Uma enciclopédia gastronômica para quem abre cinco abas só para entender um ingrediente. A interface organiza técnicas, pratos e descobertas dentro de um livro skeuomórfico; o backend conecta a curadoria ao Gemini, ao Ollama local ou a um modo demo sem configuração. Começou como projeto acadêmico na PUCPR (nota: 10/10) — esta é sua evolução pessoal contínua.
 
+A versão do GitHub Pages é uma demo estática: mantém a interface completa do livro e as receitas clássicas/de demonstração incluídas no repositório, mas não chama Gemini nem Ollama. Para gerar receitas com IA real, rode a aplicação Flask localmente com um arquivo `.env`.
+
 ## providers
 
 | | provider | configuração | gratuito | melhor para |
@@ -53,6 +55,8 @@ Uma enciclopédia gastronômica para quem abre cinco abas só para entender um i
 
 Pegue uma chave Gemini em [aistudio.google.com](https://aistudio.google.com/apikey) · confira os [limites atuais da API Gemini](https://ai.google.dev/gemini-api/docs/rate-limits) · baixe o Ollama em [ollama.com](https://ollama.com)
 
+As chaves do Gemini são lidas apenas pelo backend Flask a partir do `.env`; o frontend não pede nem armazena chave de API.
+
 ## getting started
 
 ```bash
@@ -62,17 +66,44 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
+```
 
-# demo — edite .env → DEMO_MODE=true
+Edite o `.env` para o modo desejado:
+
+```bash
+# demo, sem IA
+DEMO_MODE=true
+
+# gemini, aplicação completa
+DEMO_MODE=false
+AI_PROVIDER=gemini
+GEMINI_API_KEY=sua_chave
+
+# ollama, aplicação completa
+DEMO_MODE=false
+AI_PROVIDER=ollama
+OLLAMA_HOST=http://localhost:11434
+OLLAMA_MODEL=gemma3:latest
+```
+
+Rode:
+
+```bash
 flask run --port 5001
+```
 
-# gemini — edite .env → AI_PROVIDER=gemini + GEMINI_API_KEY=sua_chave
-flask run --port 5001
+Abra `http://localhost:5001`.
 
-# ollama — instale em ollama.com, então:
+Para usar Ollama, instale antes e baixe o modelo:
+
+```bash
 ollama pull gemma3
-# edite .env → AI_PROVIDER=ollama
-flask run --port 5001
+```
+
+Para atualizar a demo estática do GitHub Pages depois de mudar template, CSS ou JS:
+
+```bash
+python3 scripts/build_static_demo.py
 ```
 
 ## stack
@@ -93,8 +124,8 @@ foodpedia/
 ├── static/            # CSS, JavaScript, dados de receitas
 ├── templates/         # HTML Jinja2 e ilustrações SVG
 ├── docs/              # screenshots do README
-├── scripts/           # automação dos screenshots
-├── tests/
+├── scripts/           # export da demo estática
+├── index.html         # demo gerada para GitHub Pages
 ├── app.py
 └── .env.example
 ```

@@ -37,7 +37,7 @@ html, body {
   min-height:100dvh;
   overflow:hidden;
   background-color:var(--c-wood);
-  background-image:url('/static/img/textures/wood-table.jpg');
+  background-image:url('../img/textures/wood-table.jpg');
   background-size:cover;
   background-position:center;
 }
@@ -1692,35 +1692,6 @@ body {
   margin-top:4px;
   border-top:0.5px solid var(--c-rule);
 }
-
-.gemini-key-row {
-  display:none;
-  align-items:center;
-  gap:4px;
-  margin-top:6px;
-  padding-top:6px;
-  border-top:0.5px dashed var(--c-rule);
-}
-.gemini-key-input {
-  flex:1; min-width:0;
-  background:rgba(176,125,42,.05);
-  border:none; border-bottom:1px solid var(--c-border);
-  padding:3px 6px;
-  font-family:'Grape Nuts',cursive;
-  font-size:12px; color:var(--c-ink);
-  outline:none; border-radius:0;
-}
-.gemini-key-input::placeholder { color:rgba(176,125,42,.45); }
-.gemini-key-input:focus { border-bottom-color:var(--c-gold); }
-.gemini-key-confirm {
-  flex-shrink:0;
-  font-family:'Cedarville Cursive',cursive;
-  font-size:11px; color:var(--c-ink-faded);
-  background:none; border:0.75px solid var(--c-border);
-  padding:3px 8px; cursor:pointer; border-radius:1px;
-  transition:color 120ms, border-color 120ms;
-}
-.gemini-key-confirm:hover { color:var(--c-annotation); border-color:var(--c-annotation); }
 
 /* ──────────────────────────
    DEMO STAMP

@@ -286,13 +286,6 @@
             <ul class="model-list" id="model-list">
               <li class="model-option loading-models">carregando...</li>
             </ul>
-            <div class="gemini-key-row" id="gemini-key-row">
-              <input type="password" id="gemini-key-input" class="gemini-key-input"
-                     placeholder="chave da API →" autocomplete="off"
-                     data-i18n-placeholder="gemini_key_placeholder">
-              <button class="gemini-key-confirm" onclick="confirmGeminiKey()"
-                      data-i18n="gemini_key_confirm">✓</button>
-            </div>
           </div>
           <div class="page-footer">
             <span class="footer-brand">Foodpedia</span>
@@ -464,7 +457,7 @@
                 <li><span data-i18n="setup_gemini_step1">Obtenha uma chave gratuita:</span>
                   <code>aistudio.google.com/apikey</code>
                 </li>
-                <li><span data-i18n="setup_gemini_step2">Configure no .env ou no seletor:</span>
+                <li><span data-i18n="setup_gemini_step2">Configure no .env local:</span>
                   <code>GEMINI_API_KEY=sua-chave</code>
                 </li>
               </ul>

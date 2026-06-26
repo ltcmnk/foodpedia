@@ -43,6 +43,8 @@
 
 A gastronomic encyclopedia for anyone who opens five tabs just to understand one ingredient. The interface organizes techniques, dishes, and discoveries inside a skeuomorphic cookbook; the backend connects curated content to Gemini, local Ollama models, or a no-setup demo. It started as a university project at PUCPR — this is its ongoing personal evolution.
 
+The GitHub Pages build is a static demo: it keeps the full book interface and the bundled classic/demo recipes, but it does not call Gemini or Ollama. For generated recipes with real AI, run the Flask app locally with a `.env` file.
+
 ## providers
 
 | | provider | setup | free | best for |
@@ -53,6 +55,8 @@ A gastronomic encyclopedia for anyone who opens five tabs just to understand one
 
 Get a Gemini key at [aistudio.google.com](https://aistudio.google.com/apikey) · check current [Gemini API limits](https://ai.google.dev/gemini-api/docs/rate-limits) · get Ollama at [ollama.com](https://ollama.com)
 
+Gemini keys are read only by the Flask backend from `.env`; the frontend never asks for or stores an API key.
+
 ## getting started
 
 ```bash
@@ -62,17 +66,44 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
+```
 
-# demo — edit .env → DEMO_MODE=true
+Edit `.env` for the mode you want:
+
+```bash
+# demo, no AI
+DEMO_MODE=true
+
+# gemini, full app
+DEMO_MODE=false
+AI_PROVIDER=gemini
+GEMINI_API_KEY=your_key
+
+# ollama, full app
+DEMO_MODE=false
+AI_PROVIDER=ollama
+OLLAMA_HOST=http://localhost:11434
+OLLAMA_MODEL=gemma3:latest
+```
+
+Run it:
+
+```bash
 flask run --port 5001
+```
 
-# gemini — edit .env → AI_PROVIDER=gemini + GEMINI_API_KEY=your_key
-flask run --port 5001
+Open `http://localhost:5001`.
 
-# ollama — install from ollama.com, then:
+For Ollama, install it first and download the model:
+
+```bash
 ollama pull gemma3
-# edit .env → AI_PROVIDER=ollama
-flask run --port 5001
+```
+
+To refresh the static GitHub Pages demo after template/style/script changes:
+
+```bash
+python3 scripts/build_static_demo.py
 ```
 
 ## stack
@@ -93,8 +124,8 @@ foodpedia/
 ├── static/            # CSS, JavaScript, recipe data
 ├── templates/         # Jinja2 HTML and SVG illustrations
 ├── docs/              # README screenshots
-├── scripts/           # screenshot automation
-├── tests/
+├── scripts/           # static demo export
+├── index.html         # generated GitHub Pages demo
 ├── app.py
 └── .env.example
 ```

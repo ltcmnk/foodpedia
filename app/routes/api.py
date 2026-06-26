@@ -98,7 +98,6 @@ def get_recipe():
     dish = data.get('dish', '').strip()
     model = (data.get('model') or '').strip() or None
     lang = data.get('lang', 'pt')
-    gemini_api_key = (data.get('gemini_api_key') or '').strip() or None
 
     # Provider resolution: body → config (DEMO_MODE overrides all)
     if current_app.config.get('DEMO_MODE') or data.get('demo') is True:
@@ -116,7 +115,7 @@ def get_recipe():
     from app.services.ai_router import get_recipe_from_ai
 
     try:
-        recipe = get_recipe_from_ai(dish, provider=provider, model=model, lang=lang, gemini_api_key=gemini_api_key)
+        recipe = get_recipe_from_ai(dish, provider=provider, model=model, lang=lang)
         return jsonify(recipe)
 
     except ValueError as e:

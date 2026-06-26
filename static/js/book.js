@@ -28,8 +28,6 @@ const BookState = {
   isAnimating: false,
   selectedModel: null,
   selectedProvider: null,
-  geminiKey: null,
-  geminiKeyConfigured: false,
   lastErrorCode: null,
   currentRecipe: null,
   currentRecipeVariants: {},
@@ -1130,42 +1128,57 @@ function ensureResultPagination(recipe) {
 
 // ── PROVIDER + MODEL SELECTOR ──
 const _PROVIDER_ORDER = ['gemini', 'ollama', 'demo']
+let apiAvailable = true
 
-function _updateGeminiKeyRow() {
-  const row = document.getElementById('gemini-key-row')
-  if (!row) return
-  const isGemini = BookState.selectedProvider === 'gemini'
-  const hasKey = !!BookState.geminiKey
-  row.style.display = isGemini && !hasKey ? 'flex' : 'none'
+async function fetchStaticJson(path) {
+  const cleanPath = path.replace(/^\/+/, '')
+  const candidates = [
+    cleanPath,
+    `./${cleanPath}`,
+    cleanPath.startsWith('static/') ? cleanPath.replace('static/', '/static/') : `/${cleanPath}`,
+  ]
+  for (const candidate of [...new Set(candidates)]) {
+    try {
+      const res = await fetch(candidate)
+      if (res.ok) return res.json()
+    } catch {}
+  }
+  throw new Error(`Could not load ${path}`)
 }
 
-function confirmGeminiKey() {
-  const input = document.getElementById('gemini-key-input')
-  if (!input) return
-  const key = input.value.trim()
-  if (!key) return
-  BookState.geminiKey = key
-  BookState.geminiKeyConfigured = true
-  try { localStorage.setItem('fp_gemini_key', key) } catch {}
-  input.value = ''
-  _updateGeminiKeyRow()
-  showToast(currentLang === 'en' ? 'Gemini key saved.' : 'Chave do Gemini salva.')
+function localDemoRecipe(dish, recipes) {
+  if (!recipes?.length) throw new Error('DEMO_RECIPES_UNAVAILABLE')
+  const query = (dish || '').toLowerCase().trim()
+  const exact = recipes.find(recipe => (recipe.name || '').toLowerCase() === query)
+  const partial = recipes.find(recipe => {
+    const name = (recipe.name || '').toLowerCase()
+    return name.includes(query) || query.includes(name)
+  })
+  const source = exact || partial || recipes[Math.floor(Math.random() * recipes.length)]
+  return { ...source, _demo: true }
 }
 
 async function loadProviders() {
   const list = document.getElementById('model-list')
   if (!list) return
 
-  // restore persisted gemini key
-  if (!BookState.geminiKey) {
-    try { BookState.geminiKey = localStorage.getItem('fp_gemini_key') || null } catch {}
-  }
-
   let data = {}
   try {
     const res = await fetch('/api/models')
+    if (!res.ok) throw new Error('models unavailable')
     data = await res.json()
-  } catch {}
+  } catch {
+    apiAvailable = false
+    data = {
+      providers: {
+        demo: {
+          available: true,
+          models: ['demo'],
+          label: 'Demonstração (sem backend)',
+        },
+      },
+    }
+  }
 
   const providers = data.providers || {}
   const items = []
@@ -1185,7 +1198,6 @@ async function loadProviders() {
     list.innerHTML = '<li class="model-option loading-models">demo</li>'
     BookState.selectedProvider = 'demo'
     BookState.selectedModel = 'demo'
-    _updateGeminiKeyRow()
     return
   }
 
@@ -1212,11 +1224,8 @@ async function loadProviders() {
       BookState.selectedModel    = el.dataset.model
       list.querySelectorAll('.model-option').forEach(o => o.classList.remove('selected'))
       el.classList.add('selected')
-      _updateGeminiKeyRow()
     })
   })
-
-  _updateGeminiKeyRow()
 }
 
 loadProviders()
@@ -1225,10 +1234,15 @@ loadProviders()
 const IS_DEMO = new URLSearchParams(window.location.search).get('demo') === 'true'
 
 async function fetchRecipe(query) {
+  const shouldUseStaticDemo = IS_DEMO || !apiAvailable || BookState.selectedProvider === 'demo'
+  if (shouldUseStaticDemo && !apiAvailable) {
+    const recipes = await fetchStaticJson('static/data/demo_recipes.json')
+    return localDemoRecipe(query, recipes)
+  }
+
   const body = { dish: query, lang: currentLang }
   if (BookState.selectedProvider) body.provider = BookState.selectedProvider
   if (BookState.selectedModel)    body.model    = BookState.selectedModel
-  if (BookState.geminiKey)        body.gemini_api_key = BookState.geminiKey
   if (IS_DEMO) body.demo = true
   const res = await fetch('/api/recipe', {
     method:  'POST',
@@ -1236,6 +1250,11 @@ async function fetchRecipe(query) {
     body:    JSON.stringify(body),
   })
   if (!res.ok) {
+    if (shouldUseStaticDemo && (res.status === 404 || res.status === 405)) {
+      apiAvailable = false
+      const recipes = await fetchStaticJson('static/data/demo_recipes.json')
+      return localDemoRecipe(query, recipes)
+    }
     let errorCode = 'INTERNAL_ERROR'
     try { errorCode = (await res.json()).error || errorCode } catch {}
     BookState.lastErrorCode = errorCode
