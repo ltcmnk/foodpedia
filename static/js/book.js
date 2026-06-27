@@ -1470,10 +1470,6 @@ function notifyRecipeReady(recipe) {
   ensureResultPagination(recipe)
   rebuildBookLayout({ keepCurrent: true })
   document.querySelector('[data-section="result"]')?.classList.add('is-ready')
-  gsap.to('#ribbon-pages', {
-    opacity: 0.25, duration: 0.45, repeat: 7, yoyo: true, ease: 'power1.inOut',
-    onComplete: () => gsap.set('#ribbon-pages', { opacity: 1 })
-  })
   showArrow(arrowR, 0.9)
 }
 
