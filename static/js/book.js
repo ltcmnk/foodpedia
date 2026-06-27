@@ -100,7 +100,6 @@ function spreadKey(spread) {
 function tocEntries() {
   const favorites = favoriteKeys()
   const entries = [
-    { type: 'link', labelKey: 'toc_about', fallback: 'Sobre o Foodpedia', targetRole: 'about', targetKey: 'about', favorite: favorites.includes('about'), weight: 1 },
     { type: 'link', labelKey: 'toc_search', fallback: 'Pesquisar um Prato', targetRole: 'search', targetKey: 'search', favorite: favorites.includes('search'), weight: 1 },
     { type: 'section', labelKey: 'toc_classics', fallback: 'Receitas Clássicas', targetRole: 'base-recipe', weight: 1.2 },
   ]
@@ -314,7 +313,6 @@ function buildFavoritesTocSpread() {
       return savedData?.recipe?.name || key
     }
     const staticLabels = {
-      about: currentLang === 'en' ? 'About Foodpedia' : 'Sobre o Foodpedia',
       search: currentLang === 'en' ? 'Search a Dish' : 'Pesquisar um Prato',
     }
     return staticLabels[key] || key
@@ -358,7 +356,6 @@ function rebuildBookLayout(options = {}) {
   const favTocSpread = buildFavoritesTocSpread()
   const endpaper = document.querySelector('[data-role="endpaper"]')
   const comoUsar = [...document.querySelectorAll('[data-role="como-usar"]')]
-  const about = document.querySelector('[data-role="about"]')
   const search = document.querySelector('[data-role="search"]')
   const result = document.querySelector('[data-role="result"]')
   const resultContinuations = [...document.querySelectorAll('[data-role="result-continuation"]')]
@@ -376,7 +373,6 @@ function rebuildBookLayout(options = {}) {
     ...comoUsar,
     ...tocSpreads,
     favTocSpread,
-    about,
     search,
     ...recipes,
     ...conditional,
@@ -404,8 +400,7 @@ function rebuildBookLayout(options = {}) {
   SPREAD_COMO_USAR_START = Number(comoUsar[0]?.dataset.spread || 2)
   SPREAD_COMO_USAR_END   = Number(comoUsar.at(-1)?.dataset.spread || SPREAD_COMO_USAR_START)
   SPREAD_TOC = Number(tocSpreads[0]?.dataset.spread || 2)
-  SPREAD_ABOUT = Number(about?.dataset.spread || SPREAD_TOC)
-  SPREAD_SEARCH = Number(search?.dataset.spread || SPREAD_ABOUT)
+  SPREAD_SEARCH = Number(search?.dataset.spread || SPREAD_TOC)
   SPREAD_RECIPES_START = Number(recipes[0]?.dataset.spread || SPREAD_SEARCH)
   SPREAD_RECIPES_END = Number(recipes.at(-1)?.dataset.spread || SPREAD_RECIPES_START)
   SPREAD_ERROR = layoutIndex(error)
@@ -415,7 +410,6 @@ function rebuildBookLayout(options = {}) {
   SPREAD_FAVORITES_TOC = favTocSpread ? layoutIndex(favTocSpread) : 0
   Object.assign(SECTION_SPREADS, {
     toc: SPREAD_TOC,
-    about: SPREAD_ABOUT,
     search: SPREAD_SEARCH,
     recipes: SPREAD_RECIPES_START,
     result: SPREAD_RESULT,
@@ -828,7 +822,7 @@ function isOnboardingComplete() {
   return localStorage.getItem('onboarding_complete') === '1'
 }
 
-const SIDE_TAB_SECTIONS = new Set(['toc', 'about', 'search', 'recipes', 'result', 'saved', 'favorites'])
+const SIDE_TAB_SECTIONS = new Set(['toc', 'search', 'recipes', 'result', 'saved', 'favorites'])
 
 function isSideTab(section) {
   return SIDE_TAB_SECTIONS.has(section)
@@ -937,7 +931,6 @@ function updateDividerTabs(spreadIndex) {
   const spread = document.querySelector(`[data-spread="${spreadIndex}"]`)
   const role = spread?.dataset.role
   if      (role === 'toc')         section = 'toc'
-  else if (role === 'about')       section = null
   else if (role === 'search')      section = 'search'
   else if (role === 'base-recipe') section = 'recipes'
   else if (role === 'result' || role === 'result-continuation' || role === 'error' || role === 'setup') section = 'result'

@@ -196,44 +196,6 @@
       <div id="toc-spreads-container"></div>
       <div id="favorites-toc-container"></div>
 
-      <!-- ── SPREAD 2: SOBRE ── -->
-      <div class="book-spread" data-role="about">
-        <div class="page-turn-layer"><div class="turn-front"></div><div class="turn-back"></div></div>
-        <div class="page page-left about-page">
-          <div class="curl-zone curl-left" role="button" aria-label="Página anterior"><div class="curl-surface"></div><div class="curl-hint">‹</div></div>
-          <span class="about-eyebrow" data-stagger data-i18n="about_eyebrow_left">Sobre o Projeto</span>
-          <h2 class="about-heading" data-stagger data-i18n="about_heading">O que é<br>o Foodpedia?</h2>
-          <div class="about-body">
-            <p data-stagger data-i18n="about_body_1">Foodpedia é uma enciclopédia culinária viva. Não tem banco de dados fixo: cada receita é consultada em tempo real, como perguntar a um chef de memória longa.</p>
-            <p data-stagger data-i18n="about_body_2">As dezesseis receitas clássicas cobrem doze países e estão sempre disponíveis para leitura. A próxima pode ser qualquer coisa que você quiser descobrir.</p>
-            <p data-stagger data-i18n="about_body_3">Toda a inteligência roda localmente via Ollama. Nenhuma consulta sai da sua máquina. Sem chave de API, sem custo por pergunta, sem nuvem.</p>
-          </div>
-          <div class="page-footer">
-            <span class="footer-brand">Foodpedia</span>
-            <span class="page-number">2</span>
-          </div>
-        </div>
-        <div class="page page-right about-page">
-          <div class="curl-zone curl-right" role="button" aria-label="Próxima página"><div class="curl-surface"></div><div class="curl-hint">›</div></div>
-          <span class="about-eyebrow" data-stagger data-i18n="about_eyebrow_right">Como Usar</span>
-          <div class="about-body about-manual">
-            <p data-stagger data-i18n="manual_1">Pegue pelos cantos dobrados e as páginas se viram sozinhas. As divisórias coloridas te levam direto onde quiser — use as setas nas bordas ou o teclado, o que te parecer mais certo.</p>
-            <p data-stagger data-i18n="manual_2">Na pesquisa, o Foodpedia cozinha a resposta em silêncio. Enquanto isso, as receitas clássicas ficam todas abertas pra você folhear — o tempo não se perde nunca aqui.</p>
-            <p data-stagger data-i18n="manual_3">A fitinha vermelha é só da página que você mais gosta. Um clique e ela desce, marcando o lugar. Dois cliques e ela dobra em fichas bonitas, prontas pra imprimir.</p>
-            <p data-stagger data-i18n="manual_4">PT e EN trocam a edição inteira do livro, receita e história juntas. Ele fecha um instante, respira, e reabre exatamente onde você estava.</p>
-            <p data-stagger data-i18n="manual_5">Receitas que merecem ficar vão pra Salvas. Favoritos reúne tudo que você marcou com a fita — receita, sumário, qualquer página que importou.</p>
-            <p data-stagger data-i18n="manual_6">A folhinha ? tem todos os comandos reunidos. No celular, cada lado é uma página independente e você vira uma de cada vez.</p>
-          </div>
-          <div class="handwritten-annotation annotation-0 multiline-i18n" data-stagger data-i18n="manual_annotation">
-            qualquer prato<br>do mundo!
-          </div>
-          <div class="page-footer">
-            <span class="footer-brand">Foodpedia</span>
-            <span class="page-number">3</span>
-          </div>
-        </div>
-      </div>
-
       <!-- ── SPREADS 3–18: RECEITAS BASE ── -->
       {% for recipe in base_recipes %}
       <div class="book-spread" data-role="base-recipe" data-recipe-name="{{ recipe.name|e }}">
