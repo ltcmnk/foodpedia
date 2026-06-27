@@ -14,12 +14,11 @@ let SPREAD_COMO_USAR_END = 6
 let SPREAD_TOC = 7
 let SPREAD_ABOUT = 8
 let SPREAD_SEARCH = 9
-let SPREAD_RESULT = 10
+let SPREAD_RESULTADO_FIRST = 0   // first resultado spread index (0 = none)
 let SPREAD_ERROR = 11
 let SPREAD_SETUP = 12
 let SPREAD_RECIPES_START = 13
 let SPREAD_RECIPES_END = 28
-let SPREAD_SAVED_START = 29
 let SPREAD_FAVORITES_TOC = 0
 const SECTION_SPREADS = {}
 
@@ -78,22 +77,13 @@ gsap.set('#divider-tabs', { opacity: 1, pointerEvents: 'auto' })
 gsap.set('#bottom-tabs', { opacity: 1, pointerEvents: 'auto' })
 gsap.set('#ribbon-pages', { opacity: 0, pointerEvents: 'none', y: -92 })
 
-function savedRecipes() {
-  try {
-    return JSON.parse(localStorage.getItem('fp_saved_recipes') || '[]')
-  } catch {
-    return []
-  }
-}
-
 function spreadKey(spread) {
   if (!spread) return ''
   if (spread.dataset.role === 'base-recipe') return `recipe:${spread.dataset.recipeName}`
-  if (spread.dataset.role === 'saved') return `saved:${spread.dataset.savedId}`
   if (spread.dataset.role === 'toc') return `toc:${spread.dataset.tocPart}`
-  if (spread.dataset.role === 'result' || spread.dataset.role === 'result-continuation') {
-    return 'result:current'
-  }
+  if (spread.dataset.role === 'resultado') return `resultado:${spread.dataset.resultadoId || ''}`
+  if (spread.dataset.role === 'favorited-result') return `favresult:${spread.dataset.favresultId || ''}`
+  if (spread.dataset.role === 'resultado-toc') return 'resultado-toc'
   return spread.dataset.role || ''
 }
 
@@ -115,18 +105,34 @@ function tocEntries() {
     })
   })
 
-  const saved = savedRecipes()
-  if (saved.length) {
-    entries.push({ type: 'section', labelKey: 'toc_saved', fallback: 'Pesquisas Salvas', targetRole: 'saved', weight: 1.2 })
-    entries.push({ type: 'filter', weight: 1.4 })
-    saved.forEach(entry => {
+  // Ephemeral resultado entries (session only)
+  const resultadoSpreads = [...document.querySelectorAll('#resultado-container [data-role="resultado"]')]
+  if (resultadoSpreads.length) {
+    entries.push({ type: 'section', labelKey: 'toc_resultado', fallback: 'Pesquisadas', targetRole: 'resultado', weight: 1.2 })
+    resultadoSpreads.forEach(spread => {
+      const key = spreadKey(spread)
       entries.push({
         type: 'link',
-        subtype: 'saved',
-        label: entry.recipe?.name || '',
-        targetKey: `saved:${entry.id}`,
-        recipeId: entry.id,
-        favorite: favorites.includes(`saved:${entry.id}`),
+        subtype: 'resultado',
+        label: spread.dataset.recipeName || '',
+        targetKey: key,
+        favorite: false,
+        weight: 1,
+      })
+    })
+  }
+
+  // Persistent favorited AI recipes
+  const favoritadoSpreads = [...document.querySelectorAll('#favoritos-container [data-role="favorited-result"]')]
+  if (favoritadoSpreads.length) {
+    favoritadoSpreads.forEach(spread => {
+      const key = spreadKey(spread)
+      entries.push({
+        type: 'link',
+        subtype: 'favorited',
+        label: spread.dataset.recipeName || '',
+        targetKey: key,
+        favorite: favorites.includes(key),
         weight: 1,
       })
     })
@@ -188,12 +194,6 @@ function tocPage(entries, pageIndex, side) {
           <span class="toc-entry-title" ${entry.labelKey ? `data-i18n="${entry.labelKey}"` : ''}>${entry.fallback || entry.label || ''}</span>
           <span class="toc-dots"></span><span class="toc-page" data-toc-page></span>
         </span>
-      </li>`
-    }
-    if (entry.type === 'filter') {
-      return `<li class="toc-filter-row" data-toc-entry-index="${entryIndex}">
-        <label class="toc-filter-label" for="saved-search-input">${currentLang === 'en' ? 'filter saved recipes' : 'filtrar receitas salvas'}</label>
-        <input type="search" id="saved-search-input" placeholder="${currentLang === 'en' ? 'filter...' : 'filtrar...'}" oninput="filterSavedRecipes(this.value)">
       </li>`
     }
     const target = entry.targetKey
@@ -308,10 +308,6 @@ function buildFavoritesTocSpread() {
     const spread = BookState.layout.find(s => spreadKey(s) === key)
     if (!spread) return key
     if (spread.dataset.role === 'base-recipe') return spread.dataset.recipeName || key
-    if (spread.dataset.role === 'saved') {
-      const savedData = savedRecipes().find(r => `saved:${r.id}` === key)
-      return savedData?.recipe?.name || key
-    }
     const staticLabels = {
       search: currentLang === 'en' ? 'Search a Dish' : 'Pesquisar um Prato',
     }
@@ -357,16 +353,15 @@ function rebuildBookLayout(options = {}) {
   const endpaper = document.querySelector('[data-role="endpaper"]')
   const comoUsar = [...document.querySelectorAll('[data-role="como-usar"]')]
   const search = document.querySelector('[data-role="search"]')
-  const result = document.querySelector('[data-role="result"]')
-  const resultContinuations = [...document.querySelectorAll('[data-role="result-continuation"]')]
   const error = document.querySelector('[data-role="error"]')
   const setup = document.querySelector('[data-role="setup"]')
   const recipes = [...document.querySelectorAll('[data-role="base-recipe"]')]
-  const saved = [...document.querySelectorAll('[data-role="saved"]')]
   const conditional = []
   if (BookState.errorActive && error) conditional.push(error)
   if (BookState.setupActive && setup) conditional.push(setup)
-  if (BookState.resultAvailable && result) conditional.push(result, ...resultContinuations)
+
+  const resultados = [...document.querySelectorAll('#resultado-container > .book-spread')]
+  const favoritos  = [...document.querySelectorAll('#favoritos-container > .book-spread')]
 
   const layout = [
     endpaper,
@@ -376,7 +371,8 @@ function rebuildBookLayout(options = {}) {
     search,
     ...recipes,
     ...conditional,
-    ...saved,
+    ...resultados,
+    ...favoritos,
   ].filter(Boolean)
 
   layout.forEach((spread, index) => {
@@ -405,15 +401,13 @@ function rebuildBookLayout(options = {}) {
   SPREAD_RECIPES_END = Number(recipes.at(-1)?.dataset.spread || SPREAD_RECIPES_START)
   SPREAD_ERROR = layoutIndex(error)
   SPREAD_SETUP = layoutIndex(setup)
-  SPREAD_RESULT = layoutIndex(result)
-  SPREAD_SAVED_START = Number(saved[0]?.dataset.spread || (SPREAD_SETUP + 1))
+  SPREAD_RESULTADO_FIRST = resultados.length ? layoutIndex(resultados[0]) : 0
   SPREAD_FAVORITES_TOC = favTocSpread ? layoutIndex(favTocSpread) : 0
   Object.assign(SECTION_SPREADS, {
     toc: SPREAD_TOC,
     search: SPREAD_SEARCH,
     recipes: SPREAD_RECIPES_START,
-    result: SPREAD_RESULT,
-    saved: saved.length ? SPREAD_SAVED_START : SPREAD_RECIPES_END,
+    resultado: SPREAD_RESULTADO_FIRST,
     favorites: SPREAD_FAVORITES_TOC || SPREAD_TOC,
   })
   syncConditionalNavigation()
@@ -460,8 +454,7 @@ function updatePagePosition(side = 'left') {
 }
 
 function syncConditionalNavigation() {
-  const resultTab = document.querySelector('[data-section="result"]')
-  if (resultTab) resultTab.style.display = BookState.resultAvailable ? 'flex' : 'none'
+  syncResultadoTab()
   syncFavoritesTab()
   syncShareTab()
 }
@@ -469,9 +462,13 @@ function syncConditionalNavigation() {
 function syncShareTab() {
   const shareTab = document.getElementById('tab-share')
   if (!shareTab) return
+  if (BookState.phase === 'cover' || BookState.phase === 'backcover') {
+    shareTab.style.display = 'none'
+    return
+  }
   const spread = document.querySelector(`[data-spread="${BookState.currentSpread}"]`)
   const role = spread?.dataset.role
-  const visible = ['base-recipe', 'result', 'result-continuation', 'saved'].includes(role)
+  const visible = ['base-recipe', 'resultado', 'favorited-result'].includes(role)
   shareTab.style.display = visible ? 'flex' : 'none'
 }
 
@@ -605,6 +602,7 @@ function animateContentIn(spreadIndex) {
 function animateCoverOpen(targetKey = null, targetSide = 'left') {
   if (BookState.phase !== 'cover') return Promise.resolve()
   BookState.phase = 'browsing'
+  window.scrollTo(0, 0)
 
   const wrapper = document.getElementById('cover-wrapper')
   const spreads = document.getElementById('book-spreads')
@@ -668,6 +666,13 @@ function showNavElements() {
     onStart: () => { document.getElementById('ribbon-pages').style.pointerEvents = 'auto' },
   })
   gsap.to('#page-position', { opacity: 1, duration: 0.25, ease: 'power2.out' })
+  gsap.to('#divider-tabs, #bottom-tabs', {
+    opacity: 1, duration: 0.35, ease: 'power4.out',
+    onStart: () => {
+      document.getElementById('divider-tabs').style.pointerEvents = 'auto'
+      document.getElementById('bottom-tabs').style.pointerEvents = 'auto'
+    },
+  })
 }
 
 // ── GO TO COVER ──
@@ -689,6 +694,13 @@ function goToCover() {
   })
   gsap.to('#page-position', { opacity: 0, duration: 0.15 })
   gsap.to('.book-gutter', { opacity: 0, duration: 0.15, ease: 'power2.in' })
+  gsap.to('#divider-tabs, #bottom-tabs', {
+    opacity: 0, duration: 0.15, ease: 'power2.in',
+    onComplete: () => {
+      document.getElementById('divider-tabs').style.pointerEvents = 'none'
+      document.getElementById('bottom-tabs').style.pointerEvents = 'none'
+    },
+  })
 
   return new Promise(resolve => {
     const tl = gsap.timeline({
@@ -743,6 +755,7 @@ function goToBackCover() {
         x: -(bwWidth + tabW),
         scaleX: -1,
       })
+      syncShareTab()
       BookState.isAnimating = false
     }
   })
@@ -822,7 +835,7 @@ function isOnboardingComplete() {
   return localStorage.getItem('onboarding_complete') === '1'
 }
 
-const SIDE_TAB_SECTIONS = new Set(['toc', 'search', 'recipes', 'result', 'saved', 'favorites'])
+const SIDE_TAB_SECTIONS = new Set(['toc', 'search', 'recipes', 'resultado', 'favorites'])
 
 function isSideTab(section) {
   return SIDE_TAB_SECTIONS.has(section)
@@ -864,12 +877,7 @@ function shakeAndShowTooltip(targetEl) {
 
 function completeOnboarding() {
   localStorage.setItem('onboarding_complete', '1')
-  const key = getGeminiKey()
-  if (!key) {
-    showSetup('gemini')
-  } else {
-    goToSection('toc')
-  }
+  goToSection('toc')
 }
 
 function goToSection(section) {
@@ -882,20 +890,14 @@ function goToSection(section) {
     return
   }
 
-  if (section === 'result' && !BookState.resultAvailable && !BookState.pendingRecipe) return
-  if (section === 'result' && BookState.pendingRecipe) {
-    showRecipeResult(BookState.pendingRecipe)
-    return
-  }
-
   if (BookState.phase === 'cover') {
-    const target = SECTION_SPREADS[section] ?? SPREAD_SAVED_START
+    const target = SECTION_SPREADS[section] ?? SPREAD_RECIPES_END
     const targetSpread = BookState.layout.find(s => Number(s.dataset.spread) === target)
     animateCoverOpen(targetSpread ? spreadKey(targetSpread) : null)
     return
   }
 
-  const target = SECTION_SPREADS[section] ?? SPREAD_SAVED_START
+  const target = SECTION_SPREADS[section] ?? SPREAD_RECIPES_END
   const dir    = target > BookState.currentSpread ? 'forward' : 'backward'
   animatePageTurn(BookState.currentSpread, target, dir)
     .then(() => { animateContentIn(target) })
@@ -933,8 +935,7 @@ function updateDividerTabs(spreadIndex) {
   if      (role === 'toc')         section = 'toc'
   else if (role === 'search')      section = 'search'
   else if (role === 'base-recipe') section = 'recipes'
-  else if (role === 'result' || role === 'result-continuation' || role === 'error' || role === 'setup') section = 'result'
-  else if (role === 'saved')         section = 'saved'
+  else if (role === 'resultado' || role === 'resultado-toc' || role === 'favorited-result' || role === 'error' || role === 'setup') section = 'resultado'
   else if (role === 'favorites-toc') section = 'favorites'
   if (section)
     document.querySelector(`[data-section="${section}"] .dt-tag`)?.classList.add('active')
@@ -1166,138 +1167,6 @@ const illustrationSVG = {
   mortar:  `<svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="var(--c-gold)" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20,85 Q18,100 40,102 Q62,100 60,85 L55,60 Q50,55 40,55 Q30,55 25,60 Z"/><path d="M15,60 L65,60"/><path d="M55,40 L55,60"/><ellipse cx="55" cy="38" rx="4" ry="8" transform="rotate(10,55,38)"/></svg>`,
 }
 
-// ── POPULATE RESULT SPREAD ──
-function populateResultSpread(recipe) {
-  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || '' }
-  set('res-category',  recipe.category)
-  set('res-name',      recipe.name)
-  set('res-subtitle',  recipe.subtitle)
-  set('res-prep',      recipe.prep_time)
-  set('res-servings',  recipe.servings)
-  set('res-difficulty',recipe.difficulty)
-  set('res-story',     recipe.story)
-  set('res-tip',       recipe.tip)
-  set('res-annotation',recipe.annotation || '')
-
-  const ingEl = document.getElementById('res-ingredients')
-  if (ingEl && recipe.ingredients)
-    ingEl.innerHTML = recipe.ingredients.map(i => `<li data-stagger>${i}</li>`).join('')
-
-  const stepsEl = document.getElementById('res-steps')
-  if (stepsEl && recipe.steps)
-    stepsEl.innerHTML = recipe.steps.map((s, i) =>
-      `<li data-stagger><span class="step-number">${i+1}</span><span class="step-text">${s}</span></li>`).join('')
-
-  const illEl = document.getElementById('res-illustration')
-  if (illEl) {
-    const key = recipe.illustration_key || 'mortar'
-    illEl.innerHTML = illustrationSVG[key] || illustrationSVG.mortar
-  }
-
-  // demo stamp — shown when recipe comes from offline fallback
-  const stamp = document.getElementById('res-demo-stamp')
-  if (stamp) {
-    stamp.classList.toggle('visible', !!recipe._demo)
-  }
-
-  BookState.currentRecipe = recipe
-  if (!BookState.currentRecipeVariants[currentLang]) {
-    BookState.currentRecipeVariants[currentLang] = recipe
-  }
-
-  syncRibbonFavorite()
-}
-
-function extractOverflowItems(list, card, minItems) {
-  const overflow = []
-  while (list && card && list.children.length > minItems && card.scrollHeight > card.clientHeight + 2) {
-    const item = list.lastElementChild
-    if (!item) break
-    overflow.unshift(item.textContent.trim())
-    item.remove()
-  }
-  return overflow
-}
-
-function ensureResultPagination(recipe) {
-  const host = document.getElementById('result-continuation-container')
-  if (!host) return
-  host.innerHTML = ''
-
-  const resultSpread = document.querySelector('[data-role="result"]')
-  const wasHidden = resultSpread && getComputedStyle(resultSpread).display === 'none'
-  const previousDisplay = resultSpread?.style.display || ''
-  const previousVisibility = resultSpread?.style.visibility || ''
-  if (wasHidden && resultSpread) {
-    resultSpread.style.display = 'grid'
-    resultSpread.style.visibility = 'hidden'
-  }
-
-  const leftCard = document.getElementById('result-left-card')
-  const rightCard = document.querySelector('#result-right .recipe-card-border')
-  const ingredients = document.getElementById('res-ingredients')
-  const steps = document.getElementById('res-steps')
-  const overflowIngredients = extractOverflowItems(ingredients, leftCard, 4)
-  const overflowSteps = extractOverflowItems(steps, rightCard, 3)
-
-  if (wasHidden && resultSpread) {
-    resultSpread.style.display = previousDisplay
-    resultSpread.style.visibility = previousVisibility
-  }
-
-  document.querySelectorAll('.continues-hint').forEach(el => el.remove())
-
-  if (!overflowIngredients.length && !overflowSteps.length) {
-    rebuildBookLayout({ keepCurrent: true })
-    return
-  }
-
-  const continuesLabel = currentLang === 'en' ? 'continues →' : 'continua →'
-  if (overflowIngredients.length) {
-    const hint = document.createElement('p')
-    hint.className = 'continues-hint'
-    hint.textContent = continuesLabel
-    document.getElementById('res-ingredients')?.insertAdjacentElement('afterend', hint)
-  }
-  if (overflowSteps.length) {
-    const hint = document.createElement('p')
-    hint.className = 'continues-hint'
-    hint.textContent = continuesLabel
-    document.getElementById('res-steps')?.insertAdjacentElement('afterend', hint)
-  }
-
-  const continuation = document.createElement('div')
-  continuation.className = 'book-spread'
-  continuation.dataset.role = 'result-continuation'
-  continuation.innerHTML = `
-    <div class="page-turn-layer"><div class="turn-front"></div><div class="turn-back"></div></div>
-    <div class="page page-left">
-      <div class="curl-zone curl-left" role="button" aria-label="Página anterior"><div class="curl-surface"></div><div class="curl-hint">‹</div></div>
-      <div class="recipe-card-border result-continuation-card">
-        <span class="recipe-eyebrow">${recipe.category || ''}</span>
-        <h2 class="continuation-title">${recipe.name || ''}</h2>
-        <span class="section-label">${currentLang === 'en' ? 'Ingredients, continued' : 'Ingredientes, continuação'}</span>
-        <ul class="ingredients-list">
-          ${overflowIngredients.map(item => `<li>${item}</li>`).join('')}
-        </ul>
-      </div>
-      <div class="page-footer"><span class="footer-brand">Foodpedia</span><span class="page-number"></span></div>
-    </div>
-    <div class="page page-right">
-      <div class="curl-zone curl-right" role="button" aria-label="Próxima página"><div class="curl-surface"></div><div class="curl-hint">›</div></div>
-      <div class="recipe-card-border result-continuation-card">
-        <span class="section-label">${currentLang === 'en' ? 'Instructions, continued' : 'Modo de preparo, continuação'}</span>
-        <ol class="steps-list">
-          ${overflowSteps.map((item, index) => `<li><span class="step-number">${steps.children.length + index + 1}</span><span class="step-text">${item.replace(/^\d+\s*/, '')}</span></li>`).join('')}
-        </ol>
-        <div class="continuation-ornament">${illustrationSVG[recipe.illustration_key] || illustrationSVG.mortar}</div>
-      </div>
-      <div class="page-footer"><span class="footer-brand">Foodpedia</span><span class="page-number"></span></div>
-    </div>`
-  host.appendChild(continuation)
-  rebuildBookLayout({ keepCurrent: true })
-}
-
 // ── PROVIDER + MODEL SELECTOR ──
 const _PROVIDER_ORDER = ['gemini', 'ollama']
 let apiAvailable = true
@@ -1416,11 +1285,25 @@ function removeGeminiKey() {
 }
 
 function prefillGeminiKeyInput() {
-  const input = document.getElementById('gemini-key-input')
-  if (!input) return
   const stored = getGeminiKey()
-  input.value = stored
-  if (!stored) setTimeout(() => input.focus(), 120)
+  const setupInput = document.getElementById('gemini-key-input')
+  if (setupInput) {
+    setupInput.value = stored
+    if (!stored) setTimeout(() => setupInput.focus(), 120)
+  }
+  const onboardInput = document.getElementById('gemini-key-onboard')
+  if (onboardInput) onboardInput.value = stored
+}
+
+function saveOnboardGeminiKey() {
+  const input = document.getElementById('gemini-key-onboard')
+  const key = (input?.value || '').trim()
+  if (!key) return
+  localStorage.setItem('gemini_key', key)
+  const status = document.getElementById('gemini-key-onboard-status')
+  if (status) { status.textContent = '✓ Chave salva'; setTimeout(() => { status.textContent = '' }, 2500) }
+  const setupInput = document.getElementById('gemini-key-input')
+  if (setupInput) setupInput.value = key
 }
 
 // ── FETCH RECIPE ──
@@ -1455,17 +1338,19 @@ async function fetchRecipe(query) {
   return res.json()
 }
 
+// ── RESULTADO TAB (stub — replaced in Task 5) ──
+function syncResultadoTab() {
+  // replaced in Task 5
+}
+
+// ── REBUILD FAVORITADO SPREADS (stub — replaced in Task 4) ──
+function rebuildFavoritadoSpreads() {
+  // replaced in Task 4
+}
+
 // ── LOADING NOTIFY ──
 function notifyRecipeReady(recipe) {
-  BookState.resultAvailable = true
-  BookState.errorActive = false
-  BookState.setupActive = false
-  BookState.currentRecipeVariants = { [currentLang]: recipe }
-  populateResultSpread(recipe)
-  ensureResultPagination(recipe)
-  rebuildBookLayout({ keepCurrent: true })
-  document.querySelector('[data-section="result"]')?.classList.add('is-ready')
-  showArrow(arrowR, 0.9)
+  // replaced in Task 5
 }
 
 // ── ERROR SPREAD ──
@@ -1506,29 +1391,8 @@ function retryLastSearch() {
 
 // ── SHOW RESULT ──
 function showRecipeResult(recipe) {
-  BookState.phase = 'result'
-  BookState.pendingRecipe = null
-  BookState.resultAvailable = true
-  BookState.errorActive = false
-  BookState.setupActive = false
-  BookState.currentRecipeVariants = { [currentLang]: recipe }
-  document.querySelector('[data-section="result"]')?.classList.remove('is-ready')
-  rebuildBookLayout({ keepCurrent: true })
-  populateResultSpread(recipe)
-  if (!searchHistory().some(item => item.recipe?.name === recipe.name)) saveSearchHistory(recipe)
-  const direction = SPREAD_RESULT > BookState.currentSpread ? 'forward' : 'backward'
-  animatePageTurn(BookState.currentSpread, SPREAD_RESULT, direction).then(() => {
-    const spread = document.querySelector(`[data-spread="${SPREAD_RESULT}"]`)
-    if (!spread) return
-    const items = spread.querySelectorAll('[data-stagger]')
-    gsap.fromTo(items,
-      { opacity: 0, y: 8 },
-      { opacity: 1, y: 0, duration: DUR.content, ease: 'expo.out',
-        stagger: reducedMotion ? 0 : 0.025 }
-    )
-    updateDividerTabs(SPREAD_RESULT)
-    ensureResultPagination(recipe)
-  })
+  // replaced in Task 5 — createResultadoSpread
+  notifyRecipeReady(recipe)
 }
 
 function showSetup(mode = 'all') {
@@ -1646,172 +1510,6 @@ if (searchInput) {
   })
 }
 
-// ── SAVED RECIPES ──
-const MAX_SAVED = 10
-
-function saveCurrentRecipe() {
-  const recipe = BookState.currentRecipe
-  if (!recipe) return
-
-  let saved = JSON.parse(localStorage.getItem('fp_saved_recipes') || '[]')
-
-  if (saved.length >= MAX_SAVED) {
-    showToast('Limite de 10 receitas. Remova uma para adicionar.'); return
-  }
-  if (saved.some(s => s.recipe.name === recipe.name)) {
-    showToast(`"${recipe.name}" já está salva.`); return
-  }
-
-  saved.push({
-    id: Date.now().toString(),
-    savedAt: Date.now(),
-    recipe,
-    variants: { ...BookState.currentRecipeVariants },
-    sourceLang: currentLang,
-    userAnnotation: '',
-  })
-  localStorage.setItem('fp_saved_recipes', JSON.stringify(saved))
-  rebuildSavedSpreads()
-  rebuildBookLayout({ keepCurrent: true })
-  showSavedTab()
-  showToast(`"${recipe.name}" salva no seu livro.`)
-}
-
-function deleteSavedRecipe(id) {
-  const currentRole = document.querySelector(`[data-spread="${BookState.currentSpread}"]`)?.dataset.role
-  let saved = JSON.parse(localStorage.getItem('fp_saved_recipes') || '[]')
-  saved = saved.filter(s => s.id !== id)
-  localStorage.setItem('fp_saved_recipes', JSON.stringify(saved))
-  rebuildSavedSpreads()
-  rebuildBookLayout({ keepCurrent: currentRole !== 'saved' })
-  if (!saved.length) hideSavedTab()
-  if (currentRole === 'saved') {
-    showSpread(SPREAD_RECIPES_END)
-    animateContentIn(SPREAD_RECIPES_END)
-  }
-}
-
-function saveAnnotation(id, text) {
-  let saved = JSON.parse(localStorage.getItem('fp_saved_recipes') || '[]')
-  const entry = saved.find(s => s.id === id)
-  if (entry) {
-    entry.userAnnotation = text
-    localStorage.setItem('fp_saved_recipes', JSON.stringify(saved))
-  }
-}
-
-function rebuildSavedSpreads() {
-  const container = document.getElementById('saved-spreads-container')
-  if (!container) return
-  container.innerHTML = ''
-
-  const saved = savedRecipes()
-  const labels = currentLang === 'en'
-    ? { prep: 'Prep', servings: 'Serves', level: 'Level', ingredients: 'Ingredients', notes: 'Notes', story: 'The Story', steps: 'Instructions', tip: 'Tip', placeholder: 'write here...' }
-    : { prep: 'Preparo', servings: 'Porções', level: 'Nível', ingredients: 'Ingredientes', notes: 'Anotações', story: 'A História', steps: 'Modo de Preparo', tip: 'Dica', placeholder: 'escreva aqui...' }
-  saved.forEach((entry, i) => {
-    const r = entry.variants?.[currentLang] || entry.recipe
-    const illKey = r.illustration_key || 'mortar'
-    const ill = illustrationSVG[illKey] || illustrationSVG.mortar
-
-    const ingredients = (r.ingredients || [])
-      .map(ing => `<li>${ing}</li>`).join('')
-    const steps = (r.steps || [])
-      .map((s, si) => `<li><span class="step-number">${si+1}</span><span class="step-text">${s}</span></li>`).join('')
-
-    const el = document.createElement('div')
-    el.className = 'book-spread'
-    el.dataset.role = 'saved'
-    el.dataset.savedId = entry.id
-    el.style.display = 'none'
-    el.innerHTML = `
-      <div class="page-turn-layer"><div class="turn-front"></div><div class="turn-back"></div></div>
-      <div class="page page-left">
-        <div class="curl-zone curl-left" role="button" aria-label="Página anterior"><div class="curl-surface"></div><div class="curl-hint">‹</div></div>
-        <div class="recipe-card-border">
-          <span class="recipe-eyebrow">${r.category || ''}</span>
-          <div class="recipe-header-rule"></div>
-          <h2 class="recipe-title">${r.name || ''}</h2>
-          <p class="recipe-subtitle-italic">${r.subtitle || ''}</p>
-          <div class="recipe-meta-grid">
-            <div class="meta-cell"><span class="meta-label">${labels.prep}</span><span class="meta-value">${r.prep_time || ''}</span></div>
-            <div class="meta-cell"><span class="meta-label">${labels.servings}</span><span class="meta-value">${r.servings || ''}</span></div>
-            <div class="meta-cell"><span class="meta-label">${labels.level}</span><span class="meta-value">${r.difficulty || ''}</span></div>
-          </div>
-          <div class="recipe-section">
-            <h3 class="section-label">${labels.ingredients}</h3>
-            <ul class="ingredients-list">${ingredients}</ul>
-          </div>
-        </div>
-        <div class="saved-controls">
-          <button class="ctrl-delete" onclick="deleteSavedRecipe('${entry.id}')" title="Remover">✕</button>
-        </div>
-        <div class="handwritten-annotation annotation-0">${r.annotation || ''}</div>
-        <div class="page-footer">
-          <span class="footer-brand">Foodpedia</span>
-          <span class="page-number"></span>
-        </div>
-      </div>
-      <div class="page page-right">
-        <div class="curl-zone curl-right" role="button" aria-label="Próxima página"><div class="curl-surface"></div><div class="curl-hint">›</div></div>
-        <div class="recipe-card-border">
-          <div class="botanical-illustration">${ill}</div>
-          <div class="recipe-story">
-            <h3 class="section-label">${labels.story}</h3>
-            <p class="story-text">${r.story || ''}</p>
-          </div>
-          <div class="recipe-section">
-            <h3 class="section-label">${labels.steps}</h3>
-            <ol class="steps-list">${steps}</ol>
-          </div>
-          <div class="chef-tip">
-            <span class="tip-label">${labels.tip}</span>
-            <p class="tip-text">${r.tip || ''}</p>
-          </div>
-        </div>
-        <div class="page-footer">
-          <span class="footer-brand">Foodpedia</span>
-          <span class="page-number"></span>
-        </div>
-      </div>`
-
-    container.appendChild(el)
-  })
-
-  initCurlZones()
-}
-
-function updateTOCSavedSection() {
-  rebuildBookLayout({ keepCurrent: true })
-}
-
-function filterSavedRecipes(query) {
-  const saved = savedRecipes()
-  const q = query.toLowerCase().trim()
-  document.querySelectorAll('.toc-saved-item').forEach(item => {
-    const entry = saved.find(recipe => recipe.id === item.dataset.recipeId)
-    const recipe = entry?.variants?.[currentLang] || entry?.recipe || {}
-    const haystack = `${recipe.name || ''} ${recipe.category || ''}`.toLowerCase()
-    item.style.display = !q || haystack.includes(q) ? '' : 'none'
-  })
-}
-
-function showSavedTab() {
-  const tab = document.getElementById('tab-saved')
-  if (!tab) return
-  tab.style.display = 'flex'
-  /* badge removed */
-  gsap.fromTo(tab, { opacity: 0, x: 6 }, { opacity: 1, x: 0, duration: 0.35, ease: 'expo.out' })
-}
-
-function hideSavedTab() {
-  const tab = document.getElementById('tab-saved')
-  /* badge removed */
-  if (tab) gsap.to(tab, { opacity: 0, x: 6, duration: 0.2,
-    onComplete: () => tab.style.display = 'none' })
-}
-
-
 const HISTORY_KEY = 'fp_search_history'
 
 function searchHistory() {
@@ -1856,13 +1554,8 @@ document.getElementById('history-marks')?.addEventListener('click', event => {
   if (!item) return
   BookState.currentRecipeVariants = { ...(item.variants || {}), [item.sourceLang || 'pt']: item.recipe }
   const recipe = BookState.currentRecipeVariants[currentLang] || item.recipe
-  BookState.phase = 'result'
-  BookState.resultAvailable = true
-  BookState.errorActive = false
-  BookState.setupActive = false
-  populateResultSpread(recipe)
-  rebuildBookLayout({ keepCurrent: true })
-  navigateToSpread(SPREAD_RESULT).then(() => ensureResultPagination(recipe))
+  // History re-display delegated to showRecipeResult (Task 5 will implement)
+  showRecipeResult(recipe)
 })
 
 // ── FAVORITES ──
@@ -1955,14 +1648,8 @@ function currentPrintableRecipe() {
   const spread = document.querySelector(`[data-spread="${BookState.currentSpread}"]`)
   if (!spread) return null
   if (spread.dataset.role === 'base-recipe') return staticRecipeData(spread, currentLang)
-  if (spread.dataset.role === 'result' || spread.dataset.role === 'result-continuation') {
+  if (spread.dataset.role === 'resultado' || spread.dataset.role === 'favorited-result') {
     return BookState.currentRecipeVariants[currentLang] || BookState.currentRecipe
-  }
-  if (spread.dataset.role === 'saved') {
-    const entry = savedRecipes().find(item => item.id === spread.dataset.savedId)
-    if (!entry) return null
-    const recipe = entry.variants?.[currentLang] || entry.recipe
-    return { ...recipe, userAnnotation: entry.userAnnotation || '' }
   }
   return null
 }
@@ -2038,9 +1725,6 @@ function shareCurrentPage() {
         const key = currentLang === 'en' ? '.base-recipe-data-en' : '.base-recipe-data'
         const scriptEl = spread.querySelector(key)
         if (scriptEl) { try { r = JSON.parse(scriptEl.textContent) } catch {} }
-      } else if (role === 'saved') {
-        const entry = savedRecipes().find(s => s.id === spread.dataset.savedId)
-        if (entry) r = entry.variants?.[currentLang] || entry.recipe
       }
     }
   }
@@ -2062,6 +1746,10 @@ function applyStaticText() {
   const t = i18nData[currentLang] || i18nData.pt || {}
   document.querySelectorAll('[data-i18n]').forEach(el => {
     if (t[el.dataset.i18n]) el.textContent = t[el.dataset.i18n]
+  })
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const key = el.dataset.i18nHtml
+    if (t[key]) el.innerHTML = t[key]
   })
   const input = document.getElementById('recipe-search')
   if (input && t.search_placeholder) input.placeholder = t.search_placeholder
@@ -2106,7 +1794,6 @@ async function applyLang(lang) {
     btn.setAttribute('aria-pressed', String(active))
   })
 
-  rebuildSavedSpreads()
   rebuildBookLayout()
   renderSearchHistory()
 
@@ -2124,14 +1811,12 @@ async function translateCurrentRecipe(targetLang) {
   if (!BookState.currentRecipe || BookState.translating) return
   const cached = BookState.currentRecipeVariants[targetLang]
   if (cached) {
-    populateResultSpread(cached)
+    // Translation display delegated to Task 5 (createResultadoSpread)
     return
   }
 
   BookState.translating = true
   const sourceRecipe = BookState.currentRecipe
-  const resultSpread = document.querySelector('[data-role="result"]')
-  resultSpread?.classList.add('is-translating')
   showToast(targetLang === 'en' ? 'Translating recipe…' : 'Traduzindo receita…')
   try {
     const body = {
@@ -2149,8 +1834,6 @@ async function translateCurrentRecipe(targetLang) {
     if (!response.ok) throw new Error('translation failed')
     const translated = await response.json()
     BookState.currentRecipeVariants[targetLang] = translated
-    populateResultSpread(translated)
-    ensureResultPagination(translated)
     persistCurrentRecipeTranslation(targetLang, translated, sourceRecipe)
   } catch {
     showToast(targetLang === 'en'
@@ -2158,7 +1841,6 @@ async function translateCurrentRecipe(targetLang) {
       : 'A interface mudou, mas não foi possível traduzir a receita.')
   } finally {
     BookState.translating = false
-    resultSpread?.classList.remove('is-translating')
   }
 }
 
@@ -2201,18 +1883,6 @@ async function translateVisibleStaticRecipe() {
 
 function persistCurrentRecipeTranslation(lang, translated, sourceRecipe) {
   const sourceName = sourceRecipe?.name
-  const saved = savedRecipes()
-  let savedChanged = false
-  saved.forEach(entry => {
-    const originalName = entry.recipe?.name
-    const knownNames = Object.values(entry.variants || {}).map(variant => variant?.name)
-    if (originalName === sourceName || knownNames.includes(sourceName)) {
-      entry.variants = { ...(entry.variants || {}), [lang]: translated }
-      savedChanged = true
-    }
-  })
-  if (savedChanged) localStorage.setItem('fp_saved_recipes', JSON.stringify(saved))
-
   const history = searchHistory()
   let historyChanged = false
   history.forEach(entry => {
@@ -2469,31 +2139,9 @@ function checkOnboarding() {
   }, 800)
 }
 
-// ── DRAG TO REORDER SAVED ──
+// ── DRAG TO REORDER (stub — will be replaced in Task 4 for favorited spreads) ──
 function initDragReorder() {
-  const items = document.querySelectorAll('.toc-saved-item')
-  if (!items.length) return
-  let srcId = null
-  items.forEach(item => {
-    if (item.dataset.dragBound === 'true') return
-    item.dataset.dragBound = 'true'
-    item.setAttribute('draggable', true)
-    item.addEventListener('dragstart', () => { srcId = item.dataset.recipeId; item.style.opacity = '.5' })
-    item.addEventListener('dragend', () => item.style.opacity = '1')
-    item.addEventListener('dragover', e => { e.preventDefault(); item.style.background = 'rgba(176,125,42,.08)' })
-    item.addEventListener('dragleave', () => item.style.background = '')
-    item.addEventListener('drop', e => {
-      e.preventDefault(); item.style.background = ''
-      if (srcId === item.dataset.recipeId) return
-      let saved = JSON.parse(localStorage.getItem('fp_saved_recipes') || '[]')
-      const fi = saved.findIndex(s => s.id === srcId)
-      const ti = saved.findIndex(s => s.id === item.dataset.recipeId)
-      const [moved] = saved.splice(fi, 1); saved.splice(ti, 0, moved)
-      localStorage.setItem('fp_saved_recipes', JSON.stringify(saved))
-      rebuildSavedSpreads()
-      rebuildBookLayout({ keepCurrent: true })
-    })
-  })
+  // no-op: saved recipe drag-reorder removed; favorited drag-reorder added in Task 4
 }
 
 // ── PRINT ──
@@ -2524,12 +2172,8 @@ document.addEventListener('dblclick', e => {
 
 // ── INIT ──
 document.addEventListener('DOMContentLoaded', () => {
-  // Restore saved recipes
-  rebuildSavedSpreads()
+  rebuildFavoritadoSpreads()  // will be added in Task 4
   rebuildBookLayout()
-  const saved = JSON.parse(localStorage.getItem('fp_saved_recipes') || '[]')
-  if (saved.length) showSavedTab()
-  /* badge removed */
   renderSearchHistory()
 
   // Restore favorites
