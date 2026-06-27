@@ -316,77 +316,6 @@
         </div>
       </div>
 
-      <!-- ── SPREAD 20: RESULTADO ── -->
-      <div class="book-spread" data-role="result">
-        <div class="page-turn-layer"><div class="turn-front"></div><div class="turn-back"></div></div>
-        <div class="page page-left" id="result-left">
-          <div class="curl-zone curl-left" role="button" aria-label="Página anterior"><div class="curl-surface"></div><div class="curl-hint">‹</div></div>
-          <div class="recipe-card-border" id="result-left-card">
-            <span class="recipe-eyebrow" id="res-category" data-stagger></span>
-            <div class="recipe-header-rule" data-stagger></div>
-            <h2 class="recipe-title" id="res-name" data-stagger></h2>
-            <p class="recipe-subtitle-italic" id="res-subtitle" data-stagger></p>
-            <div class="recipe-meta-grid" data-stagger>
-              <div class="meta-cell">
-                <span class="meta-label" data-i18n="meta_prep">Preparo</span>
-                <span class="meta-value" id="res-prep"></span>
-              </div>
-              <div class="meta-cell">
-                <span class="meta-label" data-i18n="meta_servings">Porções</span>
-                <span class="meta-value" id="res-servings"></span>
-              </div>
-              <div class="meta-cell">
-                <span class="meta-label" data-i18n="meta_level">Nível</span>
-                <span class="meta-value" id="res-difficulty"></span>
-              </div>
-            </div>
-            <div class="recipe-section">
-              <h3 class="section-label" data-stagger data-i18n="sec_ingredients">Ingredientes</h3>
-              <ul class="ingredients-list" id="res-ingredients" data-stagger></ul>
-              <div class="chef-tip" data-stagger>
-                <span class="tip-label" data-i18n="sec_tip">Dica</span>
-                <p class="tip-text" id="res-tip"></p>
-              </div>
-            </div>
-          </div>
-          <div class="handwritten-annotation annotation-0" id="res-annotation"></div>
-          <svg id="res-demo-stamp" class="demo-stamp" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" stroke-width="1.2" stroke-dasharray="3 3"/>
-            <circle cx="50" cy="50" r="37" fill="none" stroke="currentColor" stroke-width="0.5"/>
-            <text x="50" y="36" text-anchor="middle" font-family="'Cedarville Cursive',cursive" font-size="8" fill="currentColor" letter-spacing="2">modo</text>
-            <text x="50" y="56" text-anchor="middle" font-family="'Cedarville Cursive',cursive" font-size="18" fill="currentColor" font-weight="600">DEMO</text>
-            <text x="50" y="70" text-anchor="middle" font-family="'Cedarville Cursive',cursive" font-size="7" fill="currentColor" letter-spacing="3">foodpedia</text>
-          </svg>
-          <div class="result-actions" data-stagger>
-            <button class="save-recipe-btn" onclick="saveCurrentRecipe()" data-i18n="btn_save">Salvar no livro</button>
-            <button class="back-to-search-btn" onclick="goToSection('search')" data-i18n="btn_back">← Pesquisar outro prato</button>
-          </div>
-          <div class="page-footer">
-            <span class="footer-brand">Foodpedia</span>
-            <span class="page-number">40</span>
-          </div>
-        </div>
-        <div class="page page-right" id="result-right">
-          <div class="curl-zone curl-right" role="button" aria-label="Próxima página"><div class="curl-surface"></div><div class="curl-hint">›</div></div>
-          <div class="recipe-card-border">
-            <div class="botanical-illustration" id="res-illustration" data-stagger></div>
-            <div class="recipe-story">
-              <h3 class="section-label" data-stagger data-i18n="sec_story">A História</h3>
-              <p class="story-text" id="res-story" data-stagger></p>
-            </div>
-            <div class="divider-ornament" data-stagger>{% include 'svg/botanical/divider.svg' %}</div>
-            <div class="recipe-section">
-              <h3 class="section-label" data-stagger data-i18n="sec_prep">Modo de Preparo</h3>
-              <ol class="steps-list" id="res-steps" data-stagger></ol>
-            </div>
-          </div>
-          <div class="page-footer">
-            <span class="footer-brand">Foodpedia</span>
-            <span class="page-number">41</span>
-          </div>
-        </div>
-      </div>
-      <div id="result-continuation-container"></div>
 
       <!-- ── SPREAD 21: ERRO ── -->
       <div class="book-spread" data-role="error" style="display:none;">
@@ -516,8 +445,11 @@
         </div>
       </div>
 
-      <!-- Spreads de receitas salvas são injetados aqui dinamicamente pelo JS -->
-      <div id="saved-spreads-container"></div>
+      <!-- Spreads efêmeros de resultado (por sessão) -->
+      <div id="resultado-container"></div>
+
+      <!-- Spreads de receitas AI favoritadas (persistidos) -->
+      <div id="favoritos-container"></div>
 
       <!-- ── NAVEGAÇÃO POR BORDA ── -->
       <div class="nav-edge-arrow nav-arrow-left" role="button" aria-label="Página anterior">
@@ -557,15 +489,9 @@
         <div class="dt-body" style="background:#65855C"></div>
         <div class="dt-tag" style="background:#65855C"><span class="dt-lbl" data-i18n="nav_recipes">Receitas</span></div>
       </button>
-      <button class="div-tab" type="button" data-section="result" onclick="goToSection('result')" style="display:none;">
+      <button class="div-tab" type="button" id="tab-resultado" data-section="resultado" onclick="goToResultado()" style="display:none;">
         <div class="dt-body" style="background:#6A8878"></div>
         <div class="dt-tag" style="background:#6A8878"><span class="dt-lbl" data-i18n="nav_result">Resultado</span></div>
-      </button>
-      <button class="div-tab" type="button" id="tab-saved" data-section="saved" onclick="goToSection('saved')" style="display:none;">
-        <div class="dt-body" style="background:#7080A0"></div>
-        <div class="dt-tag" style="background:#7080A0">
-          <span class="dt-lbl" data-i18n="nav_saved">Salvas</span>
-        </div>
       </button>
       <button class="div-tab favorite-divider-tab" type="button" id="tab-favorites"
               data-section="favorites" onclick="goToFavorites()" style="display:none;">
