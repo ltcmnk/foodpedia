@@ -1,22 +1,24 @@
 import logging
+import os
 from flask import current_app
 
 logger = logging.getLogger(__name__)
+
+IS_VERCEL = os.environ.get('VERCEL') == '1'
 
 
 def get_recipe_from_ai(dish: str, provider: str = None, model: str = None, lang: str = 'pt') -> dict:
     if provider is None:
         provider = current_app.config.get('AI_PROVIDER', 'ollama')
 
-    if provider == 'demo':
-        from app.services.demo_service import get_demo_recipe
-        return get_demo_recipe(dish)
+    # Ollama is unavailable on Vercel — fall back to gemini
+    if IS_VERCEL and provider == 'ollama':
+        provider = 'gemini'
 
     if provider == 'gemini':
         from app.services.gemini_service import call_gemini
         return call_gemini(dish, model=model, lang=lang)
 
-    # default: ollama
     from app.services.ollama_service import call_ollama, build_recipe_prompts
     system, prompt = build_recipe_prompts(dish, lang)
     return call_ollama(system, prompt, model=model)
@@ -25,6 +27,9 @@ def get_recipe_from_ai(dish: str, provider: str = None, model: str = None, lang:
 def translate_with_ai(recipe: dict, target_lang: str, provider: str = None, model: str = None) -> dict:
     if provider is None:
         provider = current_app.config.get('AI_PROVIDER', 'ollama')
+
+    if IS_VERCEL and provider == 'ollama':
+        provider = 'gemini'
 
     if provider == 'gemini':
         from app.services.gemini_service import translate_gemini
