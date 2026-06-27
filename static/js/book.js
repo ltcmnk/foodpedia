@@ -18,6 +18,7 @@ let SPREAD_SETUP = 7
 let SPREAD_RECIPES_START = 8
 let SPREAD_RECIPES_END = 23
 let SPREAD_SAVED_START = 24
+let SPREAD_FAVORITES_TOC = 0
 const SECTION_SPREADS = {}
 
 const BookState = {
@@ -292,10 +293,67 @@ function renderTOCSpreads() {
   return spreads
 }
 
+function buildFavoritesTocSpread() {
+  const host = document.getElementById('favorites-toc-container')
+  if (!host) return null
+  host.innerHTML = ''
+
+  const keys = favoriteKeys().filter(key =>
+    BookState.layout.some(spread => spreadKey(spread) === key)
+  )
+  if (!keys.length) return null
+
+  const labelFor = key => {
+    const spread = BookState.layout.find(s => spreadKey(s) === key)
+    if (!spread) return key
+    if (spread.dataset.role === 'base-recipe') return spread.dataset.recipeName || key
+    if (spread.dataset.role === 'saved') {
+      const savedData = savedRecipes().find(r => `saved:${r.id}` === key)
+      return savedData?.recipe?.name || key
+    }
+    const staticLabels = {
+      about: currentLang === 'en' ? 'About Foodpedia' : 'Sobre o Foodpedia',
+      search: currentLang === 'en' ? 'Search a Dish' : 'Pesquisar um Prato',
+    }
+    return staticLabels[key] || key
+  }
+
+  const entries = keys.map(key => ({
+    type: 'link',
+    label: labelFor(key),
+    targetKey: key,
+    favorite: true,
+  }))
+
+  const el = document.createElement('div')
+  el.className = 'book-spread'
+  el.dataset.role = 'favorites-toc'
+  el.innerHTML = `
+    <div class="page-turn-layer"><div class="turn-front"></div><div class="turn-back"></div></div>
+    ${heirloomPage('left', 'secondary')}
+    <div class="page page-right toc-sheet">
+      <div class="curl-zone curl-right" role="button" aria-label="Próxima página"><div class="curl-surface"></div><div class="curl-hint">›</div></div>
+      <h2 class="toc-heading">${currentLang === 'en' ? 'Favourites' : 'Favoritos'}</h2>
+      <ul class="toc-entries">${entries.map(entry => `
+        <li data-stagger>
+          <a class="toc-entry is-favorite" href="#" data-target-key="${entry.targetKey}">
+            <span class="toc-favorite-mark" aria-hidden="true">◆</span>
+            <span class="toc-entry-title">${entry.label}</span>
+            <span class="toc-dots"></span><span class="toc-page" data-toc-page></span>
+          </a>
+        </li>`).join('')}
+      </ul>
+      <div class="page-footer"><span class="footer-brand">Foodpedia</span><span class="page-number"></span></div>
+    </div>`
+  host.appendChild(el)
+  return el
+}
+
 function rebuildBookLayout(options = {}) {
   const previous = document.querySelector(`[data-spread="${BookState.currentSpread}"]`)
   const previousKey = spreadKey(previous)
   const tocSpreads = renderTOCSpreads()
+  const favTocSpread = buildFavoritesTocSpread()
   const endpaper = document.querySelector('[data-role="endpaper"]')
   const about = document.querySelector('[data-role="about"]')
   const search = document.querySelector('[data-role="search"]')
@@ -313,6 +371,7 @@ function rebuildBookLayout(options = {}) {
   const layout = [
     endpaper,
     ...tocSpreads,
+    favTocSpread,
     about,
     search,
     ...recipes,
@@ -347,6 +406,7 @@ function rebuildBookLayout(options = {}) {
   SPREAD_SETUP = layoutIndex(setup)
   SPREAD_RESULT = layoutIndex(result)
   SPREAD_SAVED_START = Number(saved[0]?.dataset.spread || (SPREAD_SETUP + 1))
+  SPREAD_FAVORITES_TOC = favTocSpread ? layoutIndex(favTocSpread) : 0
   Object.assign(SECTION_SPREADS, {
     toc: SPREAD_TOC,
     about: SPREAD_ABOUT,
@@ -354,6 +414,7 @@ function rebuildBookLayout(options = {}) {
     recipes: SPREAD_RECIPES_START,
     result: SPREAD_RESULT,
     saved: saved.length ? SPREAD_SAVED_START : SPREAD_RECIPES_END,
+    favorites: SPREAD_FAVORITES_TOC || SPREAD_TOC,
   })
   syncConditionalNavigation()
 
@@ -402,6 +463,16 @@ function syncConditionalNavigation() {
   const resultTab = document.querySelector('[data-section="result"]')
   if (resultTab) resultTab.style.display = BookState.resultAvailable ? 'flex' : 'none'
   syncFavoritesTab()
+  syncShareTab()
+}
+
+function syncShareTab() {
+  const shareTab = document.getElementById('tab-share')
+  if (!shareTab) return
+  const spread = document.querySelector(`[data-spread="${BookState.currentSpread}"]`)
+  const role = spread?.dataset.role
+  const visible = ['base-recipe', 'result', 'result-continuation', 'saved'].includes(role)
+  shareTab.style.display = visible ? 'flex' : 'none'
 }
 
 // ── SHOW SPREAD (instant swap) ──
@@ -540,6 +611,7 @@ function animateCoverOpen(targetKey = null, targetSide = 'left') {
   // Reset any hover tilt before starting the cover flip
   gsap.to('.book-wrapper', { rotationX: 0, rotationY: 0, duration: 0.18, ease: 'power2.out' })
   document.querySelector('.book-wrapper')?.classList.add('is-open')
+  gsap.set('.book-gutter', { opacity: 0 })
 
   // Hide the entire cover-front instantly — page-reveal shows cream behind it on both sides
   gsap.set('#cover-front', { opacity: 0 })
@@ -569,6 +641,7 @@ function animateCoverOpen(targetKey = null, targetSide = 'left') {
       animateContentIn(targetIndex)
       updateDividerTabs(targetIndex)
       showNavElements()
+      gsap.to('.book-gutter', { opacity: 1, duration: 0.25, ease: 'power2.out' })
       resolve()
     }
     })
@@ -615,6 +688,7 @@ function goToCover() {
     onComplete: () => { document.getElementById('ribbon-pages').style.pointerEvents = 'none' },
   })
   gsap.to('#page-position', { opacity: 0, duration: 0.15 })
+  gsap.to('.book-gutter', { opacity: 0, duration: 0.15, ease: 'power2.in' })
 
   return new Promise(resolve => {
     const tl = gsap.timeline({
@@ -749,6 +823,14 @@ function goToSection(section) {
     showRecipeResult(BookState.pendingRecipe)
     return
   }
+
+  if (BookState.phase === 'cover') {
+    const target = SECTION_SPREADS[section] ?? SPREAD_SAVED_START
+    const targetSpread = BookState.layout.find(s => Number(s.dataset.spread) === target)
+    animateCoverOpen(targetSpread ? spreadKey(targetSpread) : null)
+    return
+  }
+
   const target = SECTION_SPREADS[section] ?? SPREAD_SAVED_START
   const dir    = target > BookState.currentSpread ? 'forward' : 'backward'
   animatePageTurn(BookState.currentSpread, target, dir)
@@ -757,14 +839,15 @@ function goToSection(section) {
 
 function goToFavorites() {
   if (BookState.isAnimating) return
-  const favorite = favoriteKeys()
-    .map(key => BookState.layout.find(spread => spreadKey(spread) === key))
-    .find(Boolean)
-  if (!favorite) {
-    syncFavoritesTab()
+  const favToc = BookState.layout.find(s => s.dataset.role === 'favorites-toc')
+  if (!favToc) { syncFavoritesTab(); return }
+
+  if (BookState.phase === 'cover') {
+    animateCoverOpen('favorites-toc')
     return
   }
-  const target = Number(favorite.dataset.spread)
+
+  const target = Number(favToc.dataset.spread)
   const direction = target > BookState.currentSpread ? 'forward' : 'backward'
   animatePageTurn(BookState.currentSpread, target, direction)
     .then(() => animateContentIn(target))
@@ -781,12 +864,14 @@ function updateDividerTabs(spreadIndex) {
   else if (role === 'search')      section = 'search'
   else if (role === 'base-recipe') section = 'recipes'
   else if (role === 'result' || role === 'result-continuation' || role === 'error' || role === 'setup') section = 'result'
-  else if (role === 'saved')       section = 'saved'
+  else if (role === 'saved')         section = 'saved'
+  else if (role === 'favorites-toc') section = 'favorites'
   if (section)
     document.querySelector(`[data-section="${section}"] .dt-tag`)?.classList.add('active')
   if (favoriteKeys().includes(spreadKey(spread))) {
     document.querySelector('[data-section="favorites"] .dt-tag')?.classList.add('active')
   }
+  syncShareTab()
 }
 
 // ── CURL ZONES ──
@@ -932,7 +1017,7 @@ function resetBookHoverTilt() {
 }
 
 const coverWrapper = document.getElementById('cover-wrapper')
-const bookEdgeControls = () => ['#divider-tabs', '#bottom-tabs', '#history-marks']
+const bookEdgeControls = () => ['#divider-tabs', '#bottom-tabs']
   .map(selector => document.querySelector(selector))
   .filter(Boolean)
 if (coverWrapper) {
@@ -987,7 +1072,7 @@ document.getElementById('ribbon-pages')?.addEventListener('dblclick', event => {
 })
 
 // ── TOC LINKS ──
-document.getElementById('toc-spreads-container')?.addEventListener('click', e => {
+function handleTocLinkClick(e) {
   const link = e.target.closest('.toc-entry[data-target-role], .toc-entry[data-target-key]')
   if (!link) return
   e.preventDefault()
@@ -996,7 +1081,9 @@ document.getElementById('toc-spreads-container')?.addEventListener('click', e =>
   if (!target) return
   const dir = target > BookState.currentSpread ? 'forward' : 'backward'
   animatePageTurn(BookState.currentSpread, target, dir).then(() => animateContentIn(target))
-})
+}
+document.getElementById('toc-spreads-container')?.addEventListener('click', handleTocLinkClick)
+document.getElementById('favorites-toc-container')?.addEventListener('click', handleTocLinkClick)
 
 // ── SVG MAP FOR ILLUSTRATIONS ──
 const illustrationSVG = {
@@ -1037,11 +1124,10 @@ function populateResultSpread(recipe) {
     illEl.innerHTML = illustrationSVG[key] || illustrationSVG.mortar
   }
 
-  // demo stamp
+  // demo stamp — shown when recipe comes from offline fallback
   const stamp = document.getElementById('res-demo-stamp')
   if (stamp) {
-    const isDemo = BookState.selectedProvider === 'demo' || IS_DEMO
-    stamp.classList.toggle('visible', isDemo)
+    stamp.classList.toggle('visible', !!recipe._demo)
   }
 
   BookState.currentRecipe = recipe
@@ -1089,9 +1175,25 @@ function ensureResultPagination(recipe) {
     resultSpread.style.visibility = previousVisibility
   }
 
+  document.querySelectorAll('.continues-hint').forEach(el => el.remove())
+
   if (!overflowIngredients.length && !overflowSteps.length) {
     rebuildBookLayout({ keepCurrent: true })
     return
+  }
+
+  const continuesLabel = currentLang === 'en' ? 'continues →' : 'continua →'
+  if (overflowIngredients.length) {
+    const hint = document.createElement('p')
+    hint.className = 'continues-hint'
+    hint.textContent = continuesLabel
+    document.getElementById('res-ingredients')?.insertAdjacentElement('afterend', hint)
+  }
+  if (overflowSteps.length) {
+    const hint = document.createElement('p')
+    hint.className = 'continues-hint'
+    hint.textContent = continuesLabel
+    document.getElementById('res-steps')?.insertAdjacentElement('afterend', hint)
   }
 
   const continuation = document.createElement('div')
@@ -1127,7 +1229,7 @@ function ensureResultPagination(recipe) {
 }
 
 // ── PROVIDER + MODEL SELECTOR ──
-const _PROVIDER_ORDER = ['gemini', 'ollama', 'demo']
+const _PROVIDER_ORDER = ['gemini', 'ollama']
 let apiAvailable = true
 
 async function fetchStaticJson(path) {
@@ -1169,15 +1271,7 @@ async function loadProviders() {
     data = await res.json()
   } catch {
     apiAvailable = false
-    data = {
-      providers: {
-        demo: {
-          available: true,
-          models: ['demo'],
-          label: 'Demonstração (sem backend)',
-        },
-      },
-    }
+    data = { providers: {} }
   }
 
   const providers = data.providers || {}
@@ -1185,9 +1279,9 @@ async function loadProviders() {
 
   for (const pid of _PROVIDER_ORDER) {
     const p = providers[pid]
-    if (!p?.available && pid !== 'demo') continue
+    if (!p?.available) continue
     const models = p?.models?.length ? p.models : [pid]
-    const label = { ollama: 'Ollama', gemini: 'Gemini', demo: 'Demo' }[pid] || pid
+    const label = { ollama: 'Ollama', gemini: 'Gemini' }[pid] || pid
     items.push({ type: 'header', label })
     for (const m of models) {
       items.push({ type: 'model', provider: pid, model: m, label: m })
@@ -1195,9 +1289,7 @@ async function loadProviders() {
   }
 
   if (items.length === 0) {
-    list.innerHTML = '<li class="model-option loading-models">demo</li>'
-    BookState.selectedProvider = 'demo'
-    BookState.selectedModel = 'demo'
+    list.innerHTML = '<li class="model-option loading-models">Nenhum modelo disponível</li>'
     return
   }
 
@@ -1230,12 +1322,41 @@ async function loadProviders() {
 
 loadProviders()
 
+// ── GEMINI KEY MANAGEMENT ──
+
+function getGeminiKey() {
+  return localStorage.getItem('gemini_key') || ''
+}
+
+function saveGeminiKey() {
+  const input = document.getElementById('gemini-key-input')
+  const key = (input?.value || '').trim()
+  if (!key) return
+  localStorage.setItem('gemini_key', key)
+  const status = document.getElementById('gemini-key-status')
+  if (status) { status.textContent = '✓ Chave salva'; setTimeout(() => { status.textContent = '' }, 2500) }
+}
+
+function removeGeminiKey() {
+  localStorage.removeItem('gemini_key')
+  const input = document.getElementById('gemini-key-input')
+  if (input) input.value = ''
+  const status = document.getElementById('gemini-key-status')
+  if (status) { status.textContent = 'Chave removida'; setTimeout(() => { status.textContent = '' }, 2500) }
+}
+
+function prefillGeminiKeyInput() {
+  const input = document.getElementById('gemini-key-input')
+  if (!input) return
+  const stored = getGeminiKey()
+  input.value = stored
+  if (!stored) setTimeout(() => input.focus(), 120)
+}
+
 // ── FETCH RECIPE ──
-const IS_DEMO = new URLSearchParams(window.location.search).get('demo') === 'true'
 
 async function fetchRecipe(query) {
-  const shouldUseStaticDemo = IS_DEMO || !apiAvailable || BookState.selectedProvider === 'demo'
-  if (shouldUseStaticDemo && !apiAvailable) {
+  if (!apiAvailable) {
     const recipes = await fetchStaticJson('static/data/demo_recipes.json')
     return localDemoRecipe(query, recipes)
   }
@@ -1243,14 +1364,15 @@ async function fetchRecipe(query) {
   const body = { dish: query, lang: currentLang }
   if (BookState.selectedProvider) body.provider = BookState.selectedProvider
   if (BookState.selectedModel)    body.model    = BookState.selectedModel
-  if (IS_DEMO) body.demo = true
+  const geminiKey = getGeminiKey()
+  if (geminiKey) body.gemini_key = geminiKey
   const res = await fetch('/api/recipe', {
     method:  'POST',
     headers: { 'Content-Type': 'application/json' },
     body:    JSON.stringify(body),
   })
   if (!res.ok) {
-    if (shouldUseStaticDemo && (res.status === 404 || res.status === 405)) {
+    if (res.status === 404 || res.status === 405) {
       apiAvailable = false
       const recipes = await fetchStaticJson('static/data/demo_recipes.json')
       return localDemoRecipe(query, recipes)
@@ -1363,6 +1485,7 @@ function showSetup(mode = 'all') {
   BookState.errorActive = true
   BookState.setupActive = true
   BookState.resultAvailable = false
+  prefillGeminiKeyInput()
   rebuildBookLayout({ keepCurrent: BookState.phase !== 'cover' })
   if (BookState.phase === 'cover') {
     animateCoverOpen()
@@ -1553,14 +1676,6 @@ function rebuildSavedSpreads() {
             <h3 class="section-label">${labels.ingredients}</h3>
             <ul class="ingredients-list">${ingredients}</ul>
           </div>
-          <div class="user-annotation-block">
-            <h3 class="section-label" style="margin-top:10px;">${labels.notes}</h3>
-            <div class="annotation-lines"></div>
-            <div class="user-annotation-text" contenteditable="true"
-                 data-recipe-id="${entry.id}"
-                 oninput="saveAnnotation('${entry.id}',this.textContent)"
-                 placeholder="${labels.placeholder}">${entry.userAnnotation || ''}</div>
-          </div>
         </div>
         <div class="saved-controls">
           <button class="ctrl-delete" onclick="deleteSavedRecipe('${entry.id}')" title="Remover">✕</button>
@@ -1719,10 +1834,8 @@ function syncRibbonFavorite() {
 
 function syncFavoritesTab() {
   const tab = document.getElementById('tab-favorites')
-  const count = document.querySelector('.favorite-tab-count')
   const available = favoriteKeys()
     .filter(key => BookState.layout.some(spread => spreadKey(spread) === key))
-  if (count) count.textContent = String(available.length)
   if (!tab) return
   const visible = available.length > 0
   if (visible) {
@@ -1848,14 +1961,30 @@ function buildPrintRecipe(recipe) {
 }
 
 // ── SHARE ──
-function shareRecipe() {
-  const r = BookState.currentRecipe
+function shareCurrentPage() {
+  let r = BookState.currentRecipe
+
+  if (!r) {
+    const spread = document.querySelector(`[data-spread="${BookState.currentSpread}"]`)
+    if (spread) {
+      const role = spread.dataset.role
+      if (role === 'base-recipe') {
+        const key = currentLang === 'en' ? '.base-recipe-data-en' : '.base-recipe-data'
+        const scriptEl = spread.querySelector(key)
+        if (scriptEl) { try { r = JSON.parse(scriptEl.textContent) } catch {} }
+      } else if (role === 'saved') {
+        const entry = savedRecipes().find(s => s.id === spread.dataset.savedId)
+        if (entry) r = entry.variants?.[currentLang] || entry.recipe
+      }
+    }
+  }
+
   if (!r) return
   const text = `🍽 ${r.name}\n— ${r.subtitle || ''}\n📍 ${r.category}\n\n⏱ ${r.prep_time}  |  🥘 ${r.servings}  |  📊 ${r.difficulty}\n\nINGREDIENTES\n${(r.ingredients||[]).map(i=>`• ${i}`).join('\n')}\n\nMODO DE PREPARO\n${(r.steps||[]).map((s,i)=>`${i+1}. ${s}`).join('\n')}\n\n💡 ${r.tip}\n\n— via Foodpedia`
   if (navigator.share) {
     navigator.share({ title: r.name, text })
   } else {
-    navigator.clipboard.writeText(text).then(() => showToast('Receita copiada!'))
+    navigator.clipboard.writeText(text).then(() => showToast(currentLang === 'en' ? 'Recipe copied!' : 'Receita copiada!'))
   }
 }
 
@@ -1944,6 +2073,7 @@ async function translateCurrentRecipe(targetLang) {
       target_lang: targetLang,
       provider: BookState.selectedProvider || 'ollama',
       model: BookState.selectedModel || 'gemma3:latest',
+      gemini_key: getGeminiKey() || undefined,
     }
     const response = await fetch('/api/translate', {
       method: 'POST',
@@ -2157,11 +2287,6 @@ function initAnnotationDragging() {
     })
   })
 
-  // Restore and bind user-created annotations
-  restoreUserAnnotations()
-
-  // Enable double-click to add new annotation on any page
-  initAnnotationAdding()
 }
 
 function createUserAnnotationEl(data, page) {

@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Foodpedia</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍅</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Homemade+Apple&family=La+Belle+Aurore&family=Indie+Flower&family=Cedarville+Cursive&family=Grape+Nuts&family=Kalam:wght@300;400;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
@@ -14,16 +15,6 @@
 </head>
 <body data-foodpedia-layout="dynamic-v1">
 
-{% if demo_mode %}
-<aside id="demo-banner" aria-label="Modo de demonstração">
-  <span>Modo demo: pesquise
-    {% for dish in demo_dishes %}
-      <strong>{{ dish }}</strong>{% if not loop.last %}, {% endif %}
-    {% endfor %}
-  </span>
-  <button type="button" onclick="showSetup('all')" data-i18n="demo_banner_ai">Usar IA real →</button>
-</aside>
-{% endif %}
 
 <svg class="grain-filter" xmlns="http://www.w3.org/2000/svg">
   <filter id="grain">
@@ -139,6 +130,7 @@
 
       <!-- Sumário paginado e numerado em tempo real -->
       <div id="toc-spreads-container"></div>
+      <div id="favorites-toc-container"></div>
 
       <!-- ── SPREAD 2: SOBRE ── -->
       <div class="book-spread" data-role="about">
@@ -161,13 +153,12 @@
           <div class="curl-zone curl-right" role="button" aria-label="Próxima página"><div class="curl-surface"></div><div class="curl-hint">›</div></div>
           <span class="about-eyebrow" data-stagger data-i18n="about_eyebrow_right">Como Usar</span>
           <div class="about-body about-manual">
-            <p data-stagger data-i18n="manual_1">Vire as páginas pelos cantos dobrados, pelas setas nas bordas ou com as teclas ← →. As divisórias coloridas levam direto a cada seção. Clique na capa a qualquer momento para fechar e reabrir.</p>
-            <p data-stagger data-i18n="manual_2">Na pesquisa, o Ollama roda inteiramente na sua máquina — sem API, sem nuvem. Enquanto o modelo cozinha a resposta, as receitas clássicas já estão disponíveis para leitura.</p>
-            <p data-stagger data-i18n="manual_3">Duplo clique em qualquer página abre uma anotação manuscrita que pode ser arrastada para qualquer canto. As anotações persistem entre sessões.</p>
-            <p data-stagger data-i18n="manual_4">A fita vermelha favorita a página com um clique e imprime uma ficha editorial com dois cliques. A divisória Favoritos aparece assim que houver alguma marcação.</p>
-            <p data-stagger data-i18n="manual_5">PT e EN trocam a edição completa do livro, traduzindo também a receita já carregada, se houver. O histórico de consultas fica nas setas triangulares na lateral.</p>
-            <p data-stagger data-i18n="manual_6">Salvas guarda receitas completas com anotação pessoal editável. Favoritos guarda qualquer página do livro, incluindo clássicas, resultado e spreads de sumário.</p>
-            <p data-stagger data-i18n="manual_7">A tecla ? abre o guia de atalhos. No fim do livro, a capa traseira fica aberta até um clique. No celular, cada metade da página é independente.</p>
+            <p data-stagger data-i18n="manual_1">Pegue pelos cantos dobrados e as páginas se viram sozinhas. As divisórias coloridas te levam direto onde quiser — use as setas nas bordas ou o teclado, o que te parecer mais certo.</p>
+            <p data-stagger data-i18n="manual_2">Na pesquisa, o Foodpedia cozinha a resposta em silêncio. Enquanto isso, as receitas clássicas ficam todas abertas pra você folhear — o tempo não se perde nunca aqui.</p>
+            <p data-stagger data-i18n="manual_3">A fitinha vermelha é só da página que você mais gosta. Um clique e ela desce, marcando o lugar. Dois cliques e ela dobra em fichas bonitas, prontas pra imprimir.</p>
+            <p data-stagger data-i18n="manual_4">PT e EN trocam a edição inteira do livro, receita e história juntas. Ele fecha um instante, respira, e reabre exatamente onde você estava.</p>
+            <p data-stagger data-i18n="manual_5">Receitas que merecem ficar vão pra Salvas. Favoritos reúne tudo que você marcou com a fita — receita, sumário, qualquer página que importou.</p>
+            <p data-stagger data-i18n="manual_6">A folhinha ? tem todos os comandos reunidos. No celular, cada lado é uma página independente e você vira uma de cada vez.</p>
           </div>
           <div class="handwritten-annotation annotation-0 multiline-i18n" data-stagger data-i18n="manual_annotation">
             qualquer prato<br>do mundo!
@@ -350,11 +341,6 @@
             <text x="50" y="56" text-anchor="middle" font-family="'Cedarville Cursive',cursive" font-size="18" fill="currentColor" font-weight="600">DEMO</text>
             <text x="50" y="70" text-anchor="middle" font-family="'Cedarville Cursive',cursive" font-size="7" fill="currentColor" letter-spacing="3">foodpedia</text>
           </svg>
-          <div class="result-actions" data-stagger>
-            <button class="save-recipe-btn" onclick="saveCurrentRecipe()" data-i18n="btn_save">Salvar no livro</button>
-            <button class="share-recipe-btn" onclick="shareRecipe()" data-i18n="btn_share">Compartilhar</button>
-            <button class="back-to-search-btn" onclick="goToSection('search')" data-i18n="btn_back">← Pesquisar outro prato</button>
-          </div>
           <div class="page-footer">
             <span class="footer-brand">Foodpedia</span>
             <span class="page-number">40</span>
@@ -454,11 +440,29 @@
               <div class="setup-col-title" data-i18n="setup_gemini_col">Gemini</div>
               <div class="setup-col-desc" data-i18n="setup_gemini_desc">API gratuita, sem instalação</div>
               <ul class="setup-col-steps">
-                <li><span data-i18n="setup_gemini_step1">Obtenha uma chave gratuita:</span>
-                  <code>aistudio.google.com/apikey</code>
+                <li>
+                  <span data-i18n="setup_gemini_step1">Obtenha uma chave gratuita:</span>
+                  <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener"
+                     style="font-size:11px;color:var(--c-cover-red);">aistudio.google.com/apikey</a>
                 </li>
-                <li><span data-i18n="setup_gemini_step2">Configure no .env local:</span>
-                  <code>GEMINI_API_KEY=sua-chave</code>
+                <li>
+                  <span data-i18n="setup_gemini_step2">Cole sua chave aqui:</span>
+                  <div style="display:flex;gap:6px;margin-top:4px;align-items:center;">
+                    <input id="gemini-key-input" type="password"
+                           placeholder="AIza..."
+                           style="flex:1;font-family:monospace;font-size:11px;padding:4px 6px;
+                                  border:1px solid var(--c-rule);border-radius:2px;background:var(--c-page);">
+                    <button onclick="saveGeminiKey()"
+                            style="font-family:'Indie Flower',cursive;font-size:11px;
+                                   background:var(--c-cover-red);color:#FAF7F0;border:none;
+                                   padding:4px 10px;border-radius:2px;cursor:pointer;"
+                            data-i18n="setup_gemini_save">Salvar</button>
+                  </div>
+                  <div id="gemini-key-status" style="font-size:10px;color:var(--c-ink-faded);margin-top:3px;min-height:14px;"></div>
+                  <button onclick="removeGeminiKey()"
+                          style="font-family:'Indie Flower',cursive;font-size:10px;color:var(--c-ink-faded);
+                                 background:none;border:none;cursor:pointer;padding:0;margin-top:2px;"
+                          data-i18n="setup_gemini_remove">Remover chave</button>
                 </li>
               </ul>
             </div>
@@ -538,25 +542,25 @@
         <div class="dt-tag" style="background:#6A8878"><span class="dt-lbl" data-i18n="nav_result">Resultado</span></div>
       </button>
       <button class="div-tab" type="button" id="tab-saved" data-section="saved" onclick="goToSection('saved')" style="display:none;">
-        <div class="dt-body" style="background:#9E7A88"></div>
-        <div class="dt-tag" style="background:#9E7A88">
+        <div class="dt-body" style="background:#7080A0"></div>
+        <div class="dt-tag" style="background:#7080A0">
           <span class="dt-lbl" data-i18n="nav_saved">Salvas</span>
         </div>
       </button>
       <button class="div-tab favorite-divider-tab" type="button" id="tab-favorites"
               data-section="favorites" onclick="goToFavorites()" style="display:none;">
-        <div class="dt-body" style="background:#8C7052"></div>
-        <div class="dt-tag" style="background:#8C7052">
+        <div class="dt-body" style="background:#887AA8"></div>
+        <div class="dt-tag" style="background:#887AA8">
           <span class="dt-lbl" data-i18n="nav_favorites">Favoritos</span>
-          <span class="favorite-tab-count" aria-label="Quantidade de páginas favoritas">0</span>
         </div>
       </button>
     </div>
 
-    <nav id="history-marks" aria-label="Pesquisas recentes"></nav>
-
     <!-- Divisórias inferiores do livro -->
     <nav id="bottom-tabs" aria-label="Idioma e ajuda">
+      <button class="bottom-tab share-tab" id="tab-share" onclick="shareCurrentPage()" aria-label="Compartilhar receita" style="display:none;">
+        <svg viewBox="0 0 20 20" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13V4m0 0L7 7m3-3 3 3"/><path d="M5 12v4a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-4"/></svg>
+      </button>
       <button class="bottom-tab lang-tab active" data-lang="pt" onclick="applyLang('pt')" aria-pressed="true" style="background:#7E96B0">PT</button>
       <button class="bottom-tab lang-tab" data-lang="en" onclick="applyLang('en')" aria-pressed="false" style="background:#9488AA">EN</button>
       <button class="bottom-tab help-tab" onclick="toggleShortcutsOverlay()" aria-label="Atalhos de teclado" style="background:#A87880">?</button>
@@ -584,7 +588,6 @@
         <span class="shortcut-key">Home</span><span class="shortcut-desc" data-i18n="shortcut_toc">ir ao sumário</span>
         <span class="shortcut-key">/</span><span class="shortcut-desc" data-i18n="shortcut_search">abrir pesquisa</span>
         <span class="shortcut-key">F</span><span class="shortcut-desc" data-i18n="shortcut_favorite">favoritar / desfavoritar</span>
-        <span class="shortcut-key">duplo clique</span><span class="shortcut-desc" data-i18n="shortcut_annotate">nova anotação na página</span>
       </div>
     </div>
     <div class="shortcut-sheet" data-shortcut-page="1">
