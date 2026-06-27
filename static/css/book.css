@@ -940,13 +940,6 @@ body {
 /* ──────────────────────────
    RESULT ACTIONS
 ─────────────────────────── */
-.continues-hint {
-  font-family:'Cedarville Cursive',cursive;
-  font-size:10px; color:var(--c-ink-faded);
-  margin-top:6px; text-align:right;
-  letter-spacing:0.3px; opacity:0.6;
-}
-
 /* ──────────────────────────
    FAVORITES (dog-ear)
 ─────────────────────────── */
@@ -1224,31 +1217,68 @@ body {
 }
 .page-position-separator { opacity:.5; }
 
-[data-role="result"].is-translating .recipe-card-border,
-[data-role="result"].is-translating .handwritten-annotation,
-[data-role="base-recipe"].is-translating .recipe-card-border,
-[data-role="base-recipe"].is-translating .handwritten-annotation {
-  opacity:.42;
-  transition:opacity 180ms ease-out;
-}
 .multiline-i18n { white-space:pre-line; }
-.result-continuation-card {
-  overflow:hidden;
+
+/* ── RESULTADO (ephemeral AI result spreads) ── */
+[data-role="resultado"] .page-left,
+[data-role="resultado"] .page-right,
+[data-role="favorited-result"] .page-left,
+[data-role="favorited-result"] .page-right {
+  overflow-y: auto;
+  scrollbar-width: none;
 }
-.continuation-title {
-  font-family:'Homemade Apple',cursive;
-  font-size:22px;
-  line-height:1.2;
-  color:var(--c-ink);
-  margin:7px 0 20px;
+[data-role="resultado"] .page-left::-webkit-scrollbar,
+[data-role="resultado"] .page-right::-webkit-scrollbar,
+[data-role="favorited-result"] .page-left::-webkit-scrollbar,
+[data-role="favorited-result"] .page-right::-webkit-scrollbar {
+  display: none;
 }
-.continuation-ornament {
-  width:34%;
-  margin:28px auto 0;
-  opacity:.42;
-  color:var(--c-gold);
+[data-role="resultado"] .recipe-card-border,
+[data-role="favorited-result"] .recipe-card-border {
+  box-shadow: inset -2px 0 0 var(--c-border);
 }
-.continuation-ornament svg { width:100%; height:auto; }
+
+/* ── RESULTADO-TOC (mini-TOC of session searches) ── */
+[data-role="resultado-toc"] .page-right {
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+[data-role="resultado-toc"] .page-right::-webkit-scrollbar { display: none; }
+
+/* ── RESULTADO MICRO-HINT (first result, session-once) ── */
+.resultado-micro-hint {
+  font-family: 'Indie Flower', cursive;
+  font-size: 10px;
+  color: var(--c-ink-faded);
+  letter-spacing: 0.5px;
+  margin-top: 8px;
+  opacity: 1;
+  text-align: center;
+}
+
+/* ── FAVORITED-RESULT actions ── */
+.resultado-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+.back-to-search-btn {
+  font-family: 'Indie Flower', cursive;
+  font-size: 12px;
+  color: var(--c-ink-faded);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+}
+
+/* TOC entries for resultado (ephemeral — italic, lighter) */
+.toc-entry.toc-resultado-entry .toc-entry-title {
+  font-style: italic;
+  color: var(--c-ink-faded);
+}
 
 /* ──────────────────────────
    SHORTCUTS OVERLAY
