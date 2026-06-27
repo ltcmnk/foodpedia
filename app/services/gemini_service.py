@@ -86,8 +86,8 @@ def _post_gemini(prompt: str, model: str, api_key: str, timeout: int) -> dict:
         raise ValueError("Resposta do Gemini não é JSON válido") from e
 
 
-def call_gemini(dish: str, model: str = None, lang: str = 'pt') -> dict:
-    api_key = current_app.config.get('GEMINI_API_KEY', '')
+def call_gemini(dish: str, model: str = None, lang: str = 'pt', key: str = None) -> dict:
+    api_key = key or current_app.config.get('GEMINI_API_KEY', '')
     if not api_key:
         raise ValueError("GEMINI_API_KEY não configurado")
 
@@ -103,8 +103,8 @@ def call_gemini(dish: str, model: str = None, lang: str = 'pt') -> dict:
     return _post_gemini(prompt, model, api_key, timeout)
 
 
-def translate_gemini(recipe: dict, target_lang: str, model: str = None) -> dict:
-    api_key = current_app.config.get('GEMINI_API_KEY', '')
+def translate_gemini(recipe: dict, target_lang: str, model: str = None, key: str = None) -> dict:
+    api_key = key or current_app.config.get('GEMINI_API_KEY', '')
     if not api_key:
         raise ValueError("GEMINI_API_KEY não configurado")
 
@@ -121,8 +121,11 @@ def translate_gemini(recipe: dict, target_lang: str, model: str = None) -> dict:
     return translated
 
 
-def check_gemini_available() -> bool:
-    api_key = current_app.config.get('GEMINI_API_KEY', '')
+def check_gemini_available(key: str = None) -> bool:
+    from app.services.ai_router import IS_VERCEL
+    if IS_VERCEL:
+        return True  # on Vercel, provider is always available; key comes from user
+    api_key = key or current_app.config.get('GEMINI_API_KEY', '')
     return bool(api_key and api_key.strip())
 
 

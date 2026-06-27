@@ -11,7 +11,6 @@ logger = logging.getLogger(__name__)
 def health():
     from app.services.ollama_service import check_ollama_available, list_ollama_models
     from app.services.gemini_service import check_gemini_available, list_gemini_models
-    from app.services.demo_service import count_demo_recipes
 
     ollama_ok = check_ollama_available()
     gemini_ok = check_gemini_available()
@@ -27,24 +26,14 @@ def health():
             'key_configured': gemini_ok,
             'models': list_gemini_models(),
         },
-        'demo': {
-            'available': True,
-            'recipes_count': count_demo_recipes(),
-        },
     }
 
-    if current_app.config.get('DEMO_MODE'):
-        status = 'demo_only'
-    elif ollama_ok or gemini_ok:
-        status = 'ok'
-    else:
-        status = 'demo_only'
+    status = 'ok' if (ollama_ok or gemini_ok) else 'no_provider'
 
     return jsonify({
         'status': status,
         'providers': providers,
         'default_provider': current_app.config.get('AI_PROVIDER', 'ollama'),
-        'demo_mode': current_app.config.get('DEMO_MODE', False),
     })
 
 
@@ -80,12 +69,6 @@ def get_models():
                 'key_configured': gemini_ok,
                 'free_tier_info': '15 req/min grátis — obtenha em aistudio.google.com',
             },
-            'demo': {
-                'available': True,
-                'models': ['demo'],
-                'label': 'Demonstração (sem IA)',
-                'requires_setup': False,
-            },
         },
     })
 
@@ -99,11 +82,8 @@ def get_recipe():
     model = (data.get('model') or '').strip() or None
     lang = data.get('lang', 'pt')
 
-    # Provider resolution: body → config (DEMO_MODE overrides all)
-    if current_app.config.get('DEMO_MODE') or data.get('demo') is True:
-        provider = 'demo'
-    else:
-        provider = (data.get('provider') or '').strip() or current_app.config.get('AI_PROVIDER', 'ollama')
+    provider = (data.get('provider') or '').strip() or current_app.config.get('AI_PROVIDER', 'ollama')
+    gemini_key = (data.get('gemini_key') or '').strip() or None
 
     if not dish:
         return jsonify({'error': 'MISSING_DISH', 'message': 'Prato não informado'}), 400
@@ -115,7 +95,7 @@ def get_recipe():
     from app.services.ai_router import get_recipe_from_ai
 
     try:
-        recipe = get_recipe_from_ai(dish, provider=provider, model=model, lang=lang)
+        recipe = get_recipe_from_ai(dish, provider=provider, model=model, lang=lang, key=gemini_key)
         return jsonify(recipe)
 
     except ValueError as e:
@@ -153,18 +133,19 @@ def translate_recipe():
     recipe = data.get('recipe')
     target_lang = data.get('target_lang', 'pt')
     model = (data.get('model') or '').strip() or None
+    gemini_key = (data.get('gemini_key') or '').strip() or None
 
     if not isinstance(recipe, dict):
         return jsonify({'error': 'INVALID_RECIPE', 'message': 'Receita inválida'}), 400
     if target_lang not in ('pt', 'en'):
         return jsonify({'error': 'INVALID_LANG', 'message': 'Idioma inválido'}), 400
 
-    provider = current_app.config.get('AI_PROVIDER', 'ollama')
+    provider = (data.get('provider') or '').strip() or current_app.config.get('AI_PROVIDER', 'ollama')
 
     from app.services.ai_router import translate_with_ai
 
     try:
-        translated = translate_with_ai(recipe, target_lang, provider=provider, model=model)
+        translated = translate_with_ai(recipe, target_lang, provider=provider, model=model, key=gemini_key)
         return jsonify(translated)
 
     except ConnectionError:
