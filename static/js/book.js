@@ -822,8 +822,70 @@ function goToPrevSpread() {
   }
 }
 
+// ── ONBOARDING ──
+
+function isOnboardingComplete() {
+  return localStorage.getItem('onboarding_complete') === '1'
+}
+
+const SIDE_TAB_SECTIONS = new Set(['toc', 'about', 'search', 'recipes', 'result', 'saved', 'favorites'])
+
+function isSideTab(section) {
+  return SIDE_TAB_SECTIONS.has(section)
+}
+
+let _onboardingTooltip = null
+
+function shakeAndShowTooltip(targetEl) {
+  // Shake all dt-tag elements
+  document.querySelectorAll('.dt-tag').forEach(tag => {
+    tag.classList.remove('dt-tag--shaking')
+    void tag.offsetWidth  // reflow to restart animation
+    tag.classList.add('dt-tag--shaking')
+    tag.addEventListener('animationend', () => tag.classList.remove('dt-tag--shaking'), { once: true })
+  })
+
+  // Show tooltip near the clicked element or center of tabs
+  if (!_onboardingTooltip) {
+    _onboardingTooltip = document.createElement('div')
+    _onboardingTooltip.className = 'onboarding-tooltip'
+    _onboardingTooltip.textContent = 'Complete o tutorial primeiro'
+    document.body.appendChild(_onboardingTooltip)
+  }
+
+  const rect = (targetEl || document.querySelector('.dt-tag'))?.getBoundingClientRect()
+  if (rect) {
+    _onboardingTooltip.style.left = `${rect.right + 8}px`
+    _onboardingTooltip.style.top  = `${rect.top + rect.height / 2 - 14}px`
+  }
+
+  _onboardingTooltip.classList.add('visible')
+  clearTimeout(_onboardingTooltip._hideTimer)
+  _onboardingTooltip._hideTimer = setTimeout(() => {
+    _onboardingTooltip.classList.remove('visible')
+  }, 1800)
+}
+
+function completeOnboarding() {
+  localStorage.setItem('onboarding_complete', '1')
+  const key = getGeminiKey()
+  if (!key) {
+    showSetup('gemini')
+  } else {
+    goToSection('toc')
+  }
+}
+
 function goToSection(section) {
   if (BookState.isAnimating) return
+
+  // Onboarding lock: block side tabs until tutorial is complete
+  if (!isOnboardingComplete() && isSideTab(section)) {
+    const tabEl = document.querySelector(`[data-section="${section}"] .dt-tag`)
+    shakeAndShowTooltip(tabEl)
+    return
+  }
+
   if (section === 'result' && !BookState.resultAvailable && !BookState.pendingRecipe) return
   if (section === 'result' && BookState.pendingRecipe) {
     showRecipeResult(BookState.pendingRecipe)
@@ -845,6 +907,13 @@ function goToSection(section) {
 
 function goToFavorites() {
   if (BookState.isAnimating) return
+
+  if (!isOnboardingComplete()) {
+    const tabEl = document.querySelector('[data-section="favorites"] .dt-tag')
+    shakeAndShowTooltip(tabEl)
+    return
+  }
+
   const favToc = BookState.layout.find(s => s.dataset.role === 'favorites-toc')
   if (!favToc) { syncFavoritesTab(); return }
 
