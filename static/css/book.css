@@ -1733,13 +1733,14 @@ body {
   color: #FAF7F0;
   font-family: 'Indie Flower', cursive;
   font-size: 12px;
-  padding: 6px 12px;
+  padding: 6px 14px;
   border-radius: 2px;
   pointer-events: none;
   z-index: 9999;
   white-space: nowrap;
   opacity: 0;
   transition: opacity 0.15s;
+  transform: translateX(-50%);
 }
 
 .onboarding-tooltip.visible {

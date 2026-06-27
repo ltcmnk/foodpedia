@@ -853,10 +853,12 @@ function shakeAndShowTooltip(targetEl) {
     document.body.appendChild(_onboardingTooltip)
   }
 
-  const rect = (targetEl || document.querySelector('.dt-tag'))?.getBoundingClientRect()
-  if (rect) {
-    _onboardingTooltip.style.left = `${rect.right + 8}px`
-    _onboardingTooltip.style.top  = `${rect.top + rect.height / 2 - 14}px`
+  const scene = document.querySelector('.book-scene')
+  const sceneRect = scene?.getBoundingClientRect()
+  if (sceneRect) {
+    _onboardingTooltip.style.left = `${sceneRect.left + sceneRect.width / 2}px`
+    _onboardingTooltip.style.top  = `${sceneRect.bottom + 10}px`
+    _onboardingTooltip.style.transform = 'translateX(-50%)'
   }
 
   _onboardingTooltip.classList.add('visible')
