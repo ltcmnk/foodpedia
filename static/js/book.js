@@ -9,15 +9,17 @@ if (document.body.dataset.foodpediaLayout !== EXPECTED_LAYOUT) {
 
 // Spread indexes and page numbers are assigned by rebuildBookLayout().
 let SPREAD_ENDPAPER = 1
-let SPREAD_TOC = 2
-let SPREAD_ABOUT = 3
-let SPREAD_SEARCH = 4
-let SPREAD_RESULT = 5
-let SPREAD_ERROR = 6
-let SPREAD_SETUP = 7
-let SPREAD_RECIPES_START = 8
-let SPREAD_RECIPES_END = 23
-let SPREAD_SAVED_START = 24
+let SPREAD_COMO_USAR_START = 2
+let SPREAD_COMO_USAR_END = 6
+let SPREAD_TOC = 7
+let SPREAD_ABOUT = 8
+let SPREAD_SEARCH = 9
+let SPREAD_RESULT = 10
+let SPREAD_ERROR = 11
+let SPREAD_SETUP = 12
+let SPREAD_RECIPES_START = 13
+let SPREAD_RECIPES_END = 28
+let SPREAD_SAVED_START = 29
 let SPREAD_FAVORITES_TOC = 0
 const SECTION_SPREADS = {}
 
@@ -355,6 +357,7 @@ function rebuildBookLayout(options = {}) {
   const tocSpreads = renderTOCSpreads()
   const favTocSpread = buildFavoritesTocSpread()
   const endpaper = document.querySelector('[data-role="endpaper"]')
+  const comoUsar = [...document.querySelectorAll('[data-role="como-usar"]')]
   const about = document.querySelector('[data-role="about"]')
   const search = document.querySelector('[data-role="search"]')
   const result = document.querySelector('[data-role="result"]')
@@ -370,6 +373,7 @@ function rebuildBookLayout(options = {}) {
 
   const layout = [
     endpaper,
+    ...comoUsar,
     ...tocSpreads,
     favTocSpread,
     about,
@@ -397,6 +401,8 @@ function rebuildBookLayout(options = {}) {
     return index >= 0 ? index + 1 : 0
   }
   SPREAD_ENDPAPER = Number(endpaper?.dataset.spread || 1)
+  SPREAD_COMO_USAR_START = Number(comoUsar[0]?.dataset.spread || 2)
+  SPREAD_COMO_USAR_END   = Number(comoUsar.at(-1)?.dataset.spread || SPREAD_COMO_USAR_START)
   SPREAD_TOC = Number(tocSpreads[0]?.dataset.spread || 2)
   SPREAD_ABOUT = Number(about?.dataset.spread || SPREAD_TOC)
   SPREAD_SEARCH = Number(search?.dataset.spread || SPREAD_ABOUT)
