@@ -127,6 +127,36 @@ Dispositivos com `window.innerWidth < 768px` na inicialização da página.
 
 ---
 
+## 4. Scroll no Spread de Resultado (substitui spread de continuação)
+
+### Decisão
+O spread de continuação (`result-continuation`) é completamente removido. Receitas longas passam a rolar dentro do próprio spread de resultado.
+
+### Comportamento
+- Cada página do spread de resultado rola **independentemente** (esquerda e direita)
+- Scroll via wheel, touch e teclado (setas verticais quando o foco está na página)
+- Ao navegar para o spread de resultado, ambas as páginas resetam para o topo (`scrollTop = 0`)
+- Swipe horizontal (virar página) não é afetado — o scroll vertical é capturado pela página, não pelo livro
+
+### Scrollbar
+- Scrollbar padrão do browser **oculta** (`scrollbar-width: none` / `::-webkit-scrollbar { display: none }`)
+- Indicador visual: linha fina (`2px`) na cor `var(--c-border)` na borda direita de cada página, visível apenas quando há conteúdo além do limite — implementada via `box-shadow` interno ou pseudo-elemento
+
+### Remoção
+- Remover toda lógica de `result-continuation` no `book.js`: `buildResultContinuation()`, inserção no layout, referências em `rebuildBookLayout()`
+- Remover container `#result-continuation-container` do `index.html`
+- Remover CSS de `.result-continuation-card` e seletores associados
+- Remover `SPREAD_RESULT_CONTINUATION` das constantes e do mapa de navegação
+
+### Arquivos afetados (adicionais)
+| Arquivo | Alteração |
+|---------|-----------|
+| `static/js/book.js` | Remover lógica de continuação; adicionar `overflow-y: auto` e reset de scroll no result spread |
+| `static/css/book.css` | Ocultar scrollbar nativa; adicionar indicador de borda; `overflow-y: auto` nas páginas do result |
+| `templates/index.html` | Remover `#result-continuation-container` |
+
+---
+
 ## Arquivos afetados
 
 | Arquivo | Alteração |
