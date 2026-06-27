@@ -882,8 +882,8 @@ body {
 .search-annotation {
   font-family:'Grape Nuts',cursive;
   font-size:14px; color:var(--c-annotation);
-  margin-top:28px; transform:rotate(-2deg);
-  display:inline-block; line-height:1.6; white-space:pre-line;
+  top:52%; left:13%; transform:rotate(-2deg);
+  line-height:1.6;
 }
 .search-right {
   padding:48px 56px 48px 32px;
@@ -1486,6 +1486,101 @@ body {
   .toc-entry { font-size:13px; line-height:1.85; }
   .toc-heading { font-size:30px; margin-bottom:14px; }
   .recipe-card-border { margin:16px 12px 42px; padding:20px; }
+
+  /* ── Cover: scale badge to fit the 50vw right-half container ── */
+  .cover-badge {
+    min-width:0;
+    max-width:calc(50vw - 16px);
+  }
+  .cover-badge-body { padding:8px 18px 22px; }
+  .cover-title { font-size:clamp(18px,4.8vw,32px); }
+  .cover-eyebrow { font-size:7px; letter-spacing:1.5px; margin-bottom:12px; }
+
+  /* ── Page reveal: reduce huge desktop padding ── */
+  .page-reveal-left { padding:40px 28px; }
+
+  /* ── Onboarding hint: move above the tab bar (tabs sit at bottom 0–78px) ── */
+  #onboarding-hint {
+    bottom:88px;
+    white-space:normal;
+    max-width:calc(100vw - 32px);
+    text-align:center;
+  }
+
+  /* ── Nav arrows: touch swipe handles this on mobile ── */
+  .nav-edge-arrow { display:none!important; }
+
+  /* ── Handwritten annotations: smaller to avoid overlap on single-page view ── */
+  .handwritten-annotation { font-size:11px; max-width:120px; }
+
+  /* ── Shortcuts panel: fits narrow screens ── */
+  .shortcuts-panel { padding:28px 24px; min-width:0; width:min(340px,92vw); }
+}
+
+/* ──────────────────────────
+   MOBILE SMALL (≤ 480px)
+─────────────────────────── */
+@media (max-width:480px) {
+  .book-wrapper {
+    height:calc(100dvh - 70px);
+    margin-bottom:70px;
+  }
+
+  /* Cover */
+  .cover-badge-body { padding:6px 12px 18px; }
+  .cover-title { font-size:clamp(16px,4.2vw,24px); }
+
+  /* Pages */
+  .book-spread > .page-left,
+  .book-spread > .page-right {
+    padding:20px 16px 46px;
+  }
+
+  /* Tab bar */
+  .dt-tag { padding:0 8px; min-height:32px; }
+  .dt-lbl { font-size:9px; }
+  .bottom-tab {
+    min-width:38px;
+    min-height:30px;
+    padding:4px 9px 6px;
+    font-size:11px;
+  }
+
+  /* Recipe typography */
+  .recipe-title { font-size:clamp(18px,5vw,24px); }
+  #recipe-search { font-size:clamp(16px,4.5vw,22px); }
+  .recipe-card-border { margin:10px 8px 38px; padding:14px; }
+
+  /* TOC */
+  .toc-sheet { padding:22px 18px 46px; }
+  .toc-heading { font-size:24px; }
+  .toc-entry { font-size:12px; line-height:1.7; }
+
+  /* Onboarding */
+  #onboarding-hint { bottom:80px; font-size:11px; }
+  #page-position { font-size:10px; }
+}
+
+/* ──────────────────────────
+   MOBILE LANDSCAPE
+─────────────────────────── */
+@media (max-height:480px) and (max-width:900px) {
+  .book-wrapper {
+    height:calc(100dvh - 52px);
+    margin-bottom:52px;
+  }
+  .book-spread > .page-left,
+  .book-spread > .page-right {
+    padding:14px 22px 38px;
+  }
+  #divider-tabs { gap:1px; }
+  .dt-tag { min-height:28px; padding:0 10px; }
+  #bottom-tabs { bottom:32px; }
+  .bottom-tab { min-height:26px; padding:3px 10px 5px; }
+  #page-position { bottom:36px; }
+  #onboarding-hint { bottom:62px; font-size:11px; }
+  .recipe-card-border { margin:8px 10px 36px; padding:12px; }
+  .toc-sheet { padding:16px 22px 40px; }
 }
 
 /* ──────────────────────────
