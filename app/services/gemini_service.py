@@ -131,3 +131,18 @@ def check_gemini_available(key: str = None) -> bool:
 
 def list_gemini_models() -> list:
     return AVAILABLE_MODELS
+
+
+def validate_gemini_key(key: str) -> bool:
+    import requests as r
+    if not key or not key.strip():
+        return False
+    try:
+        resp = r.get(
+            'https://generativelanguage.googleapis.com/v1beta/models',
+            params={'key': key.strip()},
+            timeout=5,
+        )
+        return resp.status_code == 200
+    except Exception:
+        return False

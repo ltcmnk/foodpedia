@@ -1,4 +1,5 @@
 import logging
+import requests as req_lib
 from flask import Blueprint, request, jsonify, current_app
 
 api_bp = Blueprint('api', __name__, url_prefix='/api')
@@ -42,13 +43,23 @@ def health():
 @api_bp.route('/models', methods=['GET'])
 def get_models():
     from app.services.ollama_service import check_ollama_available, list_ollama_models
-    from app.services.gemini_service import check_gemini_available, list_gemini_models
+    from app.services.gemini_service import check_gemini_available, list_gemini_models, validate_gemini_key
+
+    # Key validation mode: X-Gemini-Key header present
+    incoming_key = request.headers.get('X-Gemini-Key', '').strip()
+    if incoming_key:
+        valid = validate_gemini_key(incoming_key)
+        if not valid:
+            return jsonify({'error': 'INVALID_KEY', 'error_code': 'auth_error'}), 401
+        return jsonify({
+            'key_valid': True,
+            'models': list_gemini_models(),
+        })
 
     ollama_ok = check_ollama_available()
     gemini_ok = check_gemini_available()
     ollama_models = list_ollama_models() if ollama_ok else []
 
-    # backward-compatible flat list (used by current frontend model selector)
     flat_models = ollama_models or (['gemma3:latest'] if not gemini_ok else [])
 
     return jsonify({
@@ -79,6 +90,7 @@ def get_models():
 def get_recipe():
     data = request.get_json() or {}
     dish = data.get('dish', '').strip()
+    demo = bool(data.get('demo', False))
     model = (data.get('model') or '').strip() or None
     lang = data.get('lang', 'pt')
 
@@ -86,11 +98,21 @@ def get_recipe():
     gemini_key = (data.get('gemini_key') or '').strip() or None
 
     if not dish:
-        return jsonify({'error': 'MISSING_DISH', 'message': 'Prato não informado'}), 400
+        return jsonify({'error': 'MISSING_DISH', 'error_code': 'generic', 'message': 'Prato não informado'}), 400
     if len(dish) < 2:
-        return jsonify({'error': 'DISH_TOO_SHORT', 'message': 'Nome do prato muito curto'}), 400
+        return jsonify({'error': 'DISH_TOO_SHORT', 'error_code': 'generic', 'message': 'Nome do prato muito curto'}), 400
     if len(dish) > 100:
-        return jsonify({'error': 'DISH_TOO_LONG', 'message': 'Nome do prato muito longo'}), 400
+        return jsonify({'error': 'DISH_TOO_LONG', 'error_code': 'generic', 'message': 'Nome do prato muito longo'}), 400
+
+    # Demo mode: serve from local demo_recipes.json
+    if demo:
+        from app.services.demo_service import get_demo_recipe
+        try:
+            recipe = get_demo_recipe(dish)
+            return jsonify(recipe)
+        except Exception as e:
+            logger.error("Demo recipe error for '%s': %s", dish, e)
+            return jsonify({'error': 'DEMO_UNAVAILABLE', 'error_code': 'generic', 'message': 'Receitas de demonstração indisponíveis'}), 503
 
     from app.services.ai_router import get_recipe_from_ai
 
@@ -103,26 +125,38 @@ def get_recipe():
         if 'GEMINI_API_KEY' in msg:
             return jsonify({
                 'error': 'GEMINI_KEY_MISSING',
+                'error_code': 'auth_error',
                 'message': 'Configure a variável GEMINI_API_KEY. Obtenha gratuitamente em aistudio.google.com',
             }), 400
         logger.error("Recipe parse error for '%s': %s", dish, e)
-        return jsonify({'error': 'PARSE_ERROR', 'message': 'Resposta inválida do modelo'}), 500
+        return jsonify({'error': 'PARSE_ERROR', 'error_code': 'generic', 'message': 'Resposta inválida do modelo'}), 500
+
+    except req_lib.exceptions.HTTPError as e:
+        status = e.response.status_code if e.response is not None else 0
+        if status == 429:
+            return jsonify({'error': 'RATE_LIMIT', 'error_code': 'rate_limit', 'message': 'Limite de requisições atingido'}), 429
+        elif status in (401, 403):
+            return jsonify({'error': 'AUTH_ERROR', 'error_code': 'auth_error', 'message': 'Chave inválida'}), 401
+        logger.error("Gemini HTTP error %s for '%s': %s", status, dish, e)
+        return jsonify({'error': 'GEMINI_ERROR', 'error_code': 'generic', 'message': 'Erro ao chamar Gemini'}), 502
 
     except ConnectionError as e:
         return jsonify({
             'error': 'OLLAMA_OFFLINE',
+            'error_code': 'generic',
             'message': 'Ollama não está rodando. Inicie com: ollama serve',
         }), 503
 
     except TimeoutError as e:
         return jsonify({
             'error': 'TIMEOUT',
+            'error_code': 'generic',
             'message': 'O modelo demorou demais para responder. Tente novamente.',
         }), 504
 
     except Exception as e:
         logger.error("Unexpected error for dish '%s' provider '%s': %s", dish, provider, e)
-        return jsonify({'error': 'INTERNAL_ERROR', 'message': 'Falha ao processar receita'}), 500
+        return jsonify({'error': 'INTERNAL_ERROR', 'error_code': 'generic', 'message': 'Falha ao processar receita'}), 500
 
 
 # ── /api/translate ────────────────────────────────────────────────────────────
