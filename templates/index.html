@@ -301,13 +301,45 @@
         </div>
         <div class="page page-right search-right">
           <div class="curl-zone curl-right" role="button" aria-label="Próxima página"><div class="curl-surface"></div><div class="curl-hint">›</div></div>
-          <div class="recipe-card-border" style="display:flex;flex-direction:column;justify-content:center;">
-            <p class="search-question" data-stagger data-i18n="search_question">Qual prato você quer conhecer?</p>
-            <div class="search-ruled-line" data-stagger></div>
-            <input type="text" id="recipe-search"
-                   placeholder="escreva um prato..."
-                   autocomplete="off" data-stagger>
-            <p class="search-hint" data-stagger data-i18n="search_hint">pressione Enter para consultar</p>
+          <div class="search-states-container">
+
+            <!-- State A: no key -->
+            <div id="search-state-no-key" class="search-state">
+              <div class="recipe-card-border search-state-card" style="display:flex;flex-direction:column;justify-content:center;gap:16px;">
+                <p class="search-nokey-intro">para pesquisar receitas com IA, você precisa de uma chave Gemini gratuita</p>
+                <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" class="search-nokey-link">aistudio.google.com/apikey ↗</a>
+                <div class="search-key-row">
+                  <input id="search-key-input" type="password" placeholder="AIza..." autocomplete="off" class="search-key-field">
+                  <button id="search-key-confirm" class="search-key-btn" onclick="validateAndSaveGeminiKey()">confirmar</button>
+                </div>
+                <p id="search-key-error" class="search-key-error" style="display:none;">chave inválida — verifique em <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--c-cover-red)">aistudio.google.com</a></p>
+                <button class="search-demo-link" onclick="showDemoState()">ou experimente com receitas de demonstração →</button>
+              </div>
+            </div>
+
+            <!-- State B: demo -->
+            <div id="search-state-demo" class="search-state">
+              <div class="recipe-card-border search-state-card" style="display:flex;flex-direction:column;">
+                <p class="search-question" style="margin-bottom:14px;">Escolha uma receita clássica</p>
+                <div id="demo-cards-container" class="demo-cards-grid"></div>
+                <p class="search-demo-footer">modo demonstração · <button onclick="showSearchState('no-key')" class="search-demo-footer-link">configurar chave Gemini →</button></p>
+              </div>
+            </div>
+
+            <!-- State C: search (normal) -->
+            <div id="search-state-search" class="search-state">
+              <div class="recipe-card-border search-state-card" style="display:flex;flex-direction:column;justify-content:center;">
+                <p class="search-question" data-stagger data-i18n="search_question">Qual prato você quer conhecer?</p>
+                <div class="search-ruled-line" data-stagger></div>
+                <input type="text" id="recipe-search"
+                       placeholder="escreva um prato..."
+                       autocomplete="off" data-stagger>
+                <p class="search-hint" data-stagger data-i18n="search_hint">pressione Enter para consultar</p>
+                <div id="search-inline-error" class="search-inline-error" style="display:none;"></div>
+                <p class="search-key-saved-hint">chave Gemini salva · <button onclick="goToKeyState()" class="search-key-change-btn">trocar →</button></p>
+              </div>
+            </div>
+
           </div>
           <div class="page-footer">
             <span class="footer-brand">Foodpedia</span>

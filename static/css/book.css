@@ -913,6 +913,146 @@ body {
   color:var(--c-ink-faded); margin-top:12px; opacity:.7;
 }
 
+/* ── SEARCH STATES ── */
+.search-states-container {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+.search-state {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: none;
+}
+.search-state-card {
+  margin: 0;
+  height: 100%;
+}
+.search-nokey-intro {
+  font-family:'Indie Flower',cursive;
+  font-size: 13px;
+  color: var(--c-ink);
+  line-height: 1.6;
+}
+.search-nokey-link {
+  font-family:'Cedarville Cursive',cursive;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--c-cover-red);
+  text-decoration: none;
+}
+.search-nokey-link:hover { text-decoration: underline; }
+.search-key-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.search-key-field {
+  flex: 1;
+  font-family: monospace;
+  font-size: 11px;
+  padding: 5px 8px;
+  border: 1px solid var(--c-rule);
+  border-radius: 2px;
+  background: var(--c-page);
+  color: var(--c-ink);
+  outline: none;
+}
+.search-key-field.error {
+  border-color: var(--c-cover-red);
+}
+.search-key-btn {
+  font-family: 'Cedarville Cursive', cursive;
+  font-size: 11px;
+  color: #FAF7F0;
+  background: var(--c-cover-red);
+  border: none;
+  padding: 5px 12px;
+  border-radius: 2px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.search-key-btn:disabled { opacity: 0.5; cursor: default; }
+.search-key-error {
+  font-family: 'Indie Flower', cursive;
+  font-size: 11px;
+  color: var(--c-cover-red);
+  line-height: 1.5;
+}
+.search-demo-link {
+  font-family: 'Indie Flower', cursive;
+  font-size: 11px;
+  color: var(--c-ink-faded);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 120ms;
+}
+.search-demo-link:hover { text-decoration-color: var(--c-ink-faded); }
+.demo-cards-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.demo-cards-grid::-webkit-scrollbar { display: none; }
+.demo-recipe-card {
+  font-family: 'Grape Nuts', cursive;
+  font-size: 14px;
+  color: var(--c-ink);
+  background: transparent;
+  border: 0.75px solid var(--c-border);
+  border-radius: 2px;
+  padding: 7px 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 120ms;
+  flex-shrink: 0;
+}
+.demo-recipe-card:hover { background: var(--c-page-alt); }
+.search-demo-footer {
+  font-family: 'Indie Flower', cursive;
+  font-size: 10px;
+  color: var(--c-ink-faded);
+  margin-top: 10px;
+  flex-shrink: 0;
+}
+.search-demo-footer-link {
+  font-family: inherit;
+  font-size: inherit;
+  color: var(--c-ink-faded);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.search-key-saved-hint {
+  font-family: 'Indie Flower', cursive;
+  font-size: 10px;
+  color: var(--c-ink-faded);
+  margin-top: 10px;
+  opacity: 0.7;
+}
+.search-key-change-btn {
+  font-family: inherit;
+  font-size: inherit;
+  color: var(--c-ink-faded);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 /* ── MODEL SELECTOR ── */
 .model-selector {
   margin-top:24px; border-top:0.75px solid var(--c-rule); padding-top:12px;

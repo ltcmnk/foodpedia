@@ -1262,6 +1262,7 @@ async function loadProviders() {
 }
 
 loadProviders()
+initSearchStates()
 
 // ── GEMINI KEY MANAGEMENT ──
 
@@ -1308,19 +1309,119 @@ function saveOnboardGeminiKey() {
   if (setupInput) setupInput.value = key
 }
 
+// ── SEARCH SPREAD STATE MANAGEMENT ──
+
+let _demoRecipes = null
+
+function showSearchState(state) {
+  const states = ['no-key', 'demo', 'search']
+  const dur = reducedMotion ? 0.001 : 0.2
+  states.forEach(s => {
+    const el = document.getElementById(`search-state-${s}`)
+    if (!el) return
+    if (s === state) {
+      gsap.to(el, { opacity: 1, duration: dur, ease: 'power1.inOut',
+        onComplete: () => { el.style.pointerEvents = 'auto' } })
+    } else {
+      el.style.pointerEvents = 'none'
+      gsap.to(el, { opacity: 0, duration: dur * 0.75, ease: 'power1.inOut' })
+    }
+  })
+}
+
+async function showDemoState() {
+  if (!_demoRecipes) {
+    try { _demoRecipes = await fetchStaticJson('static/data/demo_recipes.json') }
+    catch { _demoRecipes = [] }
+  }
+  const container = document.getElementById('demo-cards-container')
+  if (container && _demoRecipes.length) {
+    container.innerHTML = _demoRecipes.map(r => {
+      const safe = (r.name || '').replace(/'/g, "\\'").replace(/"/g, '&quot;')
+      return `<button class="demo-recipe-card" onclick="clickDemoRecipe('${safe}')">${r.name || ''}</button>`
+    }).join('')
+  }
+  showSearchState('demo')
+}
+
+function clickDemoRecipe(name) {
+  startRecipeSearch(name, { demo: true })
+}
+
+function goToKeyState() {
+  const stored = getGeminiKey()
+  const input = document.getElementById('search-key-input')
+  if (input && stored) input.value = stored
+  clearSearchKeyError()
+  showSearchState('no-key')
+}
+
+function showSearchKeyError() {
+  const input = document.getElementById('search-key-input')
+  const errEl = document.getElementById('search-key-error')
+  if (input) {
+    input.classList.add('error')
+    input.addEventListener('input', clearSearchKeyError, { once: true })
+  }
+  if (errEl) errEl.style.display = ''
+}
+
+function clearSearchKeyError() {
+  const input = document.getElementById('search-key-input')
+  const errEl = document.getElementById('search-key-error')
+  if (input) input.classList.remove('error')
+  if (errEl) errEl.style.display = 'none'
+}
+
+async function validateAndSaveGeminiKey() {
+  const input = document.getElementById('search-key-input')
+  const btn = document.getElementById('search-key-confirm')
+  const key = (input?.value || '').trim()
+  if (!key) { showSearchKeyError(); return }
+  if (btn) btn.disabled = true
+  clearSearchKeyError()
+  try {
+    const res = await fetch('/api/models', { headers: { 'X-Gemini-Key': key } })
+    if (res.ok) {
+      localStorage.setItem('gemini_key', key)
+      const setupInput = document.getElementById('gemini-key-input')
+      if (setupInput) setupInput.value = key
+      showSearchState('search')
+    } else {
+      showSearchKeyError()
+    }
+  } catch {
+    showSearchKeyError()
+  } finally {
+    if (btn) btn.disabled = false
+  }
+}
+
+function initSearchStates() {
+  if (getGeminiKey()) {
+    showSearchState('search')
+  } else {
+    showSearchState('no-key')
+  }
+}
+
 // ── FETCH RECIPE ──
 
-async function fetchRecipe(query) {
+async function fetchRecipe(query, { demo = false } = {}) {
   if (!apiAvailable) {
     const recipes = await fetchStaticJson('static/data/demo_recipes.json')
     return localDemoRecipe(query, recipes)
   }
 
   const body = { dish: query, lang: currentLang }
-  if (BookState.selectedProvider) body.provider = BookState.selectedProvider
-  if (BookState.selectedModel)    body.model    = BookState.selectedModel
-  const geminiKey = getGeminiKey()
-  if (geminiKey) body.gemini_key = geminiKey
+  if (demo) {
+    body.demo = true
+  } else {
+    if (BookState.selectedProvider) body.provider = BookState.selectedProvider
+    if (BookState.selectedModel)    body.model    = BookState.selectedModel
+    const geminiKey = getGeminiKey()
+    if (geminiKey) body.gemini_key = geminiKey
+  }
   const res = await fetch('/api/recipe', {
     method:  'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -1621,7 +1722,7 @@ function navigateToSpread(target) {
 // ── START SEARCH ──
 const FAST_THRESHOLD_MS = 1500
 
-async function startRecipeSearch(query) {
+async function startRecipeSearch(query, { demo = false } = {}) {
   if (BookState.phase === 'loading') return
   BookState.errorActive = false
   BookState.setupActive = false
@@ -1636,7 +1737,7 @@ async function startRecipeSearch(query) {
   let recipe = null
   let fetchError = null
 
-  const fetchPromise = fetchRecipe(query).then(r => { recipe = r }).catch(e => { fetchError = e })
+  const fetchPromise = fetchRecipe(query, { demo }).then(r => { recipe = r }).catch(e => { fetchError = e })
   const timerPromise = new Promise(res => setTimeout(res, FAST_THRESHOLD_MS))
 
   // race: if fetch wins before threshold, go straight to result
@@ -1688,6 +1789,13 @@ if (searchInput) {
   searchInput.addEventListener('keydown', e => {
     if (e.key === 'Enter' && e.target.value.trim())
       startRecipeSearch(e.target.value.trim())
+  })
+}
+
+const searchKeyInput = document.getElementById('search-key-input')
+if (searchKeyInput) {
+  searchKeyInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') validateAndSaveGeminiKey()
   })
 }
 
