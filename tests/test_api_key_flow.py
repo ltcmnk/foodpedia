@@ -32,4 +32,4 @@ def test_translate_passes_gemini_key(client, monkeypatch):
         })
     m.assert_called_once()
     _, kwargs = m.call_args
-    assert kwargs.get('key') == 'my-key' or m.call_args[0][3] == 'my-key' or True  # key passed somehow
+    assert kwargs.get('key') == 'my-key' or m.call_args[0][3] == 'my-key'

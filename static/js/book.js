@@ -43,6 +43,12 @@ const BookState = {
   shortcutPage: 0,
 }
 
+function escapeHtml(s) {
+  const d = document.createElement('div')
+  d.textContent = String(s || '')
+  return d.innerHTML
+}
+
 // ── REDUCED MOTION ──
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 const isMobileLayout = () => window.matchMedia('(max-width: 768px)').matches
@@ -1613,9 +1619,8 @@ function toggleResultadoFavorite(resultadoId) {
     localStorage.setItem('fp_favorited_recipes', JSON.stringify(persisted.filter(e => e.id !== resultadoId)))
   } else {
     // Favoritar — read recipe from the resultado spread
-    const resultadoEl = document.querySelector(`[data-resultado-id="${resultadoId}"]`)
-    if (!resultadoEl) return
-    const recipe = BookState.currentRecipe || BookState.currentRecipeVariants?.[currentLang]
+    const spreadEl = document.querySelector(`[data-resultado-id="${resultadoId}"]`)
+    const recipe = spreadEl ? JSON.parse(spreadEl.dataset.recipeJson || 'null') : null
     if (!recipe) return
     favs.push(favresultKey)
     localStorage.setItem('fp_favs', JSON.stringify(favs))
@@ -1727,6 +1732,7 @@ function showRecipeResult(recipe) {
   animatePageTurn(BookState.currentSpread, target, direction).then(() => {
     animateContentIn(target)
     updateDividerTabs(target)
+    BookState.phase = 'browsing'
   })
 }
 
@@ -1797,7 +1803,6 @@ async function startRecipeSearch(query, { demo = false } = {}) {
     const simpleCode = BookState.lastSimpleCode || 'generic'
     if (simpleCode === 'rate_limit' || simpleCode === 'auth_error') {
       BookState.phase = 'browsing'
-      BookState.resultAvailable = false
       BookState.errorActive = false
       BookState.setupActive = false
       rebuildBookLayout({ keepCurrent: true })
@@ -1806,7 +1811,6 @@ async function startRecipeSearch(query, { demo = false } = {}) {
       return
     }
     BookState.phase = 'browsing'
-    BookState.resultAvailable = false
     BookState.errorActive = true
     BookState.setupActive = false
     rebuildBookLayout({ keepCurrent: true })
@@ -1835,7 +1839,6 @@ async function startRecipeSearch(query, { demo = false } = {}) {
     const simpleCode = BookState.lastSimpleCode || 'generic'
     if (simpleCode === 'rate_limit' || simpleCode === 'auth_error') {
       BookState.phase = 'browsing'
-      BookState.resultAvailable = false
       BookState.errorActive = false
       BookState.setupActive = false
       rebuildBookLayout({ keepCurrent: true })
@@ -1844,7 +1847,6 @@ async function startRecipeSearch(query, { demo = false } = {}) {
       return
     }
     BookState.phase = 'browsing'
-    BookState.resultAvailable = false
     BookState.errorActive = true
     BookState.setupActive = false
     rebuildBookLayout({ keepCurrent: true })
@@ -1959,9 +1961,9 @@ function createResultadoSpread(recipe) {
 
   const illKey = recipe.illustration_key || 'mortar'
   const ill = illustrationSVG[illKey] || illustrationSVG.mortar
-  const ingredients = (recipe.ingredients || []).map(i => `<li data-stagger>${i}</li>`).join('')
+  const ingredients = (recipe.ingredients || []).map(i => `<li data-stagger>${escapeHtml(i)}</li>`).join('')
   const steps = (recipe.steps || []).map((s, i) =>
-    `<li data-stagger><span class="step-number">${i + 1}</span><span class="step-text">${s}</span></li>`).join('')
+    `<li data-stagger><span class="step-number">${i + 1}</span><span class="step-text">${escapeHtml(s)}</span></li>`).join('')
 
   const isFirstOfSession = host.children.length === 0
   const microHint = isFirstOfSession && !sessionStorage.getItem('fp_resultado_hint_shown')
@@ -1972,32 +1974,33 @@ function createResultadoSpread(recipe) {
   el.dataset.role = 'resultado'
   el.dataset.resultadoId = id
   el.dataset.recipeName = recipe.name || ''
+  el.dataset.recipeJson = JSON.stringify(recipe)
   el.style.display = 'none'
   el.innerHTML = `
     <div class="page-turn-layer"><div class="turn-front"></div><div class="turn-back"></div></div>
     <div class="page page-left">
       <div class="curl-zone curl-left" role="button" aria-label="Página anterior"><div class="curl-surface"></div><div class="curl-hint">‹</div></div>
       <div class="recipe-card-border">
-        <span class="recipe-eyebrow" data-stagger>${recipe.category || ''}</span>
+        <span class="recipe-eyebrow" data-stagger>${escapeHtml(recipe.category)}</span>
         <div class="recipe-header-rule" data-stagger></div>
-        <h2 class="recipe-title" data-stagger>${recipe.name || ''}</h2>
-        <p class="recipe-subtitle-italic" data-stagger>${recipe.subtitle || ''}</p>
+        <h2 class="recipe-title" data-stagger>${escapeHtml(recipe.name)}</h2>
+        <p class="recipe-subtitle-italic" data-stagger>${escapeHtml(recipe.subtitle)}</p>
         <div class="recipe-meta-grid" data-stagger>
-          <div class="meta-cell"><span class="meta-label">${labels.prep}</span><span class="meta-value">${recipe.prep_time || ''}</span></div>
-          <div class="meta-cell"><span class="meta-label">${labels.servings}</span><span class="meta-value">${recipe.servings || ''}</span></div>
-          <div class="meta-cell"><span class="meta-label">${labels.level}</span><span class="meta-value">${recipe.difficulty || ''}</span></div>
+          <div class="meta-cell"><span class="meta-label">${labels.prep}</span><span class="meta-value">${escapeHtml(recipe.prep_time)}</span></div>
+          <div class="meta-cell"><span class="meta-label">${labels.servings}</span><span class="meta-value">${escapeHtml(recipe.servings)}</span></div>
+          <div class="meta-cell"><span class="meta-label">${labels.level}</span><span class="meta-value">${escapeHtml(recipe.difficulty)}</span></div>
         </div>
         <div class="recipe-section">
           <h3 class="section-label" data-stagger>${labels.ingredients}</h3>
           <ul class="ingredients-list" data-stagger>${ingredients}</ul>
           <div class="chef-tip" data-stagger>
             <span class="tip-label">${labels.tip}</span>
-            <p class="tip-text">${recipe.tip || ''}</p>
+            <p class="tip-text">${escapeHtml(recipe.tip)}</p>
           </div>
         </div>
       </div>
       ${microHint}
-      <div class="handwritten-annotation annotation-0" data-stagger>${recipe.annotation || ''}</div>
+      <div class="handwritten-annotation annotation-0" data-stagger>${escapeHtml(recipe.annotation)}</div>
       <div class="resultado-actions" data-stagger>
         <button class="back-to-search-btn" onclick="goToSection('search')">${labels.back}</button>
       </div>
@@ -2009,7 +2012,7 @@ function createResultadoSpread(recipe) {
         <div class="botanical-illustration" data-stagger>${ill}</div>
         <div class="recipe-story">
           <h3 class="section-label" data-stagger>${labels.story}</h3>
-          <p class="story-text" data-stagger>${recipe.story || ''}</p>
+          <p class="story-text" data-stagger>${escapeHtml(recipe.story)}</p>
         </div>
         <div class="divider-ornament" data-stagger></div>
         <div class="recipe-section">
@@ -2043,9 +2046,9 @@ function createFavoritadoSpread(entry) {
 
   const illKey = r.illustration_key || 'mortar'
   const ill = illustrationSVG[illKey] || illustrationSVG.mortar
-  const ingredients = (r.ingredients || []).map(i => `<li>${i}</li>`).join('')
+  const ingredients = (r.ingredients || []).map(i => `<li>${escapeHtml(i)}</li>`).join('')
   const steps = (r.steps || []).map((s, i) =>
-    `<li><span class="step-number">${i + 1}</span><span class="step-text">${s}</span></li>`).join('')
+    `<li><span class="step-number">${i + 1}</span><span class="step-text">${escapeHtml(s)}</span></li>`).join('')
 
   const el = document.createElement('div')
   el.className = 'book-spread'
@@ -2058,25 +2061,25 @@ function createFavoritadoSpread(entry) {
     <div class="page page-left">
       <div class="curl-zone curl-left" role="button" aria-label="Página anterior"><div class="curl-surface"></div><div class="curl-hint">‹</div></div>
       <div class="recipe-card-border">
-        <span class="recipe-eyebrow">${r.category || ''}</span>
+        <span class="recipe-eyebrow">${escapeHtml(r.category)}</span>
         <div class="recipe-header-rule"></div>
-        <h2 class="recipe-title">${r.name || ''}</h2>
-        <p class="recipe-subtitle-italic">${r.subtitle || ''}</p>
+        <h2 class="recipe-title">${escapeHtml(r.name)}</h2>
+        <p class="recipe-subtitle-italic">${escapeHtml(r.subtitle)}</p>
         <div class="recipe-meta-grid">
-          <div class="meta-cell"><span class="meta-label">${labels.prep}</span><span class="meta-value">${r.prep_time || ''}</span></div>
-          <div class="meta-cell"><span class="meta-label">${labels.servings}</span><span class="meta-value">${r.servings || ''}</span></div>
-          <div class="meta-cell"><span class="meta-label">${labels.level}</span><span class="meta-value">${r.difficulty || ''}</span></div>
+          <div class="meta-cell"><span class="meta-label">${labels.prep}</span><span class="meta-value">${escapeHtml(r.prep_time)}</span></div>
+          <div class="meta-cell"><span class="meta-label">${labels.servings}</span><span class="meta-value">${escapeHtml(r.servings)}</span></div>
+          <div class="meta-cell"><span class="meta-label">${labels.level}</span><span class="meta-value">${escapeHtml(r.difficulty)}</span></div>
         </div>
         <div class="recipe-section">
           <h3 class="section-label">${labels.ingredients}</h3>
           <ul class="ingredients-list">${ingredients}</ul>
           <div class="chef-tip">
             <span class="tip-label">${labels.tip}</span>
-            <p class="tip-text">${r.tip || ''}</p>
+            <p class="tip-text">${escapeHtml(r.tip)}</p>
           </div>
         </div>
       </div>
-      <div class="handwritten-annotation annotation-0">${r.annotation || ''}</div>
+      <div class="handwritten-annotation annotation-0">${escapeHtml(r.annotation)}</div>
       <div class="page-footer"><span class="footer-brand">Foodpedia</span><span class="page-number"></span></div>
     </div>
     <div class="page page-right">
@@ -2085,14 +2088,14 @@ function createFavoritadoSpread(entry) {
         <div class="botanical-illustration">${ill}</div>
         <div class="recipe-story">
           <h3 class="section-label">${labels.story}</h3>
-          <p class="story-text">${r.story || ''}</p>
+          <p class="story-text">${escapeHtml(r.story)}</p>
         </div>
         <div class="recipe-section">
           <h3 class="section-label">${labels.steps}</h3>
           <ol class="steps-list">${steps}</ol>
         </div>
         <div class="resultado-actions">
-          <button class="ribbon-btn is-favorited" data-role="favorite-btn" title="Remover dos favoritos">◆</button>
+          <button class="ribbon-btn is-favorited" data-role="favorite-btn" onclick="toggleCurrentPageFavorite()" title="Remover dos favoritos">◆</button>
         </div>
       </div>
       <div class="page-footer"><span class="footer-brand">Foodpedia</span><span class="page-number"></span></div>
