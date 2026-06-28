@@ -1052,9 +1052,9 @@ body {
 .apoio-stamp:hover { transform: rotate(-0.5deg) scale(1.01); }
 
 .apoio-stamp-stripe          { height: 9px; flex-shrink: 0; }
-.apoio-stamp-stripe--kofi    { background: #FF5E5B; }
-.apoio-stamp-stripe--livepix { background: var(--c-cover-red); }
-.apoio-stamp-stripe--github  { background: #6e40c9; }
+.apoio-stamp-stripe--github  { background: var(--c-spine); }
+.apoio-stamp-stripe--kofi    { background: var(--c-gold); }
+.apoio-stamp-stripe--livepix { background: var(--c-annotation); }
 
 .apoio-stamp-stripe::after {
   content: '';
