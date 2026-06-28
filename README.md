@@ -121,7 +121,7 @@ A live `<feTurbulence>` SVG filter at 4% opacity on the body gives the app an ag
 All decorations are inline SVG (via Jinja2 `{% include %}`), drawn in gold with no fill. They live in the DOM, cost almost nothing to load, and stay sharp at any resolution.
 
 **Onboarding that fits the metaphor**
-New users go through a "Como Usar" tutorial built as real book spreads. Side tabs are locked until the tutorial completes. The book teaches you to read the book.
+New users go through a "Como Usar" tutorial built as real book spreads. Side tabs unlock automatically as you flip through them — no buttons, no confirmation screen. The book teaches you to read the book.
 
 **Static export for Vercel (and anywhere else)**
 A build script exports the full interface as a standalone `index.html` for demos that need no server. Classic recipes work; AI search doesn't — that would require a backend, obviously.
@@ -200,7 +200,7 @@ python3 scripts/build_static_demo.py
 ## usage
 
 1. **Open the book** — the cloth cover animates open to the table of contents
-2. **Complete the tutorial** — "Como Usar" spreads walk you through the interface; side tabs unlock after
+2. **Flip through the tutorial** — "Como Usar" spreads walk you through the interface; side tabs unlock automatically as you pass through them
 3. **Browse hardcoded recipes** — flip through the book or jump via tab navigation
 4. **Search any dish** — type a name in the search spread; the AI generates a full recipe spread in real time
 5. **Flip back and compare** — the generated spread lives in the book alongside the classics, formatted identically

@@ -121,7 +121,7 @@ Um filtro SVG `<feTurbulence>` ao vivo com 4% de opacidade no body dá ao app aq
 Todas as decorações são SVG inline (via `{% include %}` do Jinja2), desenhadas em dourado sem preenchimento. Vivem no DOM, custam quase nada pra carregar e ficam nítidas em qualquer resolução.
 
 **Onboarding dentro da metáfora**
-Novos usuários passam por um tutorial "Como Usar" construído como spreads reais do livro. As abas laterais ficam bloqueadas até o tutorial terminar. O livro te ensina a ler o livro.
+Novos usuários passam por um tutorial "Como Usar" construído como spreads reais do livro. As abas laterais desbloqueiam automaticamente conforme você folheia — sem botões, sem tela de confirmação. O livro te ensina a ler o livro.
 
 **Export estático para o Vercel (e qualquer servidor estático)**
 Um script de build exporta a interface completa como `index.html` standalone para demos que não precisam de servidor. Receitas fixas funcionam; busca com IA não — isso exigiria backend, obviamente.
@@ -200,7 +200,7 @@ python3 scripts/build_static_demo.py
 ## uso
 
 1. **Abra o livro** — a capa de tecido anima e abre no sumário
-2. **Complete o tutorial** — os spreads "Como Usar" guiam pela interface; as abas desbloqueiam depois
+2. **Folheie o tutorial** — os spreads "Como Usar" guiam pela interface; as abas desbloqueiam automaticamente conforme você passa por eles
 3. **Navegue pelas receitas fixas** — vire as páginas ou use a navegação por abas
 4. **Busque qualquer prato** — digite um nome no spread de busca; a IA gera um spread completo em tempo real
 5. **Volte e compare** — o spread gerado fica no livro junto com os clássicos, formatado de forma idêntica
