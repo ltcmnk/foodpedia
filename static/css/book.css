@@ -831,6 +831,142 @@ body {
 }
 
 /* ──────────────────────────
+   RESULTADO-TOC LEFT PAGE
+   (distinct from heirloom: research-notebook feel, no rings)
+─────────────────────────── */
+.resultado-heirloom {
+  position:relative;
+  overflow:hidden;
+  background-image:none;
+}
+.rh-header-rule {
+  position:absolute;
+  left:13%;
+  right:13%;
+  top:17%;
+  height:1px;
+  background:rgba(140,105,65,.28);
+}
+.rh-header-rule::after {
+  content:'';
+  position:absolute;
+  left:0; right:0;
+  top:4px;
+  height:0.5px;
+  background:rgba(140,105,65,.14);
+}
+.rh-section-label {
+  position:absolute;
+  left:50%;
+  top:11%;
+  transform:translateX(-50%) rotate(-1deg);
+  font:10px/1 'Cedarville Cursive',cursive;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:rgba(107,76,59,.35);
+  white-space:nowrap;
+}
+.rh-note {
+  position:absolute;
+  font-family:'Grape Nuts',cursive;
+  line-height:1.35;
+  pointer-events:none;
+}
+.rh-note-a { left:15%; top:26%; font-size:17px; transform:rotate(-3deg); color:rgba(74,103,65,.52); }
+.rh-note-b { right:13%; top:43%; font-size:15px; transform:rotate(5deg); color:rgba(107,76,59,.42); }
+.rh-note-c { left:22%; bottom:28%; font-size:14px; transform:rotate(2deg); color:rgba(107,76,59,.32); text-decoration:line-through; }
+.rh-note-d { right:18%; bottom:16%; font-size:16px; transform:rotate(-4deg); color:rgba(74,103,65,.46); }
+.rh-botanical {
+  position:absolute;
+  width:34%;
+  right:13%;
+  bottom:11%;
+  fill:none;
+  stroke:rgba(74,103,65,.2);
+  stroke-width:.9;
+  stroke-linecap:round;
+}
+.rh-doodle {
+  position:absolute;
+  width:24%;
+  left:11%;
+  bottom:10%;
+  fill:none;
+  stroke:rgba(107,76,59,.18);
+  stroke-width:1.1;
+  stroke-linecap:round;
+}
+
+/* ──────────────────────────
+   FAVORITES-TOC LEFT PAGE
+   (distinct: curated/precious, warm inscription feel)
+─────────────────────────── */
+.favorites-heirloom {
+  position:relative;
+  overflow:hidden;
+  background-image:none;
+}
+.fh-diamond {
+  position:absolute;
+  left:50%;
+  top:22%;
+  transform:translateX(-50%) rotate(-2deg);
+  font-size:52px;
+  color:rgba(107,76,59,.08);
+  line-height:1;
+  pointer-events:none;
+}
+.fh-title {
+  position:absolute;
+  left:50%;
+  top:41%;
+  transform:translateX(-50%) rotate(1.5deg);
+  font:italic 21px/1.2 'La Belle Aurore',cursive;
+  color:rgba(107,76,59,.28);
+  white-space:nowrap;
+}
+.fh-note {
+  position:absolute;
+  font-family:'Grape Nuts',cursive;
+  line-height:1.35;
+  pointer-events:none;
+}
+.fh-note-a { left:13%; top:17%; font-size:15px; transform:rotate(-4deg); color:rgba(74,103,65,.48); }
+.fh-note-b { right:11%; top:53%; font-size:16px; transform:rotate(3deg); color:rgba(74,103,65,.44); }
+.fh-note-c { left:18%; bottom:24%; font-size:13px; transform:rotate(2deg); color:rgba(107,76,59,.36); }
+.fh-note-d { right:14%; bottom:36%; font-size:15px; transform:rotate(-5deg); color:rgba(107,76,59,.34); }
+.fh-ring {
+  position:absolute;
+  width:92px;
+  height:92px;
+  border:10px double rgba(107,76,59,.055);
+  border-radius:50%;
+  right:16%;
+  top:9%;
+  transform:rotate(14deg);
+}
+.fh-botanical {
+  position:absolute;
+  width:30%;
+  left:10%;
+  bottom:11%;
+  fill:none;
+  stroke:rgba(74,103,65,.2);
+  stroke-width:.9;
+  stroke-linecap:round;
+}
+.fh-doodle {
+  position:absolute;
+  width:14%;
+  right:16%;
+  bottom:13%;
+  fill:none;
+  stroke:rgba(107,76,59,.2);
+  stroke-width:1.1;
+  stroke-linecap:round;
+}
+
+/* ──────────────────────────
    ABOUT
 ─────────────────────────── */
 .about-page {
@@ -856,6 +992,113 @@ body {
   font-size:10px; text-transform:capitalize;
   letter-spacing:2px; color:var(--c-red-accent);
   margin-bottom:12px; display:block;
+}
+
+/* ── APOIO (Colofão + Selos) ── */
+.apoio-page { padding: 40px 36px 40px; }
+
+.apoio-heading {
+  font-size: 22px;
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+
+.apoio-body {
+  font-size: 11.5px;
+  line-height: 1.58;
+}
+
+.apoio-stamps-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+  padding: 8px 0;
+}
+
+.apoio-ornament {
+  font-family: 'Cedarville Cursive', cursive;
+  font-size: 11px;
+  color: var(--c-gold);
+  opacity: 0.4;
+  text-align: center;
+  margin: 6px 0;
+  display: block;
+}
+
+.apoio-stamp {
+  display: block;
+  border: 1.5px solid var(--c-border);
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: transform 120ms ease-out;
+  overflow: hidden;
+}
+
+.apoio-stamp::before,
+.apoio-stamp::after {
+  content: '';
+  position: absolute;
+  border: 0.75px solid var(--c-border);
+  pointer-events: none;
+}
+
+.apoio-stamp::before { inset: 4px; opacity: 0.5; }
+.apoio-stamp::after  { inset: 7px; border-width: 0.5px; opacity: 0.28; }
+
+.apoio-stamp:hover { transform: rotate(-0.5deg) scale(1.01); }
+
+.apoio-stamp-stripe          { height: 9px; flex-shrink: 0; }
+.apoio-stamp-stripe--kofi    { background: #FF5E5B; }
+.apoio-stamp-stripe--livepix { background: var(--c-cover-red); }
+.apoio-stamp-stripe--github  { background: #6e40c9; }
+
+.apoio-stamp-stripe::after {
+  content: '';
+  display: block;
+  height: 1.5px;
+  background: var(--c-gold);
+  opacity: 0.4;
+}
+
+.apoio-stamp-body {
+  padding: 8px 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.apoio-stamp-icon {
+  width: 22px;
+  height: 22px;
+  margin-bottom: 4px;
+}
+
+.apoio-stamp-icon svg { width: 100%; height: 100%; }
+
+.apoio-stamp-platform {
+  font-family: 'Homemade Apple', cursive;
+  font-size: 16px;
+  color: var(--c-ink);
+  line-height: 1.1;
+}
+
+.apoio-stamp-url {
+  font-family: 'Cedarville Cursive', cursive;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--c-ink-faded);
+}
+
+.apoio-stamp-note {
+  font-family: 'La Belle Aurore', cursive;
+  font-size: 11px;
+  font-style: italic;
+  color: var(--c-ink-faded);
+  margin-top: 2px;
 }
 
 /* ──────────────────────────
@@ -1436,6 +1679,16 @@ body {
   font-style: italic;
   color: var(--c-ink-faded);
 }
+
+/* TOC — apoio separator + entry */
+.toc-apoio-separator {
+  border-top: 0.75px solid var(--c-rule);
+  margin: 6px 0;
+  list-style: none;
+}
+
+.toc-apoio-entry .toc-entry-title { color: var(--c-ink-faded); }
+.toc-apoio-entry .toc-favorite-mark { color: var(--c-gold); opacity: 0.7; }
 
 /* ──────────────────────────
    SHORTCUTS OVERLAY
