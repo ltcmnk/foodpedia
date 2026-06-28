@@ -606,6 +606,12 @@ function showSpread(index) {
   updatePagePosition()
   syncRibbonFavorite()
   translateVisibleStaticRecipe()
+
+  // Auto-complete onboarding when user flips past the last como-usar spread
+  if (!isOnboardingComplete() && index > SPREAD_COMO_USAR_END) {
+    localStorage.setItem('onboarding_complete', '1')
+    initMobileNotice()
+  }
 }
 
 // ── ANIMATE PAGE TURN ──

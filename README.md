@@ -124,7 +124,7 @@ All decorations are inline SVG (via Jinja2 `{% include %}`), drawn in gold with 
 New users go through a "Como Usar" tutorial built as real book spreads. Side tabs unlock automatically as you flip through them — no buttons, no confirmation screen. The book teaches you to read the book.
 
 **Static export for Vercel (and anywhere else)**
-A build script exports the full interface as a standalone `index.html` for demos that need no server. Classic recipes work; AI search doesn't — that would require a backend, obviously.
+A build script exports the full interface as a standalone `index.html`. Classic recipes work out of the box. AI search works too — enter your Gemini API key directly in the interface; it stays in your browser and never touches a server.
 
 ---
 

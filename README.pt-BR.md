@@ -124,7 +124,7 @@ Todas as decorações são SVG inline (via `{% include %}` do Jinja2), desenhada
 Novos usuários passam por um tutorial "Como Usar" construído como spreads reais do livro. As abas laterais desbloqueiam automaticamente conforme você folheia — sem botões, sem tela de confirmação. O livro te ensina a ler o livro.
 
 **Export estático para o Vercel (e qualquer servidor estático)**
-Um script de build exporta a interface completa como `index.html` standalone para demos que não precisam de servidor. Receitas fixas funcionam; busca com IA não — isso exigiria backend, obviamente.
+Um script de build exporta a interface completa como `index.html`. Receitas fixas funcionam de cara. A busca com IA também funciona — basta inserir sua chave Gemini gratuita direto na interface; ela fica no seu browser e nunca sai do dispositivo.
 
 ---
 
