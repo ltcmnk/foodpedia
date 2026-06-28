@@ -121,7 +121,16 @@
     "cu_nav_p5": "PT / EN no rodapé troca a edição inteira — ele fecha um instante, respira, e reabre exatamente onde você estava. A folhinha ? tem todos os atalhos.",
     "cu_cta_heading": "Pronto para<br>explorar?",
     "cu_cta_body": "Você vai precisar de uma chave<br>Gemini gratuita para gerar receitas novas.",
-    "cu_cta_button": "Entendi, vamos lá!"
+    "cu_cta_button": "Entendi, vamos lá!",
+    "apoio_eyebrow": "uma palavra do autor",
+    "apoio_heading": "Feito com<br>curiosidade<br>e código.",
+    "apoio_p1": "O Foodpedia é um projeto independente — sem investidores, sem anúncios, feito por uma pessoa só.",
+    "apoio_p2": "Se ele te trouxe uma receita nova, uma história inesperada ou simplesmente um momento de curiosidade, considere apoiar.",
+    "apoio_p3": "Qualquer contribuição ajuda a manter o servidor ligado e o código evoluindo.",
+    "apoio_annotation": "obrigado\npor estar aqui",
+    "apoio_livepix_note": "para brasileiros",
+    "apoio_github_note": "via GitHub Sponsors",
+    "toc_apoio": "Apoiar o Projeto"
   },
   "en": {
     "cover_subtitle": "Culinary Encyclopedia",
@@ -245,6 +254,15 @@
     "cu_nav_p5": "PT / EN in the footer swaps the entire edition — it closes for a moment, breathes, and reopens exactly where you were. The ? sheet has all shortcuts.",
     "cu_cta_heading": "Ready to<br>explore?",
     "cu_cta_body": "You'll need a free<br>Gemini key to generate new recipes.",
-    "cu_cta_button": "Got it, let's go!"
+    "cu_cta_button": "Got it, let's go!",
+    "apoio_eyebrow": "a word from the author",
+    "apoio_heading": "Made with<br>curiosity<br>and code.",
+    "apoio_p1": "Foodpedia is an independent project — no investors, no ads, built by one person.",
+    "apoio_p2": "If it brought you a new recipe, an unexpected story, or just a moment of curiosity, consider supporting it.",
+    "apoio_p3": "Any contribution helps keep the server running and the code evolving.",
+    "apoio_annotation": "thank you\nfor being here",
+    "apoio_livepix_note": "for Brazilian supporters",
+    "apoio_github_note": "via GitHub Sponsors",
+    "toc_apoio": "Support the Project"
   }
 }
