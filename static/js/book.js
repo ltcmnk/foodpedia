@@ -1413,6 +1413,10 @@ function goToResultado() {
     if (!newest) return
     const target = Number(newest.dataset.spread)
     tabEl.classList.remove('is-ready')
+    const pl = newest.querySelector('.page-left')
+    const pr = newest.querySelector('.page-right')
+    if (pl) pl.scrollTop = 0
+    if (pr) pr.scrollTop = 0
     if (BookState.phase === 'cover') {
       animateCoverOpen(spreadKey(newest))
       return
@@ -1498,7 +1502,7 @@ function notifyRecipeReady(recipe) {
   if (tab) {
     tab.classList.add('is-ready')
     syncResultadoTab()
-    gsap.fromTo(tab, { opacity: 0.6 }, { opacity: 1, duration: 0.3, repeat: 2, yoyo: true })
+    gsap.fromTo(tab, { opacity: 0.6 }, { opacity: 1, duration: reducedMotion ? 0.001 : 0.3, repeat: 2, yoyo: true })
   }
 
   const t = (key, fallback) => window._i18nStrings?.[currentLang]?.[key] || fallback
@@ -1556,6 +1560,14 @@ function showRecipeResult(recipe) {
   buildResultadoTocSpread()
   rebuildBookLayout({ keepCurrent: true })
   saveSearchHistory(recipe)
+
+  const newest = document.querySelector('#resultado-container [data-role="resultado"]:last-child')
+  if (newest) {
+    const pl = newest.querySelector('.page-left')
+    const pr = newest.querySelector('.page-right')
+    if (pl) pl.scrollTop = 0
+    if (pr) pr.scrollTop = 0
+  }
 
   const tab = document.getElementById('tab-resultado')
   tab?.classList.remove('is-ready')
