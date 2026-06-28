@@ -1343,9 +1343,16 @@ function syncResultadoTab() {
   // replaced in Task 5
 }
 
-// ── REBUILD FAVORITADO SPREADS (stub — replaced in Task 4) ──
+// ── REBUILD FAVORITADO SPREADS ──
 function rebuildFavoritadoSpreads() {
-  // replaced in Task 4
+  const host = document.getElementById('favoritos-container')
+  if (!host) return
+  host.innerHTML = ''
+  favoritedRecipes().forEach(entry => {
+    const el = createFavoritadoSpread(entry)
+    host.appendChild(el)
+  })
+  initCurlZones()
 }
 
 // ── LOADING NOTIFY ──
@@ -1570,6 +1577,160 @@ function favoriteKeys() {
   } catch {
     return []
   }
+}
+
+function favoritedRecipes() {
+  try {
+    return JSON.parse(localStorage.getItem('fp_favorited_recipes') || '[]')
+  } catch {
+    return []
+  }
+}
+
+function createResultadoSpread(recipe) {
+  const host = document.getElementById('resultado-container')
+  if (!host) return null
+
+  const id = `resultado-${Date.now()}`
+  const lang = currentLang
+  const labels = lang === 'en'
+    ? { prep: 'Prep', servings: 'Serves', level: 'Level', ingredients: 'Ingredients',
+        story: 'The Story', steps: 'Instructions', tip: 'Tip', back: '← Search another dish',
+        hint: '◆ to save between sessions' }
+    : { prep: 'Preparo', servings: 'Porções', level: 'Nível', ingredients: 'Ingredientes',
+        story: 'A História', steps: 'Modo de Preparo', tip: 'Dica', back: '← Pesquisar outro prato',
+        hint: '◆ para guardar entre sessões' }
+
+  const illKey = recipe.illustration_key || 'mortar'
+  const ill = illustrationSVG[illKey] || illustrationSVG.mortar
+  const ingredients = (recipe.ingredients || []).map(i => `<li data-stagger>${i}</li>`).join('')
+  const steps = (recipe.steps || []).map((s, i) =>
+    `<li data-stagger><span class="step-number">${i + 1}</span><span class="step-text">${s}</span></li>`).join('')
+
+  const isFirstOfSession = host.children.length === 0
+  const microHint = isFirstOfSession && !localStorage.getItem('fp_resultado_hint_shown')
+    ? `<p class="resultado-micro-hint">${labels.hint}</p>` : ''
+
+  const el = document.createElement('div')
+  el.className = 'book-spread'
+  el.dataset.role = 'resultado'
+  el.dataset.resultadoId = id
+  el.dataset.recipeName = recipe.name || ''
+  el.style.display = 'none'
+  el.innerHTML = `
+    <div class="page-turn-layer"><div class="turn-front"></div><div class="turn-back"></div></div>
+    <div class="page page-left">
+      <div class="curl-zone curl-left" role="button" aria-label="Página anterior"><div class="curl-surface"></div><div class="curl-hint">‹</div></div>
+      <div class="recipe-card-border">
+        <span class="recipe-eyebrow" data-stagger>${recipe.category || ''}</span>
+        <div class="recipe-header-rule" data-stagger></div>
+        <h2 class="recipe-title" data-stagger>${recipe.name || ''}</h2>
+        <p class="recipe-subtitle-italic" data-stagger>${recipe.subtitle || ''}</p>
+        <div class="recipe-meta-grid" data-stagger>
+          <div class="meta-cell"><span class="meta-label">${labels.prep}</span><span class="meta-value">${recipe.prep_time || ''}</span></div>
+          <div class="meta-cell"><span class="meta-label">${labels.servings}</span><span class="meta-value">${recipe.servings || ''}</span></div>
+          <div class="meta-cell"><span class="meta-label">${labels.level}</span><span class="meta-value">${recipe.difficulty || ''}</span></div>
+        </div>
+        <div class="recipe-section">
+          <h3 class="section-label" data-stagger>${labels.ingredients}</h3>
+          <ul class="ingredients-list" data-stagger>${ingredients}</ul>
+          <div class="chef-tip" data-stagger>
+            <span class="tip-label">${labels.tip}</span>
+            <p class="tip-text">${recipe.tip || ''}</p>
+          </div>
+        </div>
+      </div>
+      ${microHint}
+      <div class="handwritten-annotation annotation-0" data-stagger>${recipe.annotation || ''}</div>
+      <div class="resultado-actions" data-stagger>
+        <button class="back-to-search-btn" onclick="goToSection('search')">${labels.back}</button>
+      </div>
+      <div class="page-footer"><span class="footer-brand">Foodpedia</span><span class="page-number"></span></div>
+    </div>
+    <div class="page page-right">
+      <div class="curl-zone curl-right" role="button" aria-label="Próxima página"><div class="curl-surface"></div><div class="curl-hint">›</div></div>
+      <div class="recipe-card-border">
+        <div class="botanical-illustration" data-stagger>${ill}</div>
+        <div class="recipe-story">
+          <h3 class="section-label" data-stagger>${labels.story}</h3>
+          <p class="story-text" data-stagger>${recipe.story || ''}</p>
+        </div>
+        <div class="divider-ornament" data-stagger></div>
+        <div class="recipe-section">
+          <h3 class="section-label" data-stagger>${labels.steps}</h3>
+          <ol class="steps-list" data-stagger>${steps}</ol>
+        </div>
+      </div>
+      <div class="page-footer"><span class="footer-brand">Foodpedia</span><span class="page-number"></span></div>
+    </div>`
+
+  host.appendChild(el)
+  return el
+}
+
+function createFavoritadoSpread(entry) {
+  const r = entry.recipe || {}
+  const lang = entry.lang || 'pt'
+  const labels = lang === 'en'
+    ? { prep: 'Prep', servings: 'Serves', level: 'Level', ingredients: 'Ingredients',
+        story: 'The Story', steps: 'Instructions', tip: 'Tip' }
+    : { prep: 'Preparo', servings: 'Porções', level: 'Nível', ingredients: 'Ingredientes',
+        story: 'A História', steps: 'Modo de Preparo', tip: 'Dica' }
+
+  const illKey = r.illustration_key || 'mortar'
+  const ill = illustrationSVG[illKey] || illustrationSVG.mortar
+  const ingredients = (r.ingredients || []).map(i => `<li>${i}</li>`).join('')
+  const steps = (r.steps || []).map((s, i) =>
+    `<li><span class="step-number">${i + 1}</span><span class="step-text">${s}</span></li>`).join('')
+
+  const el = document.createElement('div')
+  el.className = 'book-spread'
+  el.dataset.role = 'favorited-result'
+  el.dataset.favresultId = entry.id
+  el.dataset.recipeName = r.name || ''
+  el.style.display = 'none'
+  el.innerHTML = `
+    <div class="page-turn-layer"><div class="turn-front"></div><div class="turn-back"></div></div>
+    <div class="page page-left">
+      <div class="curl-zone curl-left" role="button" aria-label="Página anterior"><div class="curl-surface"></div><div class="curl-hint">‹</div></div>
+      <div class="recipe-card-border">
+        <span class="recipe-eyebrow">${r.category || ''}</span>
+        <div class="recipe-header-rule"></div>
+        <h2 class="recipe-title">${r.name || ''}</h2>
+        <p class="recipe-subtitle-italic">${r.subtitle || ''}</p>
+        <div class="recipe-meta-grid">
+          <div class="meta-cell"><span class="meta-label">${labels.prep}</span><span class="meta-value">${r.prep_time || ''}</span></div>
+          <div class="meta-cell"><span class="meta-label">${labels.servings}</span><span class="meta-value">${r.servings || ''}</span></div>
+          <div class="meta-cell"><span class="meta-label">${labels.level}</span><span class="meta-value">${r.difficulty || ''}</span></div>
+        </div>
+        <div class="recipe-section">
+          <h3 class="section-label">Ingredientes</h3>
+          <ul class="ingredients-list">${ingredients}</ul>
+          <div class="chef-tip">
+            <span class="tip-label">${labels.tip}</span>
+            <p class="tip-text">${r.tip || ''}</p>
+          </div>
+        </div>
+      </div>
+      <div class="handwritten-annotation annotation-0">${r.annotation || ''}</div>
+      <div class="page-footer"><span class="footer-brand">Foodpedia</span><span class="page-number"></span></div>
+    </div>
+    <div class="page page-right">
+      <div class="curl-zone curl-right" role="button" aria-label="Próxima página"><div class="curl-surface"></div><div class="curl-hint">›</div></div>
+      <div class="recipe-card-border">
+        <div class="botanical-illustration">${ill}</div>
+        <div class="recipe-story">
+          <h3 class="section-label">${labels.story}</h3>
+          <p class="story-text">${r.story || ''}</p>
+        </div>
+        <div class="recipe-section">
+          <h3 class="section-label">${labels.steps}</h3>
+          <ol class="steps-list">${steps}</ol>
+        </div>
+      </div>
+      <div class="page-footer"><span class="footer-brand">Foodpedia</span><span class="page-number"></span></div>
+    </div>`
+  return el
 }
 
 function syncRibbonFavorite() {
