@@ -640,6 +640,10 @@ function animatePageTurn(from, to, direction) {
       syncRibbonFavorite()
       translateVisibleStaticRecipe()
       if (layer) gsap.set(layer, { opacity: 0, clearProps: 'zIndex' })
+      if (!isOnboardingComplete() && to > SPREAD_COMO_USAR_END) {
+        localStorage.setItem('onboarding_complete', '1')
+        initMobileNotice()
+      }
       resolve()
     }
 
