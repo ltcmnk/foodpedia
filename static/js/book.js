@@ -879,6 +879,7 @@ function shakeAndShowTooltip(targetEl) {
 function completeOnboarding() {
   localStorage.setItem('onboarding_complete', '1')
   goToSection('toc')
+  initMobileNotice()
 }
 
 function goToSection(section) {
@@ -1118,7 +1119,7 @@ if (coverWrapper) {
     })
   }
   coverWrapper.addEventListener('click', () => {
-    if (BookState.phase === 'cover') animateCoverOpen()
+    if (BookState.phase === 'cover') animateCoverOpen().then(() => initMobileNotice())
   })
 }
 
@@ -1425,6 +1426,25 @@ function initSearchStates() {
   } else {
     showSearchState('no-key')
   }
+}
+
+// ── MOBILE NOTICE ──
+
+function initMobileNotice() {
+  if (!isMobileLayout()) return
+  if (localStorage.getItem('fp_mobile_notice_dismissed') === '1') return
+  const el = document.getElementById('mobile-notice')
+  if (!el) return
+  el.style.display = ''
+  gsap.to(el, { opacity: 1, duration: reducedMotion ? 0.001 : 0.4, delay: reducedMotion ? 0 : 0.3, ease: 'power1.out' })
+}
+
+function dismissMobileNotice() {
+  localStorage.setItem('fp_mobile_notice_dismissed', '1')
+  const el = document.getElementById('mobile-notice')
+  if (!el) return
+  gsap.to(el, { opacity: 0, duration: reducedMotion ? 0.001 : 0.25, ease: 'power1.in',
+    onComplete: () => { el.style.display = 'none' } })
 }
 
 // ── FETCH RECIPE ──

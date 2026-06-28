@@ -590,6 +590,11 @@
   <span data-i18n="onboarding">Clique na capa para abrir o livro</span>
 </div>
 
+<div id="mobile-notice" style="display:none;">
+  <p id="mobile-notice-text">o Foodpedia foi projetado para desktop. em telas menores, algumas páginas podem não se comportar como esperado.</p>
+  <button id="mobile-notice-dismiss" onclick="dismissMobileNotice()">continuar mesmo assim</button>
+</div>
+
 <script src="{{ url_for('static', filename='js/book.js', v=asset_version) }}"></script>
 </body>
 </html>

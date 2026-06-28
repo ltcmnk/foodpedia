@@ -1503,6 +1503,44 @@ body {
   display:flex; align-items:center; gap:8px;
 }
 
+/* ──────────────────────────
+   MOBILE NOTICE
+─────────────────────────── */
+#mobile-notice {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 150;
+  background: var(--c-page-alt);
+  border: 1px solid var(--c-border);
+  border-radius: 3px;
+  padding: 16px 20px;
+  max-width: 320px;
+  width: calc(100vw - 48px);
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,.12);
+  opacity: 0;
+}
+#mobile-notice-text {
+  font-family: 'La Belle Aurore', cursive;
+  font-size: 13px;
+  color: var(--c-ink);
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+#mobile-notice-dismiss {
+  font-family: 'Cedarville Cursive', cursive;
+  font-size: 12px;
+  color: #FAF7F0;
+  background: var(--c-cover-red);
+  border: none;
+  padding: 7px 18px;
+  border-radius: 2px;
+  cursor: pointer;
+  box-shadow: 1px 1px 0 rgba(0,0,0,.15);
+}
+
 #print-recipe { display:none; }
 
 /* ──────────────────────────
