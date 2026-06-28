@@ -6,10 +6,7 @@ from flask_cors import CORS
 
 def create_app(config_name: str = None) -> Flask:
     if config_name is None:
-        if os.getenv('DEMO_MODE', '').lower() == 'true':
-            config_name = 'demo'
-        else:
-            config_name = os.getenv('FLASK_ENV', 'development')
+        config_name = os.getenv('FLASK_ENV', 'development')
 
     from app.config import config_map
     cfg = config_map.get(config_name, config_map['development'])

@@ -1,0 +1,12 @@
+<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="var(--c-gold)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+  <g>
+    <!-- body: curved tapering chili, point at bottom -->
+    <path d="M54,40 C44,52 42,72 52,86 C58,94 64,98 68,97 C66,88 63,80 63,70 C63,58 62,48 61,41 C59,38 56,38 54,40 Z" stroke-width="1.7"/>
+    <!-- calyx -->
+    <path d="M55,41 C53,34 56,29 61,30 C66,31 66,38 63,42" stroke-width="1.2"/>
+    <!-- stem -->
+    <path d="M61,30 C61,24 63,20 67,19" stroke-width="1.2"/>
+    <!-- highlight -->
+    <path d="M58,52 C56,64 57,76 61,86" stroke-width="0.8" opacity=".5"/>
+  </g>
+</svg>

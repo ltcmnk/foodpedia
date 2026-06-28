@@ -589,8 +589,16 @@ body {
 /* ── BOTANICAL ILLUSTRATION ── */
 .botanical-illustration {
   float:right; margin:0 0 14px 16px;
-  width:clamp(60px,16%,100px); opacity:.72;
+  /* Square 120×120 icons read smaller than the old tall ones — size up to compensate. */
+  width:clamp(84px,22%,138px); opacity:.72;
 }
+
+/* Story + illustration side by side, icon vertically centered next to the story. */
+.recipe-story-row {
+  display:flex; align-items:center; gap:14px; margin-bottom:16px;
+}
+.recipe-story-row .recipe-story { flex:1 1 auto; min-width:0; margin-bottom:0; }
+.recipe-story-row .botanical-illustration { float:none; margin:0; flex:0 0 auto; }
 
 /* ── STORY / DIVIDER ── */
 .recipe-story { margin-bottom:16px; }
@@ -1687,8 +1695,8 @@ body {
   list-style: none;
 }
 
-.toc-apoio-entry .toc-entry-title { color: var(--c-ink-faded); }
-.toc-apoio-entry .toc-favorite-mark { color: var(--c-gold); opacity: 0.7; }
+/* Apoio entry matches "Pesquisar um Prato": default ink color, no side marker. */
+.toc-apoio-entry .toc-entry-title { color: var(--c-ink); }
 
 /* ──────────────────────────
    SHORTCUTS OVERLAY

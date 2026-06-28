@@ -241,12 +241,14 @@
         <div class="page page-right">
           <div class="curl-zone curl-right" role="button" aria-label="Próxima página"><div class="curl-surface"></div><div class="curl-hint">›</div></div>
           <div class="recipe-card-border">
-            <div class="botanical-illustration" data-stagger>
-              {% include 'svg/botanical/botanical_' + recipe.illustration_key + '.svg' %}
-            </div>
-            <div class="recipe-story">
-              <h3 class="section-label" data-stagger data-i18n="sec_story">A História</h3>
-              <p class="story-text" data-stagger>{{ recipe.story }}</p>
+            <div class="recipe-story-row">
+              <div class="recipe-story">
+                <h3 class="section-label" data-stagger data-i18n="sec_story">A História</h3>
+                <p class="story-text" data-stagger>{{ recipe.story }}</p>
+              </div>
+              <div class="botanical-illustration" data-stagger>
+                {% include 'svg/botanical/botanical_' + recipe.illustration_key + '.svg' %}
+              </div>
             </div>
             <div class="divider-ornament" data-stagger>
               {% include 'svg/botanical/divider.svg' %}
@@ -285,8 +287,6 @@
           <h2 class="about-heading apoio-heading" data-stagger data-i18n-html="apoio_heading">
             Feito com<br>curiosidade<br>e código.
           </h2>
-
-          <div class="recipe-header-rule" data-stagger></div>
 
           <div class="about-body apoio-body" data-stagger>
             <p data-i18n="apoio_p1">O Foodpedia começou como uma entrega acadêmica — um trabalho de faculdade sobre interfaces e inteligência artificial generativa. O prazo passou, a nota veio, mas a curiosidade ficou.</p>
@@ -693,6 +693,11 @@ por estar aqui</div>
 <div id="mobile-notice" style="display:none;">
   <p id="mobile-notice-text">o Foodpedia foi projetado para desktop. em telas menores, algumas páginas podem não se comportar como esperado.</p>
   <button id="mobile-notice-dismiss" onclick="dismissMobileNotice()">continuar mesmo assim</button>
+</div>
+
+<div id="svg-library" hidden aria-hidden="true">
+  {% for key, svg in illustrations.items() %}<template data-illustration-key="{{ key }}">{{ svg|safe }}</template>
+  {% endfor %}
 </div>
 
 <script src="{{ url_for('static', filename='js/book.js', v=asset_version) }}"></script>

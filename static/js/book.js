@@ -291,7 +291,7 @@ function tocPage(entries, pageIndex, side) {
     if (entry.subtype === 'apoio') {
       return `<li data-toc-entry-index="${entryIndex}" data-stagger>
         <a class="toc-entry toc-apoio-entry" href="#" data-target-key="apoio">
-          <span class="toc-favorite-mark" aria-hidden="true">◆</span>
+          <span class="toc-favorite-mark" aria-hidden="true"></span>
           <span class="toc-entry-title" data-i18n="toc_apoio">${entry.fallback || 'Apoiar o Projeto'}</span>
           <span class="toc-dots"></span><span class="toc-page" data-toc-page></span>
         </a>
@@ -1281,16 +1281,15 @@ document.getElementById('toc-spreads-container')?.addEventListener('click', hand
 document.getElementById('favorites-toc-container')?.addEventListener('click', handleTocLinkClick)
 document.getElementById('resultado-container')?.addEventListener('click', handleTocLinkClick)
 
-// ── SVG MAP FOR ILLUSTRATIONS ──
-const illustrationSVG = {
-  herbs:   `<svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="var(--c-gold)" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"><path d="M40,112 C40,90 40,68 40,30"/><path d="M40,100 C33,96 24,90 18,88"/><path d="M40,86 C47,82 56,76 62,74"/><path d="M40,72 C33,68 24,62 18,60"/><path d="M40,58 C47,54 56,48 62,46"/><path d="M40,44 C33,40 24,34 20,32"/><path d="M40,30 C43,24 46,18 44,12 C42,8 38,8 36,12 C34,18 37,24 40,30"/></svg>`,
-  grain:   `<svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="var(--c-gold)" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"><path d="M40,112 L40,30"/><path d="M40,42 C36,36 33,28 36,22 C38,18 40,20 40,42"/><path d="M40,42 C44,36 47,28 44,22 C42,18 40,20 40,42"/><path d="M40,58 C36,52 33,44 36,38 C38,34 40,36 40,58"/><path d="M40,58 C44,52 47,44 44,38 C42,34 40,36 40,58"/><path d="M40,74 C36,68 33,60 36,54 C38,50 40,52 40,74"/><path d="M40,74 C44,68 47,60 44,54 C42,50 40,52 40,74"/><path d="M40,90 C36,84 33,76 36,70 C38,66 40,68 40,90"/><path d="M40,90 C44,84 47,76 44,70 C42,66 40,68 40,90"/><path d="M40,30 C38,20 40,12 40,12 C40,12 42,20 40,30"/></svg>`,
-  bowl:    `<svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="var(--c-gold)" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12,58 Q12,96 40,100 Q68,96 68,58"/><ellipse cx="40" cy="58" rx="28" ry="6"/><path d="M20,72 Q28,68 36,72 Q44,76 52,72 Q60,68 66,72"/><path d="M22,86 Q32,82 40,86 Q48,90 58,86"/><path d="M48,24 L52,56"/><path d="M54,22 L58,54"/><path d="M25,50 Q22,42 25,34 Q28,26 25,18"/><path d="M35,48 Q32,40 35,32 Q38,24 35,16"/></svg>`,
-  vanilla: `<svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="var(--c-gold)" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"><path d="M36,108 C34,75 34,50 38,20 C40,15 40,10 40,10 C40,10 40,15 42,20 C46,50 46,75 44,108 C43,112 37,112 36,108"/><path d="M40,95 L36,92"/><path d="M40,82 L44,79"/><path d="M40,69 L36,66"/><path d="M40,56 L44,53"/><path d="M40,43 L36,40"/><path d="M40,30 L44,27"/><path d="M38,20 Q35,12 38,8 Q40,5 42,8 Q45,12 42,20"/></svg>`,
-  citrus:  `<svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="var(--c-gold)" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="40" cy="68" r="28"/><circle cx="40" cy="68" r="22"/><circle cx="40" cy="68" r="4"/><line x1="40" y1="46" x2="40" y2="64"/><line x1="40" y1="72" x2="40" y2="90"/><line x1="18" y1="68" x2="36" y2="68"/><line x1="44" y1="68" x2="62" y2="68"/><line x1="24" y1="52" x2="37" y2="65"/><line x1="43" y1="71" x2="56" y2="84"/><line x1="56" y1="52" x2="43" y2="65"/><line x1="37" y1="71" x2="24" y2="84"/><path d="M36,40 C34,32 42,26 50,30 C46,36 41,39 36,40"/></svg>`,
-  spice:   `<svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="var(--c-gold)" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"><path d="M40,108 C36,88 32,65 35,48 C37,35 41,25 40,18"/><path d="M40,108 C44,88 48,65 45,48 C43,35 39,25 40,18"/><path d="M36,90 C34,72 33,55 35,42"/><path d="M40,18 C40,12 42,8 40,5"/><path d="M40,18 C44,12 50,11 52,16 C48,18 44,18 40,18"/><path d="M38,10 C36,6 40,3 40,3 C40,3 44,6 42,10"/></svg>`,
-  mortar:  `<svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="var(--c-gold)" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18,70 Q16,104 40,106 Q64,104 62,70"/><ellipse cx="40" cy="70" rx="22" ry="6"/><path d="M26,108 L54,108"/><path d="M55,22 C55,34 54,46 52,54"/><ellipse cx="51" cy="57" rx="6" ry="4"/><path d="M27,82 Q33,78 38,82 Q43,86 49,82"/><path d="M29,93 Q35,89 40,92 Q45,95 51,92"/></svg>`,
-  glass:   `<svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="var(--c-gold)" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14,18 Q26,52 40,60 Q54,52 66,18"/><line x1="14" y1="18" x2="66" y2="18"/><line x1="40" y1="60" x2="40" y2="98"/><path d="M22,98 Q40,104 58,98"/><path d="M20,28 Q40,33 60,28"/><circle cx="57" cy="14" r="4"/><path d="M55,10 Q57,5 60,8"/></svg>`,
+// ── ILLUSTRATIONS ──
+// Single source of truth: the botanical SVG files, injected by Flask into
+// #svg-library. Base recipe cards include the same files server-side; dynamic
+// cards (result, favorites) read them here — so the art never diverges.
+function getIllustration(key) {
+  const lib = document.getElementById('svg-library')
+  const tpl = lib?.querySelector(`template[data-illustration-key="${key}"]`)
+    || lib?.querySelector('template[data-illustration-key="mortar"]')
+  return tpl ? tpl.innerHTML : ''
 }
 
 // ── PROVIDER + MODEL SELECTOR ──
@@ -1768,6 +1767,11 @@ function notifyRecipeReady(recipe) {
   rebuildBookLayout({ keepCurrent: true })
   saveSearchHistory(recipe)
 
+  // Loading finished: leave the loading phase and clear the pending recipe so the
+  // flip-to-end auto-show (goToNextSpread) can't create a second spread.
+  BookState.phase = 'browsing'
+  BookState.pendingRecipe = null
+
   const tab = document.getElementById('tab-resultado')
   if (tab) {
     tab.classList.add('is-ready')
@@ -2065,6 +2069,17 @@ function createResultadoSpread(recipe) {
   const host = document.getElementById('resultado-container')
   if (!host) return null
 
+  // Reuse an existing spread for the same recipe instead of appending a duplicate
+  // (covers re-search, history re-click, and slow-path flip-to-end).
+  const recipeName = recipe.name || ''
+  const existing = [...host.querySelectorAll('[data-role="resultado"]')]
+    .find(el => el.dataset.recipeName === recipeName)
+  if (existing) {
+    existing.dataset.recipeJson = JSON.stringify(recipe)
+    rebuildBookLayout({ keepCurrent: true })
+    return existing
+  }
+
   const id = `resultado-${Date.now()}`
   const lang = currentLang
   const labels = lang === 'en'
@@ -2076,7 +2091,7 @@ function createResultadoSpread(recipe) {
         hint: '◆ para guardar entre sessões' }
 
   const illKey = recipe.illustration_key || 'mortar'
-  const ill = illustrationSVG[illKey] || illustrationSVG.mortar
+  const ill = getIllustration(illKey)
   const ingredients = (recipe.ingredients || []).map(i => `<li data-stagger>${escapeHtml(i)}</li>`).join('')
   const steps = (recipe.steps || []).map((s, i) =>
     `<li data-stagger><span class="step-number">${i + 1}</span><span class="step-text">${escapeHtml(s)}</span></li>`).join('')
@@ -2125,10 +2140,12 @@ function createResultadoSpread(recipe) {
     <div class="page page-right">
       <div class="curl-zone curl-right" role="button" aria-label="Próxima página"><div class="curl-surface"></div><div class="curl-hint">›</div></div>
       <div class="recipe-card-border">
-        <div class="botanical-illustration" data-stagger>${ill}</div>
-        <div class="recipe-story">
-          <h3 class="section-label" data-stagger>${labels.story}</h3>
-          <p class="story-text" data-stagger>${escapeHtml(recipe.story)}</p>
+        <div class="recipe-story-row">
+          <div class="recipe-story">
+            <h3 class="section-label" data-stagger>${labels.story}</h3>
+            <p class="story-text" data-stagger>${escapeHtml(recipe.story)}</p>
+          </div>
+          <div class="botanical-illustration" data-stagger>${ill}</div>
         </div>
         <div class="divider-ornament" data-stagger></div>
         <div class="recipe-section">
@@ -2161,7 +2178,7 @@ function createFavoritadoSpread(entry) {
         story: 'A História', steps: 'Modo de Preparo', tip: 'Dica' }
 
   const illKey = r.illustration_key || 'mortar'
-  const ill = illustrationSVG[illKey] || illustrationSVG.mortar
+  const ill = getIllustration(illKey)
   const ingredients = (r.ingredients || []).map(i => `<li>${escapeHtml(i)}</li>`).join('')
   const steps = (r.steps || []).map((s, i) =>
     `<li><span class="step-number">${i + 1}</span><span class="step-text">${escapeHtml(s)}</span></li>`).join('')
@@ -2201,10 +2218,12 @@ function createFavoritadoSpread(entry) {
     <div class="page page-right">
       <div class="curl-zone curl-right" role="button" aria-label="Próxima página"><div class="curl-surface"></div><div class="curl-hint">›</div></div>
       <div class="recipe-card-border">
-        <div class="botanical-illustration">${ill}</div>
-        <div class="recipe-story">
-          <h3 class="section-label">${labels.story}</h3>
-          <p class="story-text">${escapeHtml(r.story)}</p>
+        <div class="recipe-story-row">
+          <div class="recipe-story">
+            <h3 class="section-label">${labels.story}</h3>
+            <p class="story-text">${escapeHtml(r.story)}</p>
+          </div>
+          <div class="botanical-illustration">${ill}</div>
         </div>
         <div class="recipe-section">
           <h3 class="section-label">${labels.steps}</h3>

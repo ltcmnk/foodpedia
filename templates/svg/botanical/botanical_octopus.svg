@@ -1,0 +1,14 @@
+<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="var(--c-gold)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+  <g>
+        <path d="M44,46 C44,32 52,24 60,24 C68,24 76,32 76,46 C76,54 74,60 70,64" stroke-width="1.7"/>
+        <path d="M50,64 C46,60 44,54 44,46" stroke-width="1.7"/>
+        <circle cx="54" cy="44" r="2" stroke-width="1.1"/><circle cx="66" cy="44" r="2" stroke-width="1.1"/>
+        <path d="M50,63 C44,74 40,84 44,92 C46,86 48,80 52,76" stroke-width="1.2"/>
+        <path d="M56,66 C52,78 50,88 54,96 C56,90 57,82 60,78" stroke-width="1.2"/>
+        <path d="M64,66 C68,78 70,88 66,96 C64,90 63,82 60,78" stroke-width="1.2"/>
+        <path d="M70,63 C76,74 80,84 76,92 C74,86 72,80 68,76" stroke-width="1.2"/>
+        <path d="M48,60 C40,68 34,76 34,84 C38,78 44,73 50,70" stroke-width="1.2"/>
+        <path d="M72,60 C80,68 86,76 86,84 C82,78 76,73 70,70" stroke-width="1.2"/>
+        <g stroke-width="0.6" opacity=".5"><circle cx="46" cy="84" r="1"/><circle cx="54" cy="90" r="1"/><circle cx="66" cy="90" r="1"/><circle cx="74" cy="84" r="1"/></g>
+      </g>
+</svg>

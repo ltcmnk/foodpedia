@@ -1,13 +1,12 @@
-<svg viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="var(--c-gold)" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M40,110 C40,80 38,60 40,30"/>
-  <path d="M40,110 C42,80 44,60 40,30"/>
-  <path d="M39,75 C36,72 35,68 37,65 C38,63 40,64 39,75"/>
-  <path d="M41,60 C44,57 45,53 43,50 C42,48 40,49 41,60"/>
-  <path d="M32,25 C34,15 40,10 40,10 C40,10 46,15 48,25"/>
-  <path d="M32,25 C30,30 32,35 40,36 C48,35 50,30 48,25"/>
-  <path d="M35,18 C37,22 40,24 43,22"/>
-  <path d="M37,14 L40,10 L43,14"/>
-  <circle cx="40" cy="10" r="1.5"/>
-  <path d="M36,32 C37,35 39,36 40,36"/>
-  <path d="M44,32 C43,35 41,36 40,36"/>
+<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="var(--c-gold)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+  <g>
+        <path d="M58,48 C53,40 53,30 58,28 C63,30 63,40 58,48 Z" stroke-width="1.2"/>
+        <path d="M58,48 C66,44 74,40 76,46 C74,52 64,52 58,48 Z" stroke-width="1.2"/>
+        <path d="M58,48 C66,54 72,62 67,66 C61,64 58,54 58,48 Z" stroke-width="1.2"/>
+        <path d="M58,48 C50,54 44,62 49,66 C55,64 58,54 58,48 Z" stroke-width="1.2"/>
+        <path d="M58,48 C50,44 42,40 40,46 C42,52 52,52 58,48 Z" stroke-width="1.2"/>
+        <circle cx="58" cy="48" r="3" stroke-width="1"/>
+        <path d="M58,51 C58,68 56,82 60,94" stroke-width="1.4"/>
+        <path d="M58,72 C66,68 74,68 78,74 C72,78 62,78 58,73" stroke-width="1.1"/>
+      </g>
 </svg>

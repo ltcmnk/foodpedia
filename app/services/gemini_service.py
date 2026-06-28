@@ -21,7 +21,7 @@ _RECIPE_PROMPT = '''Para o prato "{dish}", retorne APENAS este JSON (sem markdow
   "name": "nome oficial completo",
   "subtitle": "frase curta e poética que descreve o prato",
   "category": "origem culinária (ex: Culinária Brasileira)",
-  "illustration_key": "uma de: herbs, grain, bowl, vanilla, citrus, spice, mortar",
+  "illustration_key": "uma de: artichoke, bread, cake-slice, candle, cheese-wedge, chocolate, citrus, cocktail, column, corn, crab, croissant, cupcake, cutlery, donut, drumstick, espresso-cup, fish, fish-plate, garlic, gelato, glass, ham, herbs, lobster, moka, mortar, mussels, noodle-bowl, octopus, olive-branch, onion, pasta-fork, pepper, pie, pitcher, plate-setting, pot, pudding-mold, rice-bowl, rolling-pin, sausage, shrimp, steak, tomato, tumbler, vanilla, whisk, wine-bottle",
   "prep_time": "tempo total",
   "servings": "número de porções",
   "difficulty": "Fácil, Médio ou Difícil",
