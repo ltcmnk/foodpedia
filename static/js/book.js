@@ -188,6 +188,95 @@ function heirloomPage(side = 'right', variant = 'primary') {
     </div>`
 }
 
+function resultadoHeirloomPage() {
+  const en = currentLang === 'en'
+  const label  = en ? 'searched this session'   : 'pesquisadas nesta sessão'
+  const noteA  = en ? 'good call!'              : 'boa ideia!'
+  const noteB  = en ? 'try with tomato'         : 'tentar com tomate'
+  const noteC  = en ? 'make again Friday'       : 'repetir na sexta'
+  const noteD  = en ? 'save for later'          : 'salvar para depois'
+  return `
+    <div class="page page-left resultado-heirloom" aria-label="${label}">
+      <div class="curl-zone curl-left" role="button" aria-label="Página anterior"><div class="curl-surface"></div><div class="curl-hint">‹</div></div>
+      <div class="rh-header-rule"></div>
+      <span class="rh-section-label">${label}</span>
+      <svg class="rh-botanical" viewBox="0 0 80 120" aria-hidden="true">
+        <path d="M40,92 C34,86 22,72 18,56 C14,40 20,20 28,12 C32,8 36,8 40,12 C44,8 48,8 52,12 C60,20 66,40 62,56 C58,72 46,86 40,92"/>
+        <path d="M40,92 L40,12"/>
+        <path d="M40,24 C34,26 26,30 20,38"/>
+        <path d="M40,36 C34,38 26,42 20,50"/>
+        <path d="M40,48 C34,50 27,53 22,60"/>
+        <path d="M40,60 C36,62 30,65 26,70"/>
+        <path d="M40,24 C46,26 54,30 60,38"/>
+        <path d="M40,36 C46,38 54,42 60,50"/>
+        <path d="M40,48 C46,50 53,53 58,60"/>
+        <path d="M40,60 C44,62 50,65 54,70"/>
+        <path d="M40,80 C36,73 30,68 26,72"/>
+        <path d="M40,80 C44,73 50,68 54,72"/>
+      </svg>
+      <span class="rh-note rh-note-a">${noteA}</span>
+      <span class="rh-note rh-note-b">${noteB}</span>
+      <span class="rh-note rh-note-c">${noteC}</span>
+      <span class="rh-note rh-note-d">${noteD}</span>
+      <svg class="rh-doodle" viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="38" cy="38" r="26"/>
+        <circle cx="38" cy="38" r="18"/>
+        <path d="M58 58 L84 82"/>
+        <path d="M28 24 C32 20 38 18 44 22"/>
+      </svg>
+      <div class="page-footer"><span class="footer-brand">Foodpedia</span><span class="page-number"></span></div>
+    </div>`
+}
+
+function favoritesHeirloomPage() {
+  const en    = currentLang === 'en'
+  const title = en ? 'Saved'               : 'Guardadas'
+  const noteA = en ? 'heart recipes'       : 'receitas de coração'
+  const noteB = en ? 'to share'            : 'para compartilhar'
+  const noteC = en ? 'revisit every year'  : 'revisitar todo ano'
+  const noteD = en ? 'handle with care'    : 'guardar com cuidado'
+  return `
+    <div class="page page-left favorites-heirloom" aria-label="${en ? 'Favorite recipes' : 'Receitas favoritas'}">
+      <div class="curl-zone curl-left" role="button" aria-label="Página anterior"><div class="curl-surface"></div><div class="curl-hint">‹</div></div>
+      <span class="fh-diamond" aria-hidden="true">◆</span>
+      <span class="fh-title">${title}</span>
+      <div class="fh-ring" aria-hidden="true"></div>
+      <svg class="fh-botanical" viewBox="0 0 80 120" aria-hidden="true">
+        <path d="M40,88 L40,8"/>
+        <path d="M40,16 L36,11"/><path d="M40,16 L44,11"/>
+        <path d="M40,24 L35,19"/><path d="M40,24 L45,19"/>
+        <path d="M40,32 L35,27"/><path d="M40,32 L45,27"/>
+        <path d="M40,40 L35,35"/><path d="M40,40 L45,35"/>
+        <path d="M40,48 L35,43"/><path d="M40,48 L45,43"/>
+        <path d="M40,56 L35,51"/><path d="M40,56 L45,51"/>
+        <path d="M40,64 L35,59"/><path d="M40,64 L45,59"/>
+        <path d="M40,72 L35,67"/><path d="M40,72 L45,67"/>
+        <path d="M32,80 C30,62 28,44 30,28 C31,18 28,8 26,4"/>
+        <path d="M30,28 C25,23 21,18 24,14 C26,11 31,15 30,28"/>
+        <path d="M30,44 C24,39 20,33 24,29 C26,27 31,32 30,44"/>
+        <path d="M29,60 C23,55 20,48 24,44 C26,42 30,48 29,60"/>
+        <path d="M48,80 C50,62 52,44 50,28 C49,18 52,8 54,4"/>
+        <path d="M50,28 C55,23 59,18 56,14 C54,11 49,15 50,28"/>
+        <path d="M51,44 C56,39 60,33 56,29 C54,27 49,32 51,44"/>
+        <path d="M51,60 C57,55 61,48 57,44 C55,42 50,48 51,60"/>
+        <path d="M30,82 C35,85 40,86 45,85 C49,84 53,83 54,82"/>
+        <path d="M30,84 C35,87 40,88 45,87 C49,86 53,85 54,84"/>
+      </svg>
+      <span class="fh-note fh-note-a">${noteA}</span>
+      <span class="fh-note fh-note-b">${noteB}</span>
+      <span class="fh-note fh-note-c">${noteC}</span>
+      <span class="fh-note fh-note-d">${noteD}</span>
+      <svg class="fh-doodle" viewBox="0 0 40 80" aria-hidden="true">
+        <path d="M4 4 L4 64 L20 54 L36 64 L36 4 Z"/>
+        <path d="M4 14 L36 14"/>
+        <path d="M4 16 L36 16"/>
+        <path d="M12 4 L12 14"/>
+        <path d="M28 4 L28 14"/>
+      </svg>
+      <div class="page-footer"><span class="footer-brand">Foodpedia</span><span class="page-number"></span></div>
+    </div>`
+}
+
 function tocPage(entries, pageIndex, side) {
   const isLeft = side === 'left'
   const heading = pageIndex === 0
@@ -333,7 +422,7 @@ function buildFavoritesTocSpread() {
   el.dataset.role = 'favorites-toc'
   el.innerHTML = `
     <div class="page-turn-layer"><div class="turn-front"></div><div class="turn-back"></div></div>
-    ${heirloomPage('left', 'secondary')}
+    ${favoritesHeirloomPage()}
     <div class="page page-right toc-sheet">
       <div class="curl-zone curl-right" role="button" aria-label="Próxima página"><div class="curl-surface"></div><div class="curl-hint">›</div></div>
       <h2 class="toc-heading">${currentLang === 'en' ? 'Favourites' : 'Favoritos'}</h2>
@@ -1534,7 +1623,7 @@ function buildResultadoTocSpread() {
   toc.dataset.role = 'resultado-toc'
   toc.innerHTML = `
     <div class="page-turn-layer"><div class="turn-front"></div><div class="turn-back"></div></div>
-    ${heirloomPage('left', 'secondary')}
+    ${resultadoHeirloomPage()}
     <div class="page page-right toc-sheet">
       <div class="curl-zone curl-right" role="button" aria-label="Próxima página"><div class="curl-surface"></div><div class="curl-hint">›</div></div>
       <h2 class="toc-heading">${heading}</h2>
@@ -2527,11 +2616,17 @@ function bindAnnotationDrag(annotation, page, onFinish) {
     annotation.classList.add('is-dragging')
     annotation.setPointerCapture?.(event.pointerId)
 
+    // For scrollable pages (resultado/favorited-result), lock scroll during drag
+    // and account for the scroll offset so position math stays in content coordinates
+    const pageScrollTop = pageEl.scrollTop || 0
+    const prevOverflowY = pageEl.style.overflowY
+    pageEl.style.overflowY = 'hidden'
+
     const move = moveEvent => {
       const w = annotation.offsetWidth
       const h = annotation.offsetHeight
       const left = Math.min(pageRect.width - w - 8, Math.max(8, moveEvent.clientX - pageRect.left - offsetX))
-      const top  = Math.min(pageRect.height - h - 44, Math.max(8, moveEvent.clientY - pageRect.top - offsetY))
+      const top  = Math.min(pageRect.height + pageScrollTop - h - 44, Math.max(8, moveEvent.clientY - pageRect.top - offsetY + pageScrollTop))
       annotation.style.left = `${left}px`
       annotation.style.top  = `${top}px`
       annotation.style.right = 'auto'
@@ -2544,6 +2639,7 @@ function bindAnnotationDrag(annotation, page, onFinish) {
       annotation.removeEventListener('pointermove', move)
       annotation.removeEventListener('pointerup', finish)
       annotation.removeEventListener('pointercancel', finish)
+      pageEl.style.overflowY = prevOverflowY
       const left = parseFloat(annotation.style.left) || 0
       const top  = parseFloat(annotation.style.top)  || 0
       onFinish?.(left / pageRect.width, top / pageRect.height, rotation)
