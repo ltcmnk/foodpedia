@@ -112,6 +112,10 @@ function tocEntries() {
     })
   })
 
+  // Apoio entry — separator + donation link after base recipes
+  entries.push({ type: 'separator', weight: 0 })
+  entries.push({ type: 'link', subtype: 'apoio', labelKey: 'toc_apoio', fallback: 'Apoiar o Projeto', targetKey: 'apoio', weight: 1 })
+
   // Ephemeral resultado entries (session only)
   const resultadoSpreads = [...document.querySelectorAll('#resultado-container [data-role="resultado"]')]
   if (resultadoSpreads.length) {
@@ -284,6 +288,18 @@ function tocPage(entries, pageIndex, side) {
     ? `<h2 class="toc-heading" data-i18n="toc_heading">Sumário</h2>`
     : `<span class="toc-continuation">${currentLang === 'en' ? 'continued' : 'continuação'}</span>`
   const rows = entries.map((entry, entryIndex) => {
+    if (entry.type === 'separator') {
+      return `<li class="toc-apoio-separator" data-toc-entry-index="${entryIndex}"></li>`
+    }
+    if (entry.subtype === 'apoio') {
+      return `<li data-toc-entry-index="${entryIndex}" data-stagger>
+        <a class="toc-entry toc-apoio-entry" href="#" data-target-key="apoio">
+          <span class="toc-favorite-mark" aria-hidden="true">◆</span>
+          <span class="toc-entry-title" data-i18n="toc_apoio">${entry.fallback || 'Apoiar o Projeto'}</span>
+          <span class="toc-dots"></span><span class="toc-page" data-toc-page></span>
+        </a>
+      </li>`
+    }
     if (entry.type === 'section') {
       return `<li class="toc-section-row" data-toc-entry-index="${entryIndex}" data-stagger>
         <span class="toc-entry toc-section" data-target-role="${entry.targetRole || ''}">
