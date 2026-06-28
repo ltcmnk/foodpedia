@@ -1156,6 +1156,7 @@ function handleTocLinkClick(e) {
 }
 document.getElementById('toc-spreads-container')?.addEventListener('click', handleTocLinkClick)
 document.getElementById('favorites-toc-container')?.addEventListener('click', handleTocLinkClick)
+document.getElementById('resultado-container')?.addEventListener('click', handleTocLinkClick)
 
 // ── SVG MAP FOR ILLUSTRATIONS ──
 const illustrationSVG = {
@@ -1340,9 +1341,98 @@ async function fetchRecipe(query) {
   return res.json()
 }
 
-// ── RESULTADO TAB (stub — replaced in Task 5) ──
+// ── RESULTADO TAB ──
 function syncResultadoTab() {
-  // replaced in Task 5
+  const tab = document.getElementById('tab-resultado')
+  if (!tab) return
+  const hasResultados = document.querySelector('#resultado-container [data-role="resultado"]') !== null
+  tab.style.display = hasResultados ? 'flex' : 'none'
+}
+
+// ── RESULTADO TOC SPREAD ──
+function buildResultadoTocSpread() {
+  const host = document.getElementById('resultado-container')
+  if (!host) return null
+
+  // Remove existing toc spread if any
+  const existing = host.querySelector('[data-role="resultado-toc"]')
+  if (existing) existing.remove()
+
+  const resultadoEls = [...host.querySelectorAll('[data-role="resultado"]')]
+  if (!resultadoEls.length) return null
+
+  const heading = currentLang === 'en' ? 'Searched' : 'Pesquisadas'
+  const entries = resultadoEls.map(el => {
+    const key = spreadKey(el)
+    const name = el.dataset.recipeName || key
+    return `<li data-stagger>
+      <a class="toc-entry toc-sub" href="#" data-target-key="${key}">
+        <span class="toc-favorite-mark" aria-hidden="true"></span>
+        <span class="toc-entry-title">${name}</span>
+        <span class="toc-dots"></span><span class="toc-page" data-toc-page></span>
+      </a>
+    </li>`
+  }).join('')
+
+  const toc = document.createElement('div')
+  toc.className = 'book-spread'
+  toc.dataset.role = 'resultado-toc'
+  toc.innerHTML = `
+    <div class="page-turn-layer"><div class="turn-front"></div><div class="turn-back"></div></div>
+    ${heirloomPage('left', 'secondary')}
+    <div class="page page-right toc-sheet">
+      <div class="curl-zone curl-right" role="button" aria-label="Próxima página"><div class="curl-surface"></div><div class="curl-hint">›</div></div>
+      <h2 class="toc-heading">${heading}</h2>
+      <ul class="toc-entries">${entries}</ul>
+      <div class="page-footer"><span class="footer-brand">Foodpedia</span><span class="page-number"></span></div>
+    </div>`
+
+  // Insert TOC before first resultado spread
+  host.insertBefore(toc, host.firstChild)
+  rebuildBookLayout({ keepCurrent: true })
+  return toc
+}
+
+// ── GO TO RESULTADO ──
+function goToResultado() {
+  if (BookState.isAnimating) return
+
+  if (!isOnboardingComplete()) {
+    const tabEl = document.querySelector('#tab-resultado .dt-tag')
+    shakeAndShowTooltip(tabEl)
+    return
+  }
+
+  const tabEl = document.getElementById('tab-resultado')
+  const isReady = tabEl?.classList.contains('is-ready')
+
+  if (isReady) {
+    // Navigate to the newest resultado spread
+    const resultados = [...document.querySelectorAll('#resultado-container [data-role="resultado"]')]
+    const newest = resultados.at(-1)
+    if (!newest) return
+    const target = Number(newest.dataset.spread)
+    tabEl.classList.remove('is-ready')
+    if (BookState.phase === 'cover') {
+      animateCoverOpen(spreadKey(newest))
+      return
+    }
+    const dir = target > BookState.currentSpread ? 'forward' : 'backward'
+    animatePageTurn(BookState.currentSpread, target, dir).then(() => animateContentIn(target))
+    return
+  }
+
+  // Navigate to resultado-toc
+  const tocEl = document.querySelector('#resultado-container [data-role="resultado-toc"]')
+  if (!tocEl) return
+  const target = Number(tocEl.dataset.spread)
+  if (!target) return
+  if (BookState.phase === 'cover') {
+    animateCoverOpen('resultado-toc')
+    return
+  }
+  const dir = target > BookState.currentSpread ? 'forward' : 'backward'
+  animatePageTurn(BookState.currentSpread, target, dir).then(() => animateContentIn(target))
 }
 
 // ── REBUILD FAVORITADO SPREADS ──
@@ -1395,7 +1485,25 @@ function toggleResultadoFavorite(resultadoId) {
 
 // ── LOADING NOTIFY ──
 function notifyRecipeReady(recipe) {
-  // replaced in Task 5
+  BookState.currentRecipe = recipe
+  BookState.currentRecipeVariants = { [currentLang]: recipe }
+
+  const spreadEl = createResultadoSpread(recipe)
+  if (!spreadEl) return
+  buildResultadoTocSpread()
+  rebuildBookLayout({ keepCurrent: true })
+  saveSearchHistory(recipe)
+
+  const tab = document.getElementById('tab-resultado')
+  if (tab) {
+    tab.classList.add('is-ready')
+    syncResultadoTab()
+    gsap.fromTo(tab, { opacity: 0.6 }, { opacity: 1, duration: 0.3, repeat: 2, yoyo: true })
+  }
+
+  const t = (key, fallback) => window._i18nStrings?.[currentLang]?.[key] || fallback
+  showToast(t('recipe_ready_toast', 'Receita pronta! Clique em Resultado para ver.'))
+  showArrow(arrowR, 0.9)
 }
 
 // ── ERROR SPREAD ──
@@ -1436,8 +1544,29 @@ function retryLastSearch() {
 
 // ── SHOW RESULT ──
 function showRecipeResult(recipe) {
-  // replaced in Task 5 — createResultadoSpread
-  notifyRecipeReady(recipe)
+  BookState.phase = 'result'
+  BookState.pendingRecipe = null
+  BookState.currentRecipe = recipe
+  BookState.currentRecipeVariants = { [currentLang]: recipe }
+  BookState.errorActive = false
+  BookState.setupActive = false
+
+  const spreadEl = createResultadoSpread(recipe)
+  if (!spreadEl) return
+  buildResultadoTocSpread()
+  rebuildBookLayout({ keepCurrent: true })
+  saveSearchHistory(recipe)
+
+  const tab = document.getElementById('tab-resultado')
+  tab?.classList.remove('is-ready')
+  syncResultadoTab()
+
+  const target = Number(spreadEl.dataset.spread)
+  const direction = target > BookState.currentSpread ? 'forward' : 'backward'
+  animatePageTurn(BookState.currentSpread, target, direction).then(() => {
+    animateContentIn(target)
+    updateDividerTabs(target)
+  })
 }
 
 function showSetup(mode = 'all') {
@@ -1459,7 +1588,6 @@ function showSetup(mode = 'all') {
 
   BookState.errorActive = true
   BookState.setupActive = true
-  BookState.resultAvailable = false
   prefillGeminiKeyInput()
   rebuildBookLayout({ keepCurrent: BookState.phase !== 'cover' })
   if (BookState.phase === 'cover') {
@@ -1483,10 +1611,10 @@ const FAST_THRESHOLD_MS = 1500
 
 async function startRecipeSearch(query) {
   if (BookState.phase === 'loading') return
-  BookState.resultAvailable = false
   BookState.errorActive = false
   BookState.setupActive = false
   BookState.lastErrorCode = null
+  document.getElementById('tab-resultado')?.classList.remove('is-ready')
   rebuildBookLayout({ keepCurrent: true })
   BookState.phase = 'loading'
   BookState.loadingQuery = query
@@ -1504,7 +1632,6 @@ async function startRecipeSearch(query) {
 
   if (fetchError) {
     BookState.phase = 'browsing'
-    BookState.resultAvailable = false
     BookState.errorActive = true
     BookState.setupActive = false
     rebuildBookLayout({ keepCurrent: true })
@@ -1531,7 +1658,6 @@ async function startRecipeSearch(query) {
 
   if (fetchError) {
     BookState.phase = 'browsing'
-    BookState.resultAvailable = false
     BookState.errorActive = true
     BookState.setupActive = false
     rebuildBookLayout({ keepCurrent: true })
@@ -1542,8 +1668,6 @@ async function startRecipeSearch(query) {
 
   BookState.pendingRecipe = recipe
   notifyRecipeReady(recipe)
-  const t = (key, fallback) => window._i18nStrings?.[currentLang]?.[key] || fallback
-  showToast(t('recipe_ready_toast', 'Receita pronta! Avance para ver o resultado.'))
 }
 
 // ── SEARCH INPUT ──
