@@ -19,6 +19,7 @@ let SPREAD_ERROR = 11
 let SPREAD_SETUP = 12
 let SPREAD_RECIPES_START = 13
 let SPREAD_RECIPES_END = 28
+let SPREAD_APOIO = 0
 let SPREAD_FAVORITES_TOC = 0
 const SECTION_SPREADS = {}
 
@@ -451,6 +452,7 @@ function rebuildBookLayout(options = {}) {
   const search = document.querySelector('[data-role="search"]')
   const error = document.querySelector('[data-role="error"]')
   const setup = document.querySelector('[data-role="setup"]')
+  const apoio = document.querySelector('[data-role="apoio"]')
   const recipes = [...document.querySelectorAll('[data-role="base-recipe"]')]
   const conditional = []
   if (BookState.errorActive && error) conditional.push(error)
@@ -466,6 +468,7 @@ function rebuildBookLayout(options = {}) {
     favTocSpread,
     search,
     ...recipes,
+    apoio,
     ...conditional,
     ...resultados,
     ...favoritos,
@@ -499,6 +502,7 @@ function rebuildBookLayout(options = {}) {
   SPREAD_SETUP = layoutIndex(setup)
   SPREAD_RESULTADO_FIRST = resultados.length ? layoutIndex(resultados[0]) : 0
   SPREAD_FAVORITES_TOC = favTocSpread ? layoutIndex(favTocSpread) : 0
+  SPREAD_APOIO = layoutIndex(apoio)
   Object.assign(SECTION_SPREADS, {
     toc: SPREAD_TOC,
     search: SPREAD_SEARCH,
