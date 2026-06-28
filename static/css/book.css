@@ -981,6 +981,23 @@ body {
   color: var(--c-cover-red);
   line-height: 1.5;
 }
+.search-inline-error {
+  font-family: 'Indie Flower', cursive;
+  font-size: 11px;
+  color: var(--c-cover-red);
+  line-height: 1.5;
+  margin-top: 8px;
+}
+.search-inline-error-link {
+  font-family: inherit;
+  font-size: inherit;
+  color: var(--c-cover-red);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+}
 .search-demo-link {
   font-family: 'Indie Flower', cursive;
   font-size: 11px;

@@ -31,6 +31,7 @@ const BookState = {
   selectedModel: null,
   selectedProvider: null,
   lastErrorCode: null,
+  lastSimpleCode: null,
   currentRecipe: null,
   currentRecipeVariants: {},
   layout: [],
@@ -1373,6 +1374,27 @@ function clearSearchKeyError() {
   if (errEl) errEl.style.display = 'none'
 }
 
+function showSearchInlineError(simpleCode) {
+  const el = document.getElementById('search-inline-error')
+  if (!el) return
+  const t = (key, fallback) => window._i18nStrings?.[currentLang]?.[key] || fallback
+  if (simpleCode === 'rate_limit') {
+    el.textContent = t('error_rate_limit', 'muitas pesquisas em pouco tempo — aguarde alguns minutos')
+    el.dataset.action = ''
+  } else if (simpleCode === 'auth_error') {
+    el.innerHTML = t('error_auth_inline', 'chave inválida — verifique em aistudio.google.com')
+      + ' <button class="search-inline-error-link" onclick="goToKeyState()">Trocar chave →</button>'
+  } else {
+    return
+  }
+  el.style.display = ''
+}
+
+function clearSearchInlineError() {
+  const el = document.getElementById('search-inline-error')
+  if (el) el.style.display = 'none'
+}
+
 async function validateAndSaveGeminiKey() {
   const input = document.getElementById('search-key-input')
   const btn = document.getElementById('search-key-confirm')
@@ -1434,8 +1456,14 @@ async function fetchRecipe(query, { demo = false } = {}) {
       return localDemoRecipe(query, recipes)
     }
     let errorCode = 'INTERNAL_ERROR'
-    try { errorCode = (await res.json()).error || errorCode } catch {}
+    let simpleCode = 'generic'
+    try {
+      const errData = await res.json()
+      errorCode = errData.error || errorCode
+      simpleCode = errData.error_code || simpleCode
+    } catch {}
     BookState.lastErrorCode = errorCode
+    BookState.lastSimpleCode = simpleCode
     throw new Error(errorCode)
   }
   return res.json()
@@ -1724,9 +1752,11 @@ const FAST_THRESHOLD_MS = 1500
 
 async function startRecipeSearch(query, { demo = false } = {}) {
   if (BookState.phase === 'loading') return
+  clearSearchInlineError()
   BookState.errorActive = false
   BookState.setupActive = false
   BookState.lastErrorCode = null
+  BookState.lastSimpleCode = null
   document.getElementById('tab-resultado')?.classList.remove('is-ready')
   rebuildBookLayout({ keepCurrent: true })
   BookState.phase = 'loading'
@@ -1744,7 +1774,19 @@ async function startRecipeSearch(query, { demo = false } = {}) {
   await Promise.race([fetchPromise, timerPromise])
 
   if (fetchError) {
+    const simpleCode = BookState.lastSimpleCode || 'generic'
+    if (simpleCode === 'rate_limit' || simpleCode === 'auth_error') {
+      BookState.phase = 'browsing'
+      BookState.resultAvailable = false
+      BookState.errorActive = false
+      BookState.setupActive = false
+      rebuildBookLayout({ keepCurrent: true })
+      showSearchInlineError(simpleCode)
+      await navigateToSpread(SPREAD_SEARCH)
+      return
+    }
     BookState.phase = 'browsing'
+    BookState.resultAvailable = false
     BookState.errorActive = true
     BookState.setupActive = false
     rebuildBookLayout({ keepCurrent: true })
@@ -1770,7 +1812,19 @@ async function startRecipeSearch(query, { demo = false } = {}) {
   await fetchPromise
 
   if (fetchError) {
+    const simpleCode = BookState.lastSimpleCode || 'generic'
+    if (simpleCode === 'rate_limit' || simpleCode === 'auth_error') {
+      BookState.phase = 'browsing'
+      BookState.resultAvailable = false
+      BookState.errorActive = false
+      BookState.setupActive = false
+      rebuildBookLayout({ keepCurrent: true })
+      showSearchInlineError(simpleCode)
+      await navigateToSpread(SPREAD_SEARCH)
+      return
+    }
     BookState.phase = 'browsing'
+    BookState.resultAvailable = false
     BookState.errorActive = true
     BookState.setupActive = false
     rebuildBookLayout({ keepCurrent: true })
