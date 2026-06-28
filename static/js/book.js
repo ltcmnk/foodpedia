@@ -36,7 +36,6 @@ const BookState = {
   layout: [],
   totalPages: 0,
   translating: false,
-  resultAvailable: false,
   errorActive: false,
   setupActive: false,
   languageTransition: false,
@@ -1361,7 +1360,8 @@ function buildResultadoTocSpread() {
   const resultadoEls = [...host.querySelectorAll('[data-role="resultado"]')]
   if (!resultadoEls.length) return null
 
-  const heading = currentLang === 'en' ? 'Searched' : 'Pesquisadas'
+  const t = (key, fallback) => window._i18nStrings?.[currentLang]?.[key] || fallback
+  const heading = t('toc_resultado', 'Pesquisadas')
   const entries = resultadoEls.map(el => {
     const key = spreadKey(el)
     const name = el.dataset.recipeName || key
