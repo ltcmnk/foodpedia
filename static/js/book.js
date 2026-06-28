@@ -481,10 +481,10 @@ function rebuildBookLayout(options = {}) {
     favTocSpread,
     search,
     ...recipes,
-    apoio,
     ...conditional,
     ...resultados,
     ...favoritos,
+    apoio,
   ].filter(Boolean)
 
   layout.forEach((spread, index) => {
