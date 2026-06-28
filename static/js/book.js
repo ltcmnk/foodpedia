@@ -308,6 +308,7 @@ function buildFavoritesTocSpread() {
     const spread = BookState.layout.find(s => spreadKey(s) === key)
     if (!spread) return key
     if (spread.dataset.role === 'base-recipe') return spread.dataset.recipeName || key
+    if (spread.dataset.role === 'favorited-result') return spread.dataset.recipeName || key
     const staticLabels = {
       search: currentLang === 'en' ? 'Search a Dish' : 'Pesquisar um Prato',
     }
@@ -1356,6 +1357,42 @@ function rebuildFavoritadoSpreads() {
   initCurlZones()
 }
 
+// ── TOGGLE RESULTADO FAVORITE ──
+function toggleResultadoFavorite(resultadoId) {
+  const favresultKey = `favresult:${resultadoId}`
+  let favs = favoriteKeys()
+  const persisted = favoritedRecipes()
+  const alreadyFavorited = favs.includes(favresultKey)
+
+  if (alreadyFavorited) {
+    // Desfavoritar
+    localStorage.setItem('fp_favs', JSON.stringify(favs.filter(k => k !== favresultKey)))
+    localStorage.setItem('fp_favorited_recipes', JSON.stringify(persisted.filter(e => e.id !== resultadoId)))
+  } else {
+    // Favoritar — read recipe from the resultado spread
+    const resultadoEl = document.querySelector(`[data-resultado-id="${resultadoId}"]`)
+    if (!resultadoEl) return
+    const recipe = BookState.currentRecipe || BookState.currentRecipeVariants?.[currentLang]
+    if (!recipe) return
+    favs.push(favresultKey)
+    localStorage.setItem('fp_favs', JSON.stringify(favs))
+    persisted.push({ id: resultadoId, recipe, lang: currentLang })
+    localStorage.setItem('fp_favorited_recipes', JSON.stringify(persisted))
+    if (!localStorage.getItem('fp_resultado_hint_shown')) {
+      localStorage.setItem('fp_resultado_hint_shown', '1')
+    }
+  }
+
+  rebuildFavoritadoSpreads()
+  rebuildBookLayout({ keepCurrent: true })
+  syncRibbonFavorite()
+  syncFavoritesTab()
+  updateDividerTabs(BookState.currentSpread)
+  showToast(alreadyFavorited
+    ? (currentLang === 'en' ? 'Recipe removed from favorites.' : 'Receita removida dos favoritos.')
+    : (currentLang === 'en' ? 'Recipe saved to Favorites.' : 'Receita salva nos Favoritos.'))
+}
+
 // ── LOADING NOTIFY ──
 function notifyRecipeReady(recipe) {
   // replaced in Task 5
@@ -1783,7 +1820,25 @@ function syncFavoritesTab() {
 function toggleCurrentPageFavorite() {
   const id = currentFavoriteKey()
   if (!id) return
-  let favs = JSON.parse(localStorage.getItem('fp_favs') || '[]')
+
+  const spread = document.querySelector(`[data-spread="${BookState.currentSpread}"]`)
+  const role = spread?.dataset.role
+
+  // AI resultado: persist full recipe object
+  if (role === 'resultado') {
+    toggleResultadoFavorite(spread.dataset.resultadoId)
+    return
+  }
+
+  // Favorited-result: toggle the favresult key (desfavoritar only — the spread exists because it was favorited)
+  if (role === 'favorited-result') {
+    const resultadoId = spread.dataset.favresultId
+    toggleResultadoFavorite(resultadoId)
+    return
+  }
+
+  // Classic spread: existing key-only behavior
+  let favs = favoriteKeys()
   const i = favs.indexOf(id)
   i === -1 ? favs.push(id) : favs.splice(i, 1)
   localStorage.setItem('fp_favs', JSON.stringify(favs))
