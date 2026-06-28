@@ -86,7 +86,7 @@
 
 Recipe websites bury the actual recipe under autoplay videos, pop-up newsletters, and three paragraphs about someone's grandmother. Foodpedia does the opposite: everything goes inside a book — an actual book you open and flip through — where each dish gets its own spread and nothing competes for your attention.
 
-It started as a university project at PUCPR (grade 10/10). The concept held up well enough to keep going: it now supports Ollama for fully local on-device generation, Gemini API as a cloud alternative, and ships with a static GitHub Pages demo that needs no server at all.
+It started as a university project at PUCPR (grade 10/10). The concept held up well enough to keep going: it now supports Ollama for fully local on-device generation, Gemini API as a cloud alternative, and ships with a static Vercel demo that needs no server at all.
 
 Zero cloud lock-in. Zero framework overhead. Zero compromise on the physical feel.
 
@@ -123,7 +123,7 @@ All decorations are inline SVG (via Jinja2 `{% include %}`), drawn in gold with 
 **Onboarding that fits the metaphor**
 New users go through a "Como Usar" tutorial built as real book spreads. Side tabs are locked until the tutorial completes. The book teaches you to read the book.
 
-**GitHub Pages static export**
+**Static export for Vercel (and anywhere else)**
 A build script exports the full interface as a standalone `index.html` for demos that need no server. Classic recipes work; AI search doesn't — that would require a backend, obviously.
 
 ---
@@ -189,7 +189,7 @@ flask run --port 5001
 # Open http://localhost:5001
 ```
 
-To rebuild the static GitHub Pages demo after template or style changes:
+To rebuild the static Vercel demo after template or style changes:
 
 ```bash
 python3 scripts/build_static_demo.py
@@ -246,7 +246,7 @@ foodpedia/
 ├── templates/         # Jinja2 HTML + SVG illustrations
 ├── docs/              # README assets
 ├── scripts/           # Static demo export
-├── index.html         # Generated GitHub Pages build
+├── index.html         # Generated static build (Vercel demo)
 ├── app.py
 └── .env.example
 ```
@@ -259,7 +259,7 @@ foodpedia/
 - [x] AI recipe generation via Ollama (local, offline)
 - [x] Gemini API integration (cloud alternative)
 - [x] Demo mode — works with no AI configured
-- [x] Static GitHub Pages export
+- [x] Static export (deployed on Vercel)
 - [x] Onboarding tutorial built as book spreads
 - [ ] Export recipe spread as printable PDF
 - [ ] Save and bookmark recipes across sessions (localStorage)

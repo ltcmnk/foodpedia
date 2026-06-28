@@ -86,7 +86,7 @@
 
 Sites de receita enterram a receita de verdade embaixo de vídeo com autoplay, pop-up de newsletter e três parágrafos sobre a avó da autora antes de chegar nos ingredientes. O Foodpedia faz o oposto: tudo vai pra dentro de um livro — um livro de verdade que você abre e vira as páginas — onde cada prato tem seu spread e nada está disputando sua atenção.
 
-Começou como projeto de disciplina na PUCPR (nota 10). A ideia se sustentou bem o suficiente pra continuar evoluindo: hoje suporta Ollama para geração local no próprio dispositivo, Gemini API como alternativa na nuvem, e tem uma versão estática no GitHub Pages que não precisa de servidor.
+Começou como projeto de disciplina na PUCPR (nota 10). A ideia se sustentou bem o suficiente pra continuar evoluindo: hoje suporta Ollama para geração local no próprio dispositivo, Gemini API como alternativa na nuvem, e tem uma versão estática no Vercel que não precisa de servidor.
 
 Sem lock-in. Sem framework. Sem compromisso com a sensação física.
 
@@ -123,7 +123,7 @@ Todas as decorações são SVG inline (via `{% include %}` do Jinja2), desenhada
 **Onboarding dentro da metáfora**
 Novos usuários passam por um tutorial "Como Usar" construído como spreads reais do livro. As abas laterais ficam bloqueadas até o tutorial terminar. O livro te ensina a ler o livro.
 
-**Export estático para GitHub Pages**
+**Export estático para o Vercel (e qualquer servidor estático)**
 Um script de build exporta a interface completa como `index.html` standalone para demos que não precisam de servidor. Receitas fixas funcionam; busca com IA não — isso exigiria backend, obviamente.
 
 ---
@@ -189,7 +189,7 @@ flask run --port 5001
 # Abra http://localhost:5001
 ```
 
-Para reconstruir a demo estática do GitHub Pages depois de mudar template, CSS ou JS:
+Para reconstruir a demo estática do Vercel depois de mudar template, CSS ou JS:
 
 ```bash
 python3 scripts/build_static_demo.py
@@ -246,7 +246,7 @@ foodpedia/
 ├── templates/         # HTML Jinja2 + ilustrações SVG
 ├── docs/              # assets do README
 ├── scripts/           # export da demo estática
-├── index.html         # build gerada para GitHub Pages
+├── index.html         # build estática gerada (demo no Vercel)
 ├── app.py
 └── .env.example
 ```
@@ -259,7 +259,7 @@ foodpedia/
 - [x] Geração de receitas via Ollama (local, offline)
 - [x] Integração com Gemini API (alternativa na nuvem)
 - [x] Modo demo — funciona sem nenhuma IA configurada
-- [x] Export estático para GitHub Pages
+- [x] Export estático (deploy no Vercel)
 - [x] Tutorial de onboarding construído como spreads do livro
 - [ ] Exportar spread de receita como PDF imprimível
 - [ ] Salvar e favoritar receitas entre sessões (localStorage)
