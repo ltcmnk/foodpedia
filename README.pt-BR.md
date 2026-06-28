@@ -261,11 +261,11 @@ foodpedia/
 - [x] Modo demo — funciona sem nenhuma IA configurada
 - [x] Export estático (deploy no Vercel)
 - [x] Tutorial de onboarding construído como spreads do livro
-- [ ] Exportar spread de receita como PDF imprimível
-- [ ] Salvar e favoritar receitas entre sessões (localStorage)
+- [x] Exportar spread de receita como PDF imprimível (tecla `P`)
+- [x] Salvar e favoritar receitas entre sessões (localStorage)
+- [x] Receitas clássicas de várias culinárias (18 pratos, 10+ países)
+- [x] Navegação por teclado para virar páginas (← → PageUp PageDown)
 - [ ] Geração de imagem da receita via IA
-- [ ] Mais receitas clássicas fixas, de mais culinárias
-- [ ] Navegação por teclado para virar páginas
 
 ---
 

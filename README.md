@@ -261,11 +261,11 @@ foodpedia/
 - [x] Demo mode — works with no AI configured
 - [x] Static export (deployed on Vercel)
 - [x] Onboarding tutorial built as book spreads
-- [ ] Export recipe spread as printable PDF
-- [ ] Save and bookmark recipes across sessions (localStorage)
+- [x] Export recipe spread as printable PDF (press `P`)
+- [x] Save and bookmark recipes across sessions (localStorage)
+- [x] Classic recipes across cuisines (18 dishes, 10+ countries)
+- [x] Keyboard navigation for page turns (← → PageUp PageDown)
 - [ ] Recipe image generation via AI
-- [ ] More bundled classic recipes across cuisines
-- [ ] Keyboard navigation for page turns
 
 ---
 
