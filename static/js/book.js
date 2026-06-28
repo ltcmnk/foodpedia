@@ -112,10 +112,6 @@ function tocEntries() {
     })
   })
 
-  // Apoio entry — separator + donation link after base recipes
-  entries.push({ type: 'separator', weight: 0 })
-  entries.push({ type: 'link', subtype: 'apoio', labelKey: 'toc_apoio', fallback: 'Apoiar o Projeto', targetKey: 'apoio', weight: 1 })
-
   // Ephemeral resultado entries (session only)
   const resultadoSpreads = [...document.querySelectorAll('#resultado-container [data-role="resultado"]')]
   if (resultadoSpreads.length) {
@@ -148,6 +144,11 @@ function tocEntries() {
       })
     })
   }
+
+  // Apoio entry — separator + donation link always last in TOC
+  entries.push({ type: 'separator', weight: 0 })
+  entries.push({ type: 'link', subtype: 'apoio', labelKey: 'toc_apoio', fallback: 'Apoiar o Projeto', targetKey: 'apoio', weight: 1 })
+
   return entries
 }
 
