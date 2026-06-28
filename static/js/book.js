@@ -1608,7 +1608,7 @@ function createResultadoSpread(recipe) {
     `<li data-stagger><span class="step-number">${i + 1}</span><span class="step-text">${s}</span></li>`).join('')
 
   const isFirstOfSession = host.children.length === 0
-  const microHint = isFirstOfSession && !localStorage.getItem('fp_resultado_hint_shown')
+  const microHint = isFirstOfSession && !sessionStorage.getItem('fp_resultado_hint_shown')
     ? `<p class="resultado-micro-hint">${labels.hint}</p>` : ''
 
   const el = document.createElement('div')
@@ -1665,6 +1665,14 @@ function createResultadoSpread(recipe) {
     </div>`
 
   host.appendChild(el)
+  rebuildBookLayout()
+  if (microHint) {
+    sessionStorage.setItem('fp_resultado_hint_shown', '1')
+    const hintEl = el.querySelector('.resultado-micro-hint')
+    if (hintEl) {
+      gsap.to(hintEl, { delay: 3, duration: reducedMotion ? 0.001 : 0.5, opacity: 0, onComplete: () => hintEl.remove() })
+    }
+  }
   return el
 }
 
@@ -1704,7 +1712,7 @@ function createFavoritadoSpread(entry) {
           <div class="meta-cell"><span class="meta-label">${labels.level}</span><span class="meta-value">${r.difficulty || ''}</span></div>
         </div>
         <div class="recipe-section">
-          <h3 class="section-label">Ingredientes</h3>
+          <h3 class="section-label">${labels.ingredients}</h3>
           <ul class="ingredients-list">${ingredients}</ul>
           <div class="chef-tip">
             <span class="tip-label">${labels.tip}</span>
@@ -1726,6 +1734,9 @@ function createFavoritadoSpread(entry) {
         <div class="recipe-section">
           <h3 class="section-label">${labels.steps}</h3>
           <ol class="steps-list">${steps}</ol>
+        </div>
+        <div class="resultado-actions">
+          <button class="ribbon-btn is-favorited" data-role="favorite-btn" title="Remover dos favoritos">◆</button>
         </div>
       </div>
       <div class="page-footer"><span class="footer-brand">Foodpedia</span><span class="page-number"></span></div>
