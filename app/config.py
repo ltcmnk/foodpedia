@@ -2,7 +2,7 @@ import os
 
 
 class BaseConfig:
-    SECRET_KEY = os.getenv('FLASK_SECRET_KEY', os.urandom(24))
+    SECRET_KEY = os.getenv('FLASK_SECRET_KEY', 'dev-only-insecure-key-set-in-prod')
     AI_PROVIDER = os.getenv('AI_PROVIDER', 'ollama')
     OLLAMA_HOST = os.getenv('OLLAMA_HOST', 'http://localhost:11434')
     OLLAMA_MODEL = os.getenv('OLLAMA_MODEL', 'gemma3:latest')
