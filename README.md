@@ -3,7 +3,7 @@
 <br>
 
 <p align="center">
-  <img src="./docs/foodpedia-tag-eng.png" alt="foodpedia" width="220"/>
+  <img src="./docs/foodpedia-tag-eng.png" alt="foodpedia" width="400"/>
 </p>
 
 <p align="center">
