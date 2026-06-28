@@ -115,7 +115,7 @@ function tocEntries() {
   // Ephemeral resultado entries (session only)
   const resultadoSpreads = [...document.querySelectorAll('#resultado-container [data-role="resultado"]')]
   if (resultadoSpreads.length) {
-    entries.push({ type: 'section', labelKey: 'toc_resultado', fallback: 'Pesquisadas', targetRole: 'resultado', weight: 1.2 })
+    entries.push({ type: 'section', labelKey: 'toc_resultado', fallback: 'Receitas Pesquisadas', targetRole: 'resultado', weight: 1.2 })
     resultadoSpreads.forEach(spread => {
       const key = spreadKey(spread)
       entries.push({
@@ -145,8 +145,7 @@ function tocEntries() {
     })
   }
 
-  // Apoio entry — separator + donation link always last in TOC
-  entries.push({ type: 'separator', weight: 0 })
+  // Apoio entry — always last, position updates as recipes are added
   entries.push({ type: 'link', subtype: 'apoio', labelKey: 'toc_apoio', fallback: 'Apoiar o Projeto', targetKey: 'apoio', weight: 1 })
 
   return entries
@@ -289,9 +288,6 @@ function tocPage(entries, pageIndex, side) {
     ? `<h2 class="toc-heading" data-i18n="toc_heading">Sumário</h2>`
     : `<span class="toc-continuation">${currentLang === 'en' ? 'continued' : 'continuação'}</span>`
   const rows = entries.map((entry, entryIndex) => {
-    if (entry.type === 'separator') {
-      return `<li class="toc-apoio-separator" data-toc-entry-index="${entryIndex}"></li>`
-    }
     if (entry.subtype === 'apoio') {
       return `<li data-toc-entry-index="${entryIndex}" data-stagger>
         <a class="toc-entry toc-apoio-entry" href="#" data-target-key="apoio">
@@ -1632,7 +1628,7 @@ function buildResultadoTocSpread() {
   if (!resultadoEls.length) return null
 
   const t = (key, fallback) => window._i18nStrings?.[currentLang]?.[key] || fallback
-  const heading = t('toc_resultado', 'Pesquisadas')
+  const heading = t('toc_resultado', 'Receitas Pesquisadas')
   const entries = resultadoEls.map(el => {
     const key = spreadKey(el)
     const name = el.dataset.recipeName || key
